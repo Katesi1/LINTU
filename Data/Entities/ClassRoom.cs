@@ -30,5 +30,5 @@ public class ClassRoom : IDateTracking
     public ICollection<Post>? Posts { get; set; }
     public ICollection<ClassDetail>? ClassDetails { get; set; }
     public ICollection<Assignment> Assignments { get; set; } = new List<Assignment>();
-    public ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
+    // public ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
 }

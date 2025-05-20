@@ -1,0 +1,85 @@
+<mxfile host="app.diagrams.net" modified="2024-03-19T04:23:12.285Z" agent="Mozilla/5.0" version="22.1.21">
+  <diagram id="sequence-diagram" name="Assignment Management Sequence">
+    <mxGraphModel dx="1188" dy="634" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Frame -->
+        <mxCell id="frame" value="sd Quản lý bài tập" style="shape=umlFrame;whiteSpace=wrap;html=1;width=160;height=30;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="760" height="560" as="geometry" />
+        </mxCell>
+
+        <!-- Lifelines -->
+        <mxCell id="teacher" value="Giáo viên" style="shape=umlLifeline;participant=umlActor;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;verticalAlign=top;spacingTop=36;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="120" y="80" width="20" height="480" as="geometry" />
+        </mxCell>
+
+        <mxCell id="student" value="Học sinh" style="shape=umlLifeline;participant=umlActor;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;verticalAlign=top;spacingTop=36;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="240" y="80" width="20" height="480" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ui" value=":UI" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;verticalAlign=top;spacingTop=36;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="360" y="80" width="100" height="480" as="geometry" />
+        </mxCell>
+
+        <mxCell id="controller" value=":AssignmentController" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;verticalAlign=top;spacingTop=36;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="520" y="80" width="100" height="480" as="geometry" />
+        </mxCell>
+
+        <mxCell id="db" value=":Database" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;verticalAlign=top;spacingTop=36;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="680" y="80" width="100" height="480" as="geometry" />
+        </mxCell>
+
+        <!-- Create Assignment Flow -->
+        <mxCell id="createAssignment" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;" vertex="1" parent="1">
+          <mxGeometry x="125" y="140" width="10" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="createAssignmentMsg" value="1. Tạo bài tập mới" style="html=1;verticalAlign=bottom;endArrow=block;entryX=0;entryY=0;" edge="1" parent="1" source="createAssignment" target="ui">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="140" y="140" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="validateInput" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;" vertex="1" parent="1">
+          <mxGeometry x="405" y="160" width="10" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="saveToDb" value="2. Lưu bài tập" style="html=1;verticalAlign=bottom;endArrow=block;" edge="1" parent="1" source="ui" target="controller">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="420" y="200" as="sourcePoint" />
+            <mxPoint x="570" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Submit Assignment Flow -->
+        <mxCell id="submitAssignment" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;" vertex="1" parent="1">
+          <mxGeometry x="245" y="260" width="10" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="submitMsg" value="3. Nộp bài tập" style="html=1;verticalAlign=bottom;endArrow=block;" edge="1" parent="1" source="submitAssignment" target="ui">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Grade Assignment Flow -->
+        <mxCell id="gradeAssignment" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;" vertex="1" parent="1">
+          <mxGeometry x="125" y="380" width="10" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="gradeMsg" value="4. Chấm điểm" style="html=1;verticalAlign=bottom;endArrow=block;" edge="1" parent="1" source="gradeAssignment" target="ui">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="saveGrade" value="5. Lưu điểm" style="html=1;verticalAlign=bottom;endArrow=block;" edge="1" parent="1" source="controller" target="db">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="570" y="420" as="sourcePoint" />
+            <mxPoint x="730" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+

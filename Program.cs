@@ -43,6 +43,14 @@ AddAuthorizationPolicies();
 builder.Services.AddSignalR();
 AddScoped();
 var app = builder.Build();
+
+// Ensure uploads directory exists
+var uploadsDir = Path.Combine(app.Environment.WebRootPath, "uploads", "lectures");
+if (!Directory.Exists(uploadsDir))
+{
+    Directory.CreateDirectory(uploadsDir);
+}
+
 app.MapHub<ChatHub>("/chatHub");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -78,7 +86,10 @@ app.MapRazorPages()
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+    // Khôi phục lại code ban đầu sau khi đã tạo migration
     db.Database.Migrate();
+
     var serviceProvider = scope.ServiceProvider;
     try
     {

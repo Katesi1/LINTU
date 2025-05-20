@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "User Management";
+    ViewData["Title"] = "Quản lý người dùng";
 }
 @model ICollection<LMS.Data.Entities.User>
 
@@ -8,8 +8,8 @@
         <div class="col-lg-8">
             <div class="page-header-title">
                 <div class="d-inline">
-                    <h4>Users Management</h4>
-                    <span>Manage user accounts and roles</span>
+                    <h4>Quản lý người dùng</h4>
+                    <span>Quản lý tài khoản và vai trò người dùng</span>
                 </div>
             </div>
         </div>
@@ -19,7 +19,7 @@
                     <li class="breadcrumb-item">
                         <a href="/"><i class="feather icon-home"></i></a>
                     </li>
-                    <li class="breadcrumb-item">Users</li>
+                    <li class="breadcrumb-item">Người dùng</li>
                 </ul>
             </div>
         </div>
@@ -31,7 +31,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h5><i class="feather icon-users mr-1"></i> User Accounts</h5>
+                    <h5><i class="feather icon-users mr-1"></i> Tài khoản người dùng</h5>
                 </div>
                 <div class="card-block">
                     @if (Model != null && Model.Any())
@@ -41,9 +41,9 @@
                                 <thead>
                                     <tr class="bg-primary text-white">
                                         <th scope="col" style="width: 60px;">STT</th>
-                                        <th scope="col">Name</th>
+                                        <th scope="col">Họ tên</th>
                                         <th scope="col">Email</th>
-                                        <th scope="col" class="text-center">Actions</th>
+                                        <th scope="col" class="text-center">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -70,11 +70,11 @@
                                             <td class="text-center">
                                                 <a asp-controller="UserRoles" asp-action="Edit" asp-route-id="@user.Id"
                                                     class="btn btn-sm btn-outline-primary waves-effect mr-2">
-                                                    <i class="feather icon-edit mr-1"></i>Edit Roles
+                                                    <i class="feather icon-edit mr-1"></i>Sửa vai trò
                                                 </a>
                                                 <button type="button" class="btn btn-sm btn-outline-danger waves-effect"
                                                     onclick="confirmDelete('@user.Id', '@user.FullName')">
-                                                    <i class="feather icon-trash-2 mr-1"></i>Delete
+                                                    <i class="feather icon-trash-2 mr-1"></i>Xóa
                                                 </button>
                                             </td>
                                         </tr>
@@ -87,8 +87,8 @@
                     {
                         <div class="text-center py-4">
                             <i class="feather icon-users text-muted" style="font-size: 48px;"></i>
-                            <h6 class="mt-3">No Users Found</h6>
-                            <p class="text-muted">No user accounts available in the system.</p>
+                            <h6 class="mt-3">Không tìm thấy người dùng</h6>
+                            <p class="text-muted">Không có tài khoản người dùng nào trong hệ thống.</p>
                         </div>
                     }
                 </div>
@@ -102,19 +102,20 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title"><i class="feather icon-alert-triangle mr-1"></i> Confirm Delete</h5>
+                <h5 class="modal-title"><i class="feather icon-alert-triangle mr-1"></i> Xác nhận xóa</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete user <strong id="userName"></strong>?</p>
-                <p class="text-danger"><i class="feather icon-alert-circle mr-1"></i> This action cannot be undone.</p>
+                <p>Bạn có chắc chắn muốn xóa người dùng <strong id="userName"></strong>?</p>
+                <p class="text-danger"><i class="feather icon-alert-circle mr-1"></i> Hành động này không thể hoàn tác.
+                </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Hủy bỏ</button>
                 <a id="deleteUserLink" class="btn btn-danger">
-                    <i class="feather icon-trash-2 mr-1"></i> Delete User
+                    <i class="feather icon-trash-2 mr-1"></i> Xóa người dùng
                 </a>
             </div>
         </div>

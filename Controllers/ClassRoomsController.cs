@@ -133,13 +133,20 @@ namespace LMS.Controllers
                 .Select(cd => cd.User)
                 .ToListAsync();
 
+            var lessons = await _context.Lessons
+                .Where(l => l.ClassRoomId == classRoom.Id)
+                .Include(l => l.Lectures)
+                .OrderBy(l => l.Order)
+                .ToListAsync();
+
             var classRoomViewModel = new ClassRoomViewModel
             {
                 ClassRoom = classRoom,
                 Posts = posts,
                 MembersCount = membersCount,
-                Assignments = assignments,
-                Participants = participants!
+                Assignments = assignments ?? new List<Assignment>(),
+                Participants = participants ?? new List<User>(),
+                Lessons = lessons ?? new List<Lesson>()
             };
             return View(classRoomViewModel);
         }
@@ -433,7 +440,7 @@ namespace LMS.Controllers
             return View(classes);
         }
         [Authorize]
-        public async Task<IActionResult> Registered(string searchQuery = null, int page = 1, int pageSize = 6)
+        public async Task<IActionResult> Registered(string searchQuery = null!, int page = 1, int pageSize = 6)
         {
             var userId = _userManager.GetUserId(User);
 

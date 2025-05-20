@@ -8,17 +8,17 @@
 <!-- Hero Section -->
 <div class="row">
     <div class="col-sm-12">
-        <div class="card bg-primary text-white mb-4">
+        <div class="card bg-primary text-white mb-4 hero-card hover-shadow-2" style="border-radius: 12px; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.06); transition: all 0.3s ease;">
             <div class="card-block" style="background: linear-gradient(135deg, #4099ff, #73b4ff, #5E35B1);">
                 <div class="row align-items-center py-4">
                     <div class="col-md-8 px-4">
-                        <h2 class="text-white mb-3 f-w-500" style="font-size: 2.2rem;"><i class="feather icon-book-open mr-2"></i>Discover Your Next Learning Journey</h2>
-                        <p class="mb-4 lead f-w-400" style="font-size: 1.1rem;">Explore courses from expert instructors and expand your knowledge today</p>
+                        <h2 class="text-white mb-3 f-w-500" style="font-size: 2.2rem;">Khám phá hành trình học tập tiếp theo</h2>
+                        <p class="mb-4 lead f-w-400" style="font-size: 1.1rem;">Khám phá các khóa học từ các giảng viên chuyên gia và mở rộng kiến thức của bạn ngay hôm nay</p>
                         <div class="card-search mb-3 mb-md-0">
                             <form asp-action="Index" method="get" class="d-flex">
                                 <div class="input-group input-group-lg">
                                     <input type="text" name="searchString" class="form-control" 
-                                           placeholder="Search for classes..." value="@Context.Request.Query["searchString"]" 
+                                           placeholder="Tìm kiếm lớp học..." value="@Context.Request.Query["searchString"]" 
                                            style="border-radius: 50px 0 0 50px; padding-left: 20px; border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.1);" />
                                     <div class="input-group-append">
                                         <button type="submit" class="btn btn-light waves-effect" 
@@ -39,87 +39,87 @@
 <!-- Filter Section -->
 <div class="row mb-4">
     <div class="col-md-12">
-        <div class="card border-0" style="box-shadow: 0 2px 15px rgba(0,0,0,0.05); border-radius: 8px;">
-            <div class="card-header d-flex justify-content-between align-items-center" style="background: #f8f9fa; border-radius: 8px 8px 0 0; border-bottom: 1px solid rgba(0,0,0,0.05); padding: 15px 20px;">
+        <div class="card border-0 hover-shadow-2" style="box-shadow: 0 2px 15px rgba(0,0,0,0.05); border-radius: 12px; transition: all 0.3s ease;">
+            <div class="card-header d-flex justify-content-between align-items-center" style="background: #f8f9fa; border-radius: 12px 12px 0 0; border-bottom: 1px solid rgba(0,0,0,0.05); padding: 15px 20px;">
                 <div class="d-flex align-items-center">
                     <i class="feather icon-filter text-primary mr-2"></i>
-                    <h5 class="m-0">Filter Options</h5>
+                    <h5 class="m-0">Tùy chọn lọc</h5>
                 </div>
                 <button class="btn btn-sm btn-outline-primary waves-effect" id="toggleFilters" style="border-radius: 30px; margin-left: auto;">
-                    <i class="feather icon-sliders mr-1"></i> Toggle Filters
+                    <i class="feather icon-sliders mr-1"></i> Hiển thị bộ lọc
                 </button>
             </div>
-            <div class="card-block pt-3 pb-3" id="filterSection" style="display: none; border-radius: 0 0 8px 8px;">
+            <div class="card-block pt-3 pb-3" id="filterSection" style="display: none; border-radius: 0 0 12px 12px;">
                 <form asp-action="Index" method="get" class="row">
                     <input type="hidden" name="searchString" value="@Context.Request.Query["searchString"]" />
                     
                     <div class="col-md-4 form-group">
-                        <label class="text-muted mb-2"><i class="feather icon-trending-up mr-1 text-primary"></i>Sort By</label>
+                        <label class="text-muted mb-2"><i class="feather icon-trending-up mr-1 text-primary"></i>Sắp xếp theo</label>
                         <select name="sortBy" class="form-control" style="border-radius: 5px; border-color: #e2e5e8;">
                             @if (Context.Request.Query["sortBy"] == "")
                             {
-                                <option value="" selected>Most Recent</option>
+                                <option value="" selected>Mới nhất</option>
                             }
                             else
                             {
-                                <option value="">Most Recent</option>
+                                <option value="">Mới nhất</option>
                             }
                             
                             @if (Context.Request.Query["sortBy"] == "name")
                             {
-                                <option value="name" selected>Name</option>
+                                <option value="name" selected>Tên</option>
                             }
                             else
                             {
-                                <option value="name">Name</option>
+                                <option value="name">Tên</option>
                             }
                             
                             @if (Context.Request.Query["sortBy"] == "price")
                             {
-                                <option value="price" selected>Price</option>
+                                <option value="price" selected>Giá</option>
                             }
                             else
                             {
-                                <option value="price">Price</option>
+                                <option value="price">Giá</option>
                             }
                             
                             @if (Context.Request.Query["sortBy"] == "students")
                             {
-                                <option value="students" selected>Students Count</option>
+                                <option value="students" selected>Số học viên</option>
                             }
                             else
                             {
-                                <option value="students">Students Count</option>
+                                <option value="students">Số học viên</option>
                             }
                         </select>
                     </div>
                     
                     <div class="col-md-4 form-group">
-                        <label class="text-muted mb-2"><i class="feather icon-arrow-up-circle mr-1 text-primary"></i>Order</label>
+                        <label class="text-muted mb-2"><i class="feather icon-arrow-up-circle mr-1 text-primary"></i>Thứ tự</label>
                         <select name="sortOrder" class="form-control" style="border-radius: 5px; border-color: #e2e5e8;">
                             @if (Context.Request.Query["sortOrder"] == "asc")
                             {
-                                <option value="asc" selected>Ascending</option>
+                                <option value="asc" selected>Tăng dần</option>
                             }
                             else
                             {
-                                <option value="asc">Ascending</option>
+                                <option value="asc">Tăng dần</option>
                             }
                             
                             @if (Context.Request.Query["sortOrder"] == "desc")
                             {
-                                <option value="desc" selected>Descending</option>
+                                <option value="desc" selected>Giảm dần</option>
                             }
                             else
                             {
-                                <option value="desc">Descending</option>
+                                <option value="desc">Giảm dần</option>
                             }
                         </select>
                     </div>
                     
                     <div class="col-md-4 form-group d-flex align-items-end">
                         <button type="submit" class="btn btn-primary btn-block waves-effect" style="border-radius: 5px; padding: 10px;">
-                            <i class="feather icon-filter mr-1"></i> Apply Filters
+                            <i class="feather icon-filter mr-1"></i> Áp dụng bộ lọc
                         </button>
                     </div>
                 </form>
@@ -133,12 +133,12 @@
 {
     <div class="row mb-4">
         <div class="col-xl-3 col-md-6">
-            <div class="card bg-c-blue text-white border-0 mb-3" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(64, 153, 255, 0.2);">
+            <div class="card bg-c-blue text-white border-0 mb-3 hover-shadow-2" style="border-radius: 12px; box-shadow: 0 4px 20px rgba(64, 153, 255, 0.2); transition: all 0.3s ease;">
                 <div class="card-block">
                     <div class="row align-items-center">
                         <div class="col">
                             <h4 class="text-white m-b-5 f-w-600">@Model.Count()</h4>
-                            <h6 class="text-white m-b-0 f-w-400">Classes Found</h6>
+                            <h6 class="text-white m-b-0 f-w-400">Lớp học</h6>
                         </div>
                         <div class="col-auto">
                             <i class="feather icon-layers f-30" style="opacity: 0.8;"></i>
@@ -148,12 +148,12 @@
             </div>
         </div>
         <div class="col-xl-3 col-md-6">
-            <div class="card bg-c-green text-white border-0 mb-3" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(46, 204, 113, 0.2);">
+            <div class="card bg-c-green text-white border-0 mb-3 hover-shadow-2" style="border-radius: 12px; box-shadow: 0 4px 20px rgba(46, 204, 113, 0.2); transition: all 0.3s ease;">
                 <div class="card-block">
                     <div class="row align-items-center">
                         <div class="col">
                             <h4 class="text-white m-b-5 f-w-600">@Model.Where(c => c.Price == 0).Count()</h4>
-                            <h6 class="text-white m-b-0 f-w-400">Free Courses</h6>
+                            <h6 class="text-white m-b-0 f-w-400">Khóa học miễn phí</h6>
                         </div>
                         <div class="col-auto">
                             <i class="feather icon-gift f-30" style="opacity: 0.8;"></i>
@@ -163,12 +163,12 @@
             </div>
         </div>
         <div class="col-xl-3 col-md-6">
-            <div class="card bg-c-yellow text-white border-0 mb-3" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(255, 193, 7, 0.2);">
+            <div class="card bg-c-yellow text-white border-0 mb-3 hover-shadow-2" style="border-radius: 12px; box-shadow: 0 4px 20px rgba(255, 193, 7, 0.2); transition: all 0.3s ease;">
                 <div class="card-block">
                     <div class="row align-items-center">
                         <div class="col">
                             <h4 class="text-white m-b-5 f-w-600">@Model.Where(c => (now - c.CreateDate).TotalDays <= 7).Count()</h4>
-                            <h6 class="text-white m-b-0 f-w-400">New This Week</h6>
+                            <h6 class="text-white m-b-0 f-w-400">Mới trong tuần này</h6>
                         </div>
                         <div class="col-auto">
                             <i class="feather icon-star f-30" style="opacity: 0.8;"></i>
@@ -178,12 +178,12 @@
             </div>
         </div>
         <div class="col-xl-3 col-md-6">
-            <div class="card bg-c-purple text-white border-0 mb-3" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(156, 39, 176, 0.2);">
+            <div class="card bg-c-purple text-white border-0 mb-3 hover-shadow-2" style="border-radius: 12px; box-shadow: 0 4px 20px rgba(156, 39, 176, 0.2); transition: all 0.3s ease;">
                 <div class="card-block">
                     <div class="row align-items-center">
                         <div class="col">
                             <h4 class="text-white m-b-5 f-w-600">@Model.Select(c => c.Topic?.Name).Distinct().Count()</h4>
-                            <h6 class="text-white m-b-0 f-w-400">Topics Available</h6>
+                            <h6 class="text-white m-b-0 f-w-400">Chủ đề khác nhau</h6>
                         </div>
                         <div class="col-auto">
                             <i class="feather icon-tag f-30" style="opacity: 0.8;"></i>
@@ -204,15 +204,15 @@
                     @if (!string.IsNullOrEmpty(Context.Request.Query["searchString"]))
                     {
                         <i class="feather icon-search mr-2 text-primary"></i>
-                        <span>Search Results for "<span class="text-primary">@Context.Request.Query["searchString"]</span>"</span>
+                        <span>Kết quả tìm kiếm cho "<span class="text-primary">@Context.Request.Query["searchString"]</span>"</span>
                     }
                     else
                     {
                         <i class="feather icon-grid mr-2 text-primary"></i>
-                        <span>Available Classes</span>
+                        <span>Lớp học hiện có</span>
                     }
                 </h5>
-                <span class="text-muted">@Model.Count() classes found</span>
+                <span class="text-muted">Tìm thấy @Model.Count() lớp học</span>
             </div>
             <div class="card-block p-4">
                 @if (!Model.Any())
@@ -220,9 +220,9 @@
                     <div class="text-center py-5">
                         <img src="~/files/assets/images/search-empty.svg" alt="No results" style="max-height: 200px; margin-bottom: 30px;" class="animate-float" />
                         <h3 class="text-muted mb-3">@ViewBag.NoClassMessage</h3>
-                        <p class="text-muted mb-4">Try adjusting your search or filter to find what you're looking for.</p>
+                        <p class="text-muted mb-4">Hãy điều chỉnh tìm kiếm hoặc bộ lọc để tìm thấy nội dung bạn cần.</p>
                         <a asp-action="Index" class="btn btn-primary waves-effect" style="border-radius: 30px; padding: 10px 20px;">
-                            <i class="feather icon-refresh-cw mr-1"></i> Clear All Filters
+                            <i class="feather icon-refresh-cw mr-1"></i> Xóa tất cả bộ lọc
                         </a>
                     </div>
                 }
@@ -244,13 +244,13 @@
                                             @if (isNew)
                                             {
                                                 <span class="badge badge-pill badge-success px-2 py-1 mr-2 animate-pulse" style="box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                                                    <i class="feather icon-award mr-1"></i> NEW
+                                                    <i class="feather icon-award mr-1"></i> MỚI
                                                 </span>
                                             }
                                             @if (isFree)
                                             {
                                                 <span class="badge badge-pill badge-info px-2 py-1" style="box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                                                    <i class="feather icon-gift mr-1"></i> FREE
+                                                    <i class="feather icon-gift mr-1"></i> MIỄN PHÍ
                                                 </span>
                                             }
                                         </div>
@@ -282,16 +282,16 @@
                                                     <span class="d-block">
                                                         <i class="feather icon-users text-muted mr-1"></i>
                                                         <span class="text-muted" style="font-size: 0.9rem;">
-                                                            @($"{(ViewBag.MembersCount.ContainsKey(item.Id) ? ViewBag.MembersCount[item.Id] : 0):N0}") students
+                                                            @($"{(ViewBag.MembersCount.ContainsKey(item.Id) ? ViewBag.MembersCount[item.Id] : 0):N0}") học viên
                                                         </span>
                                                     </span>
                                                     <h5 class="font-weight-bold mt-2 mb-0 @(isFree ? "text-success" : "text-primary")">
-                                                        @(item.Price == 0 ? "Free" : String.Format("{0:0,0} VND", item.Price))
+                                                        @(item.Price == 0 ? "Miễn phí" : String.Format("{0:0,0} VND", item.Price))
                                                     </h5>
                                                 </div>
                                                 <a asp-controller="ClassRooms" asp-action="Introduction" asp-route-id="@item.Id"
                                                    class="btn btn-primary btn-sm waves-effect" style="border-radius: 20px; padding: 6px 15px; transition: all 0.3s ease;">
-                                                    <i class="feather icon-eye mr-1"></i> View
+                                                    <i class="feather icon-eye mr-1"></i> Xem
                                                 </a>
                                             </div>
                                         </div>
@@ -306,7 +306,7 @@
                         <div class="row">
                             <div class="col-md-6 d-flex align-items-center">
                                 <p class="text-muted mb-md-0">
-                                    Showing page @ViewBag.PageNumber of @ViewBag.TotalPages
+                                    Hiển thị trang @ViewBag.PageNumber / @ViewBag.TotalPages
                                 </p>
                             </div>
                             <div class="col-md-6">
@@ -398,10 +398,10 @@
     </div>
     <div id="sidebarContent" class="sidebar-content" style="box-shadow: 0 5px 20px rgba(0,0,0,0.15);">
         <a asp-action="Create" asp-controller="ClassRooms" class="btn btn-primary btn-block waves-effect" style="border-radius: 5px; margin-bottom: 10px;">
-            <i class="feather icon-plus"></i> Create Class
+            <i class="feather icon-plus"></i> Tạo lớp học
         </a>
         <button class="btn btn-success btn-block waves-effect" data-toggle="modal" data-target="#joinClassModal" style="border-radius: 5px;">
-            <i class="feather icon-log-in"></i> Join Class
+            <i class="feather icon-log-in"></i> Tham gia lớp học
         </button>
     </div>
 </div>
@@ -412,7 +412,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="border-radius: 10px; overflow: hidden; border: none; box-shadow: 0 15px 35px rgba(0,0,0,0.2);">
             <div class="modal-header bg-success text-white" style="border-bottom: none;">
-                <h5 class="modal-title" id="joinClassLabel">Join with Class Code</h5>
+                <h5 class="modal-title" id="joinClassLabel">Tham gia với mã lớp học</h5>
                 <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -420,12 +420,12 @@
             <div class="modal-body p-4">
                 <form action="Home/JoinClass" method="post">
                     <div class="form-group">
-                        <label class="text-muted mb-2"><i class="feather icon-key text-success mr-1"></i>Class Code</label>
-                        <input type="text" name="code" class="form-control" placeholder="Enter class code" required
+                        <label class="text-muted mb-2"><i class="feather icon-key text-success mr-1"></i>Mã lớp học</label>
+                        <input type="text" name="code" class="form-control" placeholder="Nhập mã lớp học" required
                                style="border-radius: 5px; padding: 12px 15px; border-color: #e2e5e8;">
                     </div>
                     <button type="submit" class="btn btn-success btn-block waves-effect" style="border-radius: 5px; padding: 12px;">
-                        <i class="feather icon-log-in mr-1"></i> Join Class
+                        <i class="feather icon-log-in mr-1"></i> Tham gia lớp học
                     </button>
                 </form>
             </div>
@@ -434,6 +434,11 @@
 </div>
 
 <style>
+    .hero-card:hover {
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12) !important;
+        transform: translateY(-5px);
+    }
+    
     .card-img-top {
         width: 100%;
         height: 180px;
@@ -497,6 +502,27 @@
     
     .animate-float {
         animation: float 3s ease-in-out infinite;
+    }
+    
+    /* Enhanced hover effects for statistic cards */
+    .bg-c-blue.hover-shadow-2:hover {
+        box-shadow: 0 15px 30px rgba(64, 153, 255, 0.3) !important;
+        transform: translateY(-5px);
+    }
+    
+    .bg-c-green.hover-shadow-2:hover {
+        box-shadow: 0 15px 30px rgba(46, 204, 113, 0.3) !important;
+        transform: translateY(-5px);
+    }
+    
+    .bg-c-yellow.hover-shadow-2:hover {
+        box-shadow: 0 15px 30px rgba(255, 193, 7, 0.3) !important;
+        transform: translateY(-5px);
+    }
+    
+    .bg-c-purple.hover-shadow-2:hover {
+        box-shadow: 0 15px 30px rgba(156, 39, 176, 0.3) !important;
+        transform: translateY(-5px);
     }
 </style>
 

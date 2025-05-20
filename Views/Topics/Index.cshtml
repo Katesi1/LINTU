@@ -1,7 +1,7 @@
 @model IEnumerable<LMS.Data.Entities.Topic>
 
 @{
-    ViewData["Title"] = "Topic Management";
+    ViewData["Title"] = "Quản lý chủ đề";
 }
 
 <div class="page-header">
@@ -9,8 +9,8 @@
         <div class="col-lg-8">
             <div class="page-header-title">
                 <div class="d-inline">
-                    <h4>Topics</h4>
-                    <span>Manage course topics and categories</span>
+                    <h4>Chủ đề</h4>
+                    <span>Quản lý chủ đề và danh mục khóa học</span>
                 </div>
             </div>
         </div>
@@ -20,7 +20,7 @@
                     <li class="breadcrumb-item">
                         <a href="/"><i class="feather icon-home"></i></a>
                     </li>
-                    <li class="breadcrumb-item">Topics</li>
+                    <li class="breadcrumb-item">Chủ đề</li>
                 </ul>
             </div>
         </div>
@@ -32,7 +32,7 @@
     <div class="row mb-4">
         <div class="col-md-12">
             <a asp-action="Create" class="btn btn-primary btn-round waves-effect waves-light">
-                <i class="feather icon-plus"></i> Add New Topic
+                <i class="feather icon-plus"></i> Thêm chủ đề mới
             </a>
         </div>
     </div>
@@ -44,46 +44,45 @@
             @foreach (var item in Model)
             {
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                    <div class="card">
+                    <div class="card h-100">
                         <div class="card-header">
                             <h5>@item.Name</h5>
                         </div>
                         <div class="card-block">
                             <div class="row align-items-center">
                                 <div class="col-4">
-                                    @if (!string.IsNullOrEmpty(item.ImageUrl))
-                                    {
-                                        <img src="@item.ImageUrl" alt="@item.Name" class="img-fluid rounded"
-                                            style="max-height: 90px; width: auto;">
-                                    }
-                                    else
-                                    {
-                                        <div class="bg-light rounded d-flex align-items-center justify-content-center"
-                                            style="height: 90px; width: 90px;">
-                                            <i class="feather icon-book text-primary" style="font-size: 40px;"></i>
-                                        </div>
-                                    }
+                                    <div class="topic-image-container"
+                                        style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                        {
+                                            <img src="@item.ImageUrl" alt="@item.Name" class="img-fluid rounded"
+                                                style="width: 100px; height: 100px; object-fit: cover;">
+                                        }
+                                        else
+                                        {
+                                            <div class="bg-light rounded d-flex align-items-center justify-content-center"
+                                                style="height: 100px; width: 100px;">
+                                                <i class="feather icon-book text-primary" style="font-size: 40px;"></i>
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
                                 <div class="col-8">
                                     <p class="mb-2"><strong>Alias:</strong> @item.Alias</p>
-                                    @if (item.ParentTopicId > 0)
-                                    {
-                                        <p class="mb-2"><strong>Parent Topic:</strong> @item.ParentTopicId</p>
-                                    }
                                 </div>
                             </div>
                             <div class="mt-3 d-flex justify-content-end">
                                 <a asp-action="Edit" asp-route-id="@item.Id"
                                     class="btn btn-sm btn-outline-primary waves-effect mr-2">
-                                    <i class="feather icon-edit"></i> Edit
+                                    <i class="feather icon-edit"></i> Sửa
                                 </a>
                                 <a asp-action="Details" asp-route-alias="@item.Alias"
                                     class="btn btn-sm btn-outline-info waves-effect mr-2">
-                                    <i class="feather icon-eye"></i> Details
+                                    <i class="feather icon-eye"></i> Chi tiết
                                 </a>
                                 <a asp-action="Delete" asp-route-id="@item.Id"
                                     class="btn btn-sm btn-outline-danger waves-effect">
-                                    <i class="feather icon-trash-2"></i> Delete
+                                    <i class="feather icon-trash-2"></i> Xóa
                                 </a>
                             </div>
                         </div>
@@ -98,9 +97,8 @@
                     <div class="card-block">
                         <div class="text-center py-5">
                             <i class="feather icon-info text-muted" style="font-size: 48px;"></i>
-                            <h4 class="mt-3">No Topics Found</h4>
-                            <p class="text-muted">There are no topics available. Click the "Add New Topic" button to create
-                                one.</p>
+                            <h4 class="mt-3">Không tìm thấy chủ đề</h4>
+                            <p class="text-muted">Không có chủ đề nào. Nhấn vào nút "Thêm chủ đề mới" để tạo một chủ đề.</p>
                         </div>
                     </div>
                 </div>
@@ -119,7 +117,7 @@
                         {
                             <li class="page-item">
                                 <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage - 1 })">
-                                    <i class="feather icon-chevron-left"></i> Previous
+                                    <i class="feather icon-chevron-left"></i> Trước
                                 </a>
                             </li>
                         }
@@ -135,7 +133,7 @@
                         {
                             <li class="page-item">
                                 <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage + 1 })">
-                                    Next <i class="feather icon-chevron-right"></i>
+                                    Tiếp <i class="feather icon-chevron-right"></i>
                                 </a>
                             </li>
                         }

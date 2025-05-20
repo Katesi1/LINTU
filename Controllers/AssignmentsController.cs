@@ -158,6 +158,7 @@ namespace LMS.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var assignment = await _context.Assignments
+                .Include(a => a.ClassRoom) // Include ClassRoom để tránh lỗi null reference
                 .Include(a => a.Submissions) // Lấy danh sách nộp bài
                 .ThenInclude(s => s.User)
                 .FirstOrDefaultAsync(a => a.Id == id);
@@ -168,7 +169,6 @@ namespace LMS.Controllers
             }
 
             return View("Details", assignment);
-
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -206,6 +206,62 @@ namespace LMS.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Details", new { id = AssignmentId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Grade(int SubmissionId, int Score, string? Feedback)
+        {
+            // Kiểm tra quyền truy cập (chỉ giáo viên hoặc admin mới được chấm điểm)
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId) || (!User.IsInRole("Administrator") && !User.IsInRole("Manager")))
+            {
+                bool isTeacher = false;
+
+                // Kiểm tra xem người dùng có phải là người tạo lớp không
+                var submission = await _context.Submissions
+                    .Include(s => s.Assignment)
+                    .ThenInclude(a => a.ClassRoom)
+                    .FirstOrDefaultAsync(s => s.Id == SubmissionId);
+
+                if (submission != null && submission.Assignment != null &&
+                    submission.Assignment.ClassRoom != null &&
+                    submission.Assignment.ClassRoom.UserId == userId)
+                {
+                    isTeacher = true;
+                }
+
+                if (!isTeacher)
+                {
+                    return Json(new { success = false, message = "Bạn không có quyền chấm điểm bài tập này." });
+                }
+            }
+
+            // Tìm bài làm
+            var submissionToGrade = await _context.Submissions.FindAsync(SubmissionId);
+            if (submissionToGrade == null)
+            {
+                return Json(new { success = false, message = "Không tìm thấy bài làm." });
+            }
+
+            // Cập nhật điểm và nhận xét
+            submissionToGrade.Score = Score;
+            submissionToGrade.Feedback = Feedback;
+            submissionToGrade.IsGraded = true;
+            submissionToGrade.GradedDate = DateTime.UtcNow;
+            submissionToGrade.GradedBy = userId;
+
+            try
+            {
+                _context.Update(submissionToGrade);
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true, message = "Chấm điểm thành công." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Lỗi khi chấm điểm: {ex.Message}" });
+            }
         }
 
         private bool AssignmentExists(int id)

@@ -1,128 +1,125 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" version="26.2.13">
-  <diagram id="activity-diagram" name="Activity Diagram">
-    <mxGraphModel dx="844" dy="904" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-        <mxCell id="swimlane1" value="Người dùng" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
-          <mxGeometry x="40" y="40" width="200" height="800" as="geometry" />
-        </mxCell>
-        <mxCell id="Fsn49-w0Mn32zp_mprw1-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="swimlane1" source="start" target="createRoom">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="2" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="swimlane1" source="start" target="createRoom">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="Fsn49-w0Mn32zp_mprw1-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="swimlane1" source="start" target="joinRoom">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="start" value="" style="ellipse;fillColor=#000000;strokeColor=none;" parent="swimlane1" vertex="1">
-          <mxGeometry x="13" y="82" width="30" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="Fsn49-w0Mn32zp_mprw1-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="swimlane1" source="start" target="sendMessage">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="viewRooms" value="Xem danh sách&#xa;phòng chat" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane1" vertex="1">
-          <mxGeometry x="73" y="77" width="120" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="Fsn49-w0Mn32zp_mprw1-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="swimlane1" source="start" target="leaveRoom">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="createRoom" value="Tạo phòng&#xa;chat mới" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane1" vertex="1">
-          <mxGeometry x="71" y="180" width="120" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="joinRoom" value="Tham gia&#xa;phòng chat" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane1" vertex="1">
-          <mxGeometry x="64" y="255" width="120" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="sendMessage" value="Gửi tin nhắn" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane1" vertex="1">
-          <mxGeometry x="63" y="400" width="120" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="leaveRoom" value="Rời phòng" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane1" vertex="1">
-          <mxGeometry x="62" y="599" width="120" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="end" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#000000;" parent="swimlane1" vertex="1">
-          <mxGeometry x="85" y="740" width="30" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="swimlane2" value="Giao diện" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
-          <mxGeometry x="240" y="40" width="200" height="800" as="geometry" />
-        </mxCell>
-        <mxCell id="displayRooms" value="Hiển thị danh sách&#xa;phòng chat" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
-          <mxGeometry x="49" y="103" width="120" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="displayChat" value="Hiển thị giao diện&#xa;chat" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
-          <mxGeometry x="40" y="320" width="120" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="updateChat" value="Cập nhật tin nhắn&#xa;trong giao diện" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
-          <mxGeometry x="40" y="479" width="120" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="swimlane3" value="SignalR Hub" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
-          <mxGeometry x="440" y="40" width="200" height="800" as="geometry" />
-        </mxCell>
-        <mxCell id="initConnection" value="Khởi tạo kết nối&#xa;SignalR" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
-          <mxGeometry x="40" y="256" width="120" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="addToGroup" value="Thêm user vào&#xa;nhóm chat" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
-          <mxGeometry x="40" y="320" width="120" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="broadcastMessage" value="Phát tin nhắn&#xa;đến nhóm" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
-          <mxGeometry x="40" y="400" width="120" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="removeFromGroup" value="Xóa user khỏi&#xa;nhóm chat" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
-          <mxGeometry x="40" y="600" width="120" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="swimlane4" value="Cơ sở dữ liệu" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
-          <mxGeometry x="640" y="40" width="200" height="800" as="geometry" />
-        </mxCell>
-        <mxCell id="loadRooms" value="Tải danh sách&#xa;phòng chat" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane4" vertex="1">
-          <mxGeometry x="24" y="77" width="120" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="saveRoom" value="Lưu phòng&#xa;chat mới" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane4" vertex="1">
-          <mxGeometry x="21" y="147" width="120" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="saveMessage" value="Lưu tin nhắn" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane4" vertex="1">
-          <mxGeometry x="40" y="400" width="120" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="flow1" value="" style="endArrow=classic;html=1;" parent="1" source="start" target="viewRooms" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="flow2" value="" style="endArrow=classic;html=1;" parent="1" source="viewRooms" target="loadRooms" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="flow3" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;edgeStyle=elbowEdgeStyle;rounded=0;curved=0;" parent="1" source="loadRooms" target="displayRooms" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="721" y="165" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="flow4" value="" style="endArrow=classic;html=1;" parent="1" source="createRoom" target="saveRoom" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="flow5" value="" style="endArrow=classic;html=1;" parent="1" source="joinRoom" target="initConnection" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="flow6" value="" style="endArrow=classic;html=1;" parent="1" source="initConnection" target="addToGroup" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="flow7" value="" style="endArrow=classic;html=1;" parent="1" source="addToGroup" target="displayChat" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="flow8" value="" style="endArrow=classic;html=1;" parent="1" source="sendMessage" target="broadcastMessage" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="flow9" value="" style="endArrow=classic;html=1;" parent="1" source="broadcastMessage" target="saveMessage" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="flow10" value="" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;rounded=0;curved=0;" parent="1" source="saveMessage" target="updateChat" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="flow11" value="" style="endArrow=classic;html=1;" parent="1" source="leaveRoom" target="removeFromGroup" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="flow12" value="" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;rounded=0;curved=0;" parent="1" source="removeFromGroup" target="end" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
+<mxfile host="65bd71144e">
+    <diagram id="activity-diagram" name="Activity Diagram">
+        <mxGraphModel dx="533" dy="435" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="swimlane1" value="Người dùng" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="40" width="200" height="623" as="geometry"/>
+                </mxCell>
+                <mxCell id="Fsn49-w0Mn32zp_mprw1-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="swimlane1" source="start" target="createRoom" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Fsn49-w0Mn32zp_mprw1-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="swimlane1" source="start" target="joinRoom" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="start" value="" style="ellipse;fillColor=#000000;strokeColor=none;" parent="swimlane1" vertex="1">
+                    <mxGeometry x="13" y="82" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="Fsn49-w0Mn32zp_mprw1-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="swimlane1" source="start" target="sendMessage" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="viewRooms" value="Xem danh sách&#xa;phòng chat" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane1" vertex="1">
+                    <mxGeometry x="73" y="77" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="Fsn49-w0Mn32zp_mprw1-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="swimlane1" source="start" target="leaveRoom" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="createRoom" value="Tạo phòng&#xa;chat mới" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane1" vertex="1">
+                    <mxGeometry x="71" y="180" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="joinRoom" value="Tham gia&#xa;phòng chat" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane1" vertex="1">
+                    <mxGeometry x="64" y="255" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="sendMessage" value="Gửi tin nhắn" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane1" vertex="1">
+                    <mxGeometry x="63" y="400" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="leaveRoom" value="Rời phòng" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane1" vertex="1">
+                    <mxGeometry x="62" y="514" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="end" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#000000;" parent="swimlane1" vertex="1">
+                    <mxGeometry x="92" y="578" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="swimlane2" value="Giao diện" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
+                    <mxGeometry x="240" y="40" width="200" height="624" as="geometry"/>
+                </mxCell>
+                <mxCell id="displayRooms" value="Hiển thị danh sách&#xa;phòng chat" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
+                    <mxGeometry x="47" y="127" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="displayChat" value="Hiển thị giao diện&#xa;chat" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
+                    <mxGeometry x="40" y="320" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="updateChat" value="Cập nhật tin nhắn&#xa;trong giao diện" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
+                    <mxGeometry x="40" y="479" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="swimlane3" value="SignalR Hub" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="40" width="200" height="623" as="geometry"/>
+                </mxCell>
+                <mxCell id="initConnection" value="Khởi tạo kết nối&#xa;SignalR" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
+                    <mxGeometry x="40" y="256" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="addToGroup" value="Thêm user vào&#xa;nhóm chat" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
+                    <mxGeometry x="40" y="320" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="broadcastMessage" value="Phát tin nhắn&#xa;đến nhóm" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
+                    <mxGeometry x="40" y="400" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="removeFromGroup" value="Xóa user khỏi&#xa;nhóm chat" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
+                    <mxGeometry x="40" y="515" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="swimlane4" value="Cơ sở dữ liệu" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
+                    <mxGeometry x="640" y="40" width="200" height="623" as="geometry"/>
+                </mxCell>
+                <mxCell id="loadRooms" value="Tải danh sách&#xa;phòng chat" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane4" vertex="1">
+                    <mxGeometry x="24" y="77" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="saveRoom" value="Lưu phòng&#xa;chat mới" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane4" vertex="1">
+                    <mxGeometry x="21" y="178" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="saveMessage" value="Lưu tin nhắn" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane4" vertex="1">
+                    <mxGeometry x="40" y="400" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow1" value="" style="endArrow=classic;html=1;" parent="1" source="start" target="viewRooms" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow2" value="" style="endArrow=classic;html=1;" parent="1" source="viewRooms" target="loadRooms" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow3" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;edgeStyle=elbowEdgeStyle;rounded=0;curved=0;" parent="1" source="loadRooms" target="displayRooms" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="721" y="165"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow4" value="" style="endArrow=classic;html=1;" parent="1" source="createRoom" target="saveRoom" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow5" value="" style="endArrow=classic;html=1;" parent="1" source="joinRoom" target="initConnection" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow6" value="" style="endArrow=classic;html=1;" parent="1" source="initConnection" target="addToGroup" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow7" value="" style="endArrow=classic;html=1;" parent="1" source="addToGroup" target="displayChat" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow8" value="" style="endArrow=classic;html=1;" parent="1" source="sendMessage" target="broadcastMessage" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow9" value="" style="endArrow=classic;html=1;" parent="1" source="broadcastMessage" target="saveMessage" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow10" value="" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;rounded=0;curved=0;" parent="1" source="saveMessage" target="updateChat" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow11" value="" style="endArrow=classic;html=1;" parent="1" source="leaveRoom" target="removeFromGroup" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow12" value="" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;rounded=0;curved=0;" parent="1" source="removeFromGroup" target="end" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
 </mxfile>

@@ -1,0 +1,49 @@
+<mxfile>
+  <diagram id="sequence-diagram" name="Document Management Sequence">
+    <mxGraphModel>
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        
+        <!-- Actors -->
+        <object label="Teacher" type="actor">
+          <mxCell style="shape=umlActor"/>
+        </object>
+        <object label="System" type="participant">
+          <mxCell style="shape=umlLifeline"/>
+        </object>
+        <object label="FileStorage" type="participant">
+          <mxCell style="shape=umlLifeline"/>
+        </object>
+        <object label="Student" type="actor">
+          <mxCell style="shape=umlActor"/>
+        </object>
+
+        <!-- Upload Document Flow -->
+        <object label="uploadDocument()" type="activation">
+          <mxCell style="edgeStyle=orthogonalEdgeStyle"/>
+        </object>
+        <object label="validateFile()" type="activation">
+          <mxCell style="edgeStyle=orthogonalEdgeStyle"/>
+        </object>
+        <object label="storeFile()" type="activation">
+          <mxCell style="edgeStyle=orthogonalEdgeStyle"/>
+        </object>
+        <object label="updatePermissions()" type="activation">
+          <mxCell style="edgeStyle=orthogonalEdgeStyle"/>
+        </object>
+
+        <!-- Access Document Flow -->
+        <object label="accessDocument()" type="activation">
+          <mxCell style="edgeStyle=orthogonalEdgeStyle"/>
+        </object>
+        <object label="checkPermissions()" type="activation">
+          <mxCell style="edgeStyle=orthogonalEdgeStyle"/>
+        </object>
+        <object label="retrieveFile()" type="activation">
+          <mxCell style="edgeStyle=orthogonalEdgeStyle"/>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

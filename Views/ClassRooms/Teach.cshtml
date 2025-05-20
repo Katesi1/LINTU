@@ -5,8 +5,8 @@
         <div class="col-lg-8">
             <div class="page-header-title">
                 <div class="d-inline">
-                    <h4>Classes I Created</h4>
-                    <span>Manage your created classes</span>
+                    <h4>Lớp học của tôi</h4>
+                    <span>Quản lý các lớp học đã tạo</span>
                 </div>
             </div>
         </div>
@@ -19,7 +19,7 @@
                         </a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a asp-controller="ClassRooms" asp-action="Teach">Classes</a>
+                        <a asp-controller="ClassRooms" asp-action="Teach">Lớp học</a>
                     </li>
                 </ul>
             </div>
@@ -32,10 +32,10 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <h5>My Classes</h5>
+                    <h5>Danh sách lớp</h5>
                     <div class="card-header-right">
                         <a asp-controller="ClassRooms" asp-action="Create" class="btn btn-primary btn-round">
-                            <i class="feather icon-plus"></i> Create New Class
+                            <i class="feather icon-plus"></i> Tạo lớp học mới
                         </a>
                     </div>
                 </div>
@@ -44,8 +44,8 @@
                     {
                         <div class="text-center p-4">
                             <i class="feather icon-book-open text-primary" style="font-size: 60px;"></i>
-                            <h5 class="mt-3">You haven't created any classes yet</h5>
-                            <p class="text-muted">Click the "Create New Class" button to get started</p>
+                            <h5 class="mt-3">Bạn chưa tạo lớp học nào</h5>
+                            <p class="text-muted">Nhấn nút "Tạo lớp học mới" để bắt đầu</p>
                         </div>
                     }
                     else
@@ -58,25 +58,25 @@
                                         <div class="card-header bg-c-@GetStatusColor(classRoom.Status) text-white">
                                             <h5 class="card-title text-white mb-0">@classRoom.Name</h5>
                                         </div>
-                                        <div class="img-container" style="height: 160px; overflow: hidden;">
+                                        <div class="img-container" style="height: 80px; overflow: hidden;">
                                             <img src="@(string.IsNullOrEmpty(classRoom.ImageUrl) ? "/files/assets/images/default-class.jpg" : classRoom.ImageUrl)" 
-                                                class="card-img-top" alt="Class Image"
+                                                class="card-img-top" alt="Ảnh lớp học"
                                                 style="width: 100%; height: 100%; object-fit: cover;">
                                         </div>
                                         <div class="card-block">
                                             <div class="row align-items-center">
                                                 <div class="col-auto">
-                                                    <span class="badge badge-@GetStatusColor(classRoom.Status) m-0">@classRoom.Status</span>
+                                                    <span class="badge badge-@GetStatusColor(classRoom.Status) m-0">@GetStatusText(classRoom.Status)</span>
                                                 </div>
                                                 <div class="col text-right">
-                                                    <span class="text-muted f-w-400"><i class="feather icon-users"></i> @classRoom.Students Students</span>
+                                                    <span class="text-muted f-w-400"><i class="feather icon-users"></i> @classRoom.Students Học viên</span>
                                                 </div>
                                             </div>
-                                            <p class="card-text mt-3 text-muted" style="height: 50px; overflow: hidden;">@classRoom.Introduction</p>
+                                            <p class="card-text mt-3 text-muted" style="height: 40px; overflow: hidden; text-overflow: ellipsis;">@classRoom.Introduction</p>
                                             <div class="mt-3">
                                                 <div class="d-flex justify-content-between align-items-center">
                                                     <span class="badge badge-light f-14"><i class="feather icon-tag"></i> @classRoom.Topic!.Name</span>
-                                                    <h5 class="text-c-blue">$@classRoom.Price</h5>
+                                                    <h5 class="text-c-blue">@String.Format("{0:0,0} VND", classRoom.Price)</h5>
                                                 </div>
                                             </div>
                                         </div>
@@ -84,11 +84,11 @@
                                             <div class="d-flex justify-content-between">
                                                 <a asp-controller="ClassRooms" asp-action="Edit" asp-route-id="@classRoom.Id"
                                                     class="btn btn-outline-primary btn-sm">
-                                                    <i class="feather icon-edit"></i> Edit
+                                                    <i class="feather icon-edit"></i> Sửa
                                                 </a>
                                                 <a asp-controller="ClassRooms" asp-action="Introduction" asp-route-id="@classRoom.Id"
                                                     class="btn btn-primary btn-sm">
-                                                    <i class="feather icon-eye"></i> View
+                                                    <i class="feather icon-eye"></i> Xem
                                                 </a>
                                             </div>
                                         </div>
@@ -104,20 +104,20 @@
                                 {
                                     <li class="page-item">
                                         <a class="page-link" href="@Url.Action("Teach", new { page = ViewBag.CurrentPage - 1 })">
-                                            <i class="feather icon-chevron-left"></i> Previous
+                                            <i class="feather icon-chevron-left"></i> Trước
                                         </a>
                                     </li>
                                 }
 
                                 <li class="page-item disabled">
-                                    <span class="page-link">Page @ViewBag.CurrentPage / @ViewBag.TotalPages</span>
+                                    <span class="page-link">Trang @ViewBag.CurrentPage / @ViewBag.TotalPages</span>
                                 </li>
 
                                 @if (ViewBag.CurrentPage < ViewBag.TotalPages)
                                 {
                                     <li class="page-item">
                                         <a class="page-link" href="@Url.Action("Teach", new { page = ViewBag.CurrentPage + 1 })">
-                                            Next <i class="feather icon-chevron-right"></i>
+                                            Tiếp <i class="feather icon-chevron-right"></i>
                                         </a>
                                     </li>
                                 }
@@ -138,6 +138,16 @@
             ClassRoomStatus.Pending => "warning",
             ClassRoomStatus.Approved => "success",
             _ => "info"
+        };
+    }
+    
+    string GetStatusText(ClassRoomStatus status)
+    {
+        return status switch
+        {
+            ClassRoomStatus.Pending => "Chờ duyệt",
+            ClassRoomStatus.Approved => "Đã duyệt",
+            _ => "Không xác định"
         };
     }
 }

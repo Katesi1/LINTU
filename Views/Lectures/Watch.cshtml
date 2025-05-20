@@ -2,344 +2,1121 @@
 
 @{
     ViewData["Title"] = Model.Lecture.Title;
-    Layout = "_CourseLayout"; // Có thể sử dụng layout riêng cho trang xem khóa học
+    Layout = "_Layout";
+    ViewBag.ClassRoomId = Model.ClassRoom.Id;
 }
 
-<div class="course-player-container">
-    <div class="row g-0">
-        <!-- Video Player Section - Left (70%) -->
-        <div class="col-lg-9 video-content-section">
-            <div class="video-container bg-dark position-relative">
-                <!-- Video Player -->
-                @if (Model.Lecture.ContentType == LectureContentType.VideoUrl)
-                {
-                        <div class="ratio ratio-16x9">
-                            @if (Model.Lecture.VideoUrl.Contains("youtube"))
-                            {
-                                    var videoId = Model.Lecture.VideoUrl.Split("?v=").Last();
-                                    <iframe src="https://www.youtube.com/embed/@videoId" 
-                                            allowfullscreen class="rounded-0"></iframe>
-                            }
-                            else if (Model.Lecture.VideoUrl.Contains("vimeo"))
-                            {
-                                    var videoId = Model.Lecture.VideoUrl.Split("/").Last();
-                                    <iframe src="https://player.vimeo.com/video/@videoId" 
-                                            allowfullscreen class="rounded-0"></iframe>
-                            }
-                            else
-                            {
-                                    <video controls class="w-100 h-100">
-                                        <source src="@Model.Lecture.VideoUrl" type="video/mp4">
-                                        Your browser does not support HTML video.
-                                    </video>
-                            }
-                        </div>
-                }
-                else if (Model.Lecture.ContentType == LectureContentType.UploadedFile)
-                {
-                        @if (Model.Lecture.FileUrl.EndsWith(".mp4") || Model.Lecture.FileUrl.EndsWith(".webm"))
-                        {
-                                <div class="ratio ratio-16x9">
-                                    <video controls class="w-100 h-100">
-                                        <source src="@Model.Lecture.FileUrl" type="video/mp4">
-                                        Your browser does not support HTML video.
-                                    </video>
-                                </div>
-                        }
-                        else if (Model.Lecture.FileUrl.EndsWith(".pdf"))
-                        {
-                                <div class="pdf-container" style="height: 70vh;">
-                                    <iframe src="@Model.Lecture.FileUrl" width="100%" height="100%" class="rounded-0"></iframe>
-                                </div>
-                        }
-                        else
-                        {
-                                <div class="d-flex justify-content-center align-items-center" style="height: 70vh;">
-                                    <div class="text-center">
-                                        <i class="fas fa-file fa-5x text-primary mb-3"></i>
-                                        <h4>This content can't be displayed in browser</h4>
-                                        <a href="@Model.Lecture.FileUrl" download class="btn btn-primary mt-3">
-                                            <i class="fas fa-download me-2"></i>Download File
-                                        </a>
-                                    </div>
-                                </div>
-                        }
-                }
-                else if (Model.Lecture.ContentType == LectureContentType.TextContent)
-                {
-                        <div class="p-4 bg-white overflow-auto" style="height: 70vh;">
-                            <div class="content-area">
-                                @Html.Raw(Model.Lecture.TextContent)
-                            </div>
-                        </div>
-                }
-            </div>
+@section Styles {
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/lecture-watch.css" />
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+        }
 
-            <!-- Content Information Section -->
-            <div class="content-info p-4 bg-white border-top">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <h2 class="mb-0">@Model.Lecture.Title</h2>
-                        <div class="text-muted">
-                            <span class="badge bg-primary me-2">
-                                <i class="fas fa-clock me-1"></i>@Model.Lecture.DurationMinutes min
-                            </span>
-                            <span>From: @Model.Lesson.Title</span>
-                        </div>
-                    </div>
-                    <div class="lecture-navigation">
-                        @if (Model.PreviousLecture != null)
-                        {
-                                <a href="@Url.Action("Watch", "Lectures", new { id = Model.PreviousLecture.Id })" 
-                                   class="btn btn-outline-secondary me-2">
-                                    <i class="fas fa-chevron-left me-2"></i>Previous
-                                </a>
-                        }
-                        @if (Model.NextLecture != null)
-                        {
-                                <a href="@Url.Action("Watch", "Lectures", new { id = Model.NextLecture.Id })" 
-                                   class="btn btn-primary">
-                                    Next<i class="fas fa-chevron-right ms-2"></i>
-                                </a>
-                        }
-                    </div>
-                </div>
+        .course-player-container {
+            height: calc(100vh - 56px);
+            overflow: hidden;
+            margin-top: -24px;
+            margin-bottom: -24px;
+            background-color: #f8f9fa;
+        }
 
-                <!-- Lecture Description -->
-                <div class="lecture-description mb-4">
-                    <h4>About this lecture</h4>
-                    <p>@Model.Lecture.Description</p>
-                </div>
+        /* Video Player Section */
+        .video-content-section {
+            height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background-color: #fff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+        }
 
-                <!-- Additional Resources -->
-                @if (Model.Resources != null && Model.Resources.Any())
-                {
-                        <div class="resources-section mb-4">
-                            <h4>Additional Resources</h4>
-                            <ul class="list-group">
-                                @foreach (var resource in Model.Resources)
-                                {
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <i class="fas fa-file-alt me-2"></i>
-                                                <span>@resource.Title</span>
+        /* Hide WebKit scrollbars */
+        .video-content-section::-webkit-scrollbar {
+            display: none;
+        }
+
+        .video-container {
+            background-color: #000;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .player-wrapper {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .file-display-card {
+            height: 70vh;
+            background: linear-gradient(135deg, #f6f8f9 0%, #e5ebee 100%);
+            padding: 3rem;
+            border-radius: 8px;
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @@keyframes pulse {
+                0% {
+                    transform: scale(0.95);
+                    opacity: 0.7;
+                }
+
+                70% {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+
+                100% {
+                    transform: scale(0.95);
+                    opacity: 0.7;
+                }
+            }
+
+            .text-content-container {
+                height: 70vh;
+                padding: 2rem;
+                background-color: #fff;
+                overflow-y: auto;
+                overflow-x: hidden;
+                border-radius: 8px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+                scrollbar-width: none; /* Firefox */
+                -ms-overflow-style: none; /* IE/Edge */
+            }
+
+            /* Hide WebKit scrollbars */
+            .text-content-container::-webkit-scrollbar {
+                display: none;
+            }
+
+            .content-area {
+                font-size: 16px;
+                line-height: 1.7;
+                color: #2c3e50;
+            }
+
+            /* Content Info Section */
+            .content-info {
+                padding: 2rem;
+                background-color: #fff;
+                border-radius: 0 0 8px 8px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            }
+
+            .lecture-title {
+                font-weight: 600;
+                color: #2c3e50;
+                font-size: 1.75rem;
+            }
+
+            .lecture-meta {
+                color: #6c757d;
+            }
+
+            .lecture-badge {
+                background-color: #e9f2ff;
+                color: #0d6efd;
+                padding: 5px 12px;
+                border-radius: 20px;
+                font-size: 14px;
+                font-weight: 500;
+            }
+
+            .lecture-source {
+                color: #6c757d;
+                font-size: 14px;
+            }
+
+            .btn-nav {
+                padding: 8px 18px;
+                font-weight: 500;
+                transition: all 0.3s ease;
+            }
+
+            .btn-nav:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .section-header {
+                border-bottom: 1px solid #e9ecef;
+                padding-bottom: 10px;
+                margin-bottom: 16px;
+            }
+
+            .section-header h4 {
+                font-weight: 600;
+                font-size: 1.25rem;
+                color: #2c3e50;
+            }
+
+            .description-content {
+                padding: 15px;
+                background-color: #f8f9fa;
+                border-radius: 8px;
+                margin-top: 10px;
+                line-height: 1.6;
+            }
+
+            /* Resources Section */
+            .resource-cards {
+                margin-top: 15px;
+            }
+
+            .resource-card {
+                display: flex;
+                align-items: center;
+                background-color: #f8f9fa;
+                border-radius: 12px;
+                padding: 16px;
+                margin-bottom: 12px;
+                transition: all 0.3s ease;
+                border: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+            .resource-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+                border-color: rgba(13, 110, 253, 0.2);
+            }
+
+            .resource-icon {
+                width: 48px;
+                height: 48px;
+                background-color: #e9f2ff;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 15px;
+                color: #0d6efd;
+                font-size: 1.4rem;
+            }
+
+            .resource-details {
+                flex: 1;
+            }
+
+            .resource-title {
+                font-size: 1rem;
+                margin-bottom: 8px;
+                font-weight: 500;
+                color: #2c3e50;
+            }
+
+            /* Notes Section */
+            .notes-container {
+                background-color: #f8f9fa;
+                border-radius: 12px;
+                padding: 20px;
+                margin-top: 10px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+                border: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+            .notes-textarea {
+                border: none;
+                background-color: transparent;
+                resize: none;
+                font-size: 15px;
+                padding: 0;
+                width: 100%;
+                min-height: 120px;
+            }
+
+            .notes-textarea:focus {
+                box-shadow: none;
+                border: none;
+                outline: none;
+            }
+
+            /* Course Content List */
+            .course-content-list {
+                height: calc(100vh - 56px);
+                overflow: hidden;
+                background-color: #f8f9fa;
+                border-left: 1px solid #e9ecef;
+                border-radius: 0 8px 8px 0;
+                box-shadow: -2px 0 10px rgba(0, 0, 0, 0.03);
+            }
+
+            .course-header {
+                background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+                color: white;
+                padding: 1.5rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 0 8px 0 0;
+            }
+
+            .course-header h4 {
+                font-weight: 600;
+                font-size: 1.25rem;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            }
+
+            .back-to-class-btn {
+                background-color: rgba(255, 255, 255, 0.15);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                color: #fff;
+                font-weight: 500;
+                padding: 6px 15px;
+                border-radius: 20px;
+                transition: all 0.3s ease;
+                font-size: 13px;
+            }
+            
+            .back-to-class-btn:hover {
+                background-color: rgba(255, 255, 255, 0.25);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+                color: #fff;
+            }
+
+            .progress-container {
+                margin-top: 10px;
+            }
+
+            .progress {
+                height: 8px;
+                background-color: rgba(255, 255, 255, 0.2);
+                border-radius: 10px;
+                overflow: hidden;
+            }
+
+            .progress-bar {
+                background: linear-gradient(90deg, #00c6ff 0%, #0072ff 100%);
+                border-radius: 10px;
+                transition: width 0.8s ease;
+            }
+
+            .progress-text {
+                color: rgba(255, 255, 255, 0.9);
+                font-weight: 500;
+                font-size: 14px;
+            }
+
+            .course-content {
+                height: calc(100vh - 150px);
+                overflow-y: auto;
+                overflow-x: hidden;
+                padding: 15px;
+                scrollbar-width: none; /* Firefox */
+                -ms-overflow-style: none; /* IE/Edge */
+            }
+            
+            .course-content::-webkit-scrollbar {
+                display: none;
+            }
+
+            /* Custom Accordion */
+            .custom-accordion {
+                margin-top: 10px;
+            }
+
+            .custom-accordion .accordion-item {
+                border: none;
+                background-color: transparent;
+                margin-bottom: 15px;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            }
+
+            .custom-accordion .accordion-item.current-lesson {
+                box-shadow: 0 3px 15px rgba(13, 110, 253, 0.15);
+                border-left: 3px solid #0d6efd;
+            }
+
+            .lesson-title-container {
+                background-color: #fff;
+                border-bottom: 1px solid #e9ecef;
+            }
+
+            .lesson-header {
+                position: relative;
+            }
+
+            .lesson-header::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 4px;
+                background-color: #4b6cb7;
+            }
+
+            .lesson-lectures-container {
+                background-color: #fff;
+            }
+
+            .lesson-icon {
+                color: #0d6efd;
+                width: 24px;
+                text-align: center;
+            }
+
+            .lesson-title {
+                font-weight: 500;
+                font-size: 15px;
+                color: #2c3e50;
+            }
+
+            .lesson-meta {
+                font-size: 12px;
+                color: #6c757d;
+            }
+
+            /* Lecture List */
+            .lecture-list {
+                list-style: none;
+                padding-left: 15px;
+                margin-bottom: 0;
+            }
+
+            .lecture-item {
+                margin-bottom: 5px;
+                transition: all 0.3s ease;
+            }
+
+            .lecture-item.current {
+                position: relative;
+                background-color: rgba(13, 110, 253, 0.08);
+                border-radius: 6px;
+            }
+
+            .lecture-item.current::before {
+                content: '';
+                position: absolute;
+                left: -10px;
+                top: 0;
+                bottom: 0;
+                width: 3px;
+                background-color: #0d6efd;
+                border-radius: 3px;
+            }
+
+            .lecture-link {
+                display: flex;
+                align-items: flex-start;
+                text-decoration: none;
+                color: #495057;
+                padding: 10px;
+                border-radius: 6px;
+                transition: all 0.2s ease;
+            }
+
+            .lecture-link:hover {
+                background-color: rgba(13, 110, 253, 0.05);
+            }
+
+            .lecture-link.active {
+                background-color: rgba(13, 110, 253, 0.08);
+                color: #0d6efd;
+            }
+
+            .lecture-status {
+                margin-right: 12px;
+                margin-top: 2px;
+                width: 20px;
+                text-align: center;
+            }
+
+            .lecture-status i {
+                font-size: 16px;
+                transition: all 0.3s ease;
+            }
+
+            .lecture-info {
+                flex: 1;
+            }
+
+            .lecture-name {
+                font-size: 14px;
+                font-weight: 500;
+                margin-bottom: 3px;
+                line-height: 1.3;
+            }
+
+            .lecture-details {
+                display: flex;
+                align-items: center;
+                font-size: 12px;
+                color: #6c757d;
+            }
+
+            .lecture-details i {
+                margin-right: 5px;
+                font-size: 11px;
+            }
+
+            /* Other improvements */
+            .content-section {
+                padding: 0 15px;
+            }
+
+            .content-card {
+                background-color: #fff;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+                margin-bottom: 20px;
+            }
+
+            /* Pulse highlight for current lecture */
+            .pulse-highlight {
+                animation: pulse-blue 1.5s ease;
+            }
+            
+            @@keyframes pulse-blue {
+                0% {
+                    background-color: rgba(13, 110, 253, 0.08);
+                }
+                50% {
+                    background-color: rgba(13, 110, 253, 0.2);
+                }
+                100% {
+                    background-color: rgba(13, 110, 253, 0.08);
+                }
+            }
+
+            /* Responsive fixes */
+            @@media(max - width: 992px) {
+                    .course-player-container {
+                        height: auto;
+                    }
+
+                    .video-content-section,
+                    .course-content-list {
+                        height: auto;
+                        overflow: hidden;
+                    }
+
+                    .course-content {
+                        height: auto !important;
+                        overflow: hidden;
+                    }
+
+                    .file-display-card,
+                    .text-content-container {
+                        height: 400px;
+                        overflow: hidden;
+                    }
+
+                    .lecture-navigation {
+                        margin-top: 15px;
+                        width: 100%;
+                        display: flex;
+                        justify-content: space-between;
+                    }
+                }
+
+                /* Thêm CSS cho fade effect */
+                .video-container.fade {
+                    opacity: 0.5;
+                    transition: opacity 0.5s ease;
+                }
+
+                /* Thêm CSS cho completed effect */
+                .completed-animation {
+                    animation: completedPulse 0.6s ease-in-out;
+                }
+
+                @@keyframes completedPulse {
+                        0% {
+                            transform: scale(1);
+                        }
+
+                        50% {
+                            transform: scale(1.2);
+                        }
+
+                        100% {
+                            transform: scale(1);
+                        }
+                    }
+
+                    /* Sửa xung đột với Layout */
+                    header {
+                        margin-bottom: 0 !important;
+                    }
+
+                    .navbar {
+                        margin-bottom: 0 !important;
+                    }
+
+                    main {
+                        overflow: hidden;
+                    }
+
+                    /* Debugging styles */
+                    .video-debug-info {
+                        padding: 10px 15px;
+                        background: #f8f9fa;
+                        border: 1px solid #ddd;
+                        border-radius: 5px;
+                        margin-top: 10px;
+                        font-family: monospace;
+                        font-size: 13px;
+                        white-space: pre-wrap;
+                        word-break: break-all;
+                    }
+                    
+                    .video-error {
+                        padding: 20px;
+                        background-color: #fff5f5;
+                        border: 1px solid #f8d7da;
+                        border-radius: 8px;
+                        margin-top: 15px;
+                        color: #721c24;
+                    }
+                </style>
+            }
+            }
+            </style>
+            }
+
+            <div class="course-player-container">
+                <div class="row g-0">
+                    <!-- Video Player Section -->
+                    <div class="video-content-section">
+                        <div class="content-section">
+                            <div class="content-card">
+                                <div class="video-container">
+                                    @if (Model.Lecture.ContentType == LectureContentType.VideoUrl)
+                                    {
+                                        if (!string.IsNullOrEmpty(Model.Lecture.VideoUrl))
+                                        {
+                                            string videoUrl = Model.Lecture.VideoUrl;
+                                            string embedUrl = "";
+                                            bool isValidVideo = true;
+                                            string errorMessage = "";
+                                            
+                                            try {
+                                                // YouTube URL handling
+                                                if (videoUrl.Contains("youtube.com") || videoUrl.Contains("youtu.be"))
+                                                {
+                                                    string videoId = null;
+                                                    
+                                                    // Format: youtube.com/watch?v=VIDEO_ID
+                                                    if (videoUrl.Contains("youtube.com/watch"))
+                                                    {
+                                                        int startIndex = videoUrl.IndexOf("v=") + 2;
+                                                        if (startIndex >= 2)
+                                                        {
+                                                            int endIndex = videoUrl.IndexOf("&", startIndex);
+                                                            videoId = endIndex > startIndex 
+                                                                ? videoUrl.Substring(startIndex, endIndex - startIndex) 
+                                                                : videoUrl.Substring(startIndex);
+                                                        }
+                                                    }
+                                                    // Format: youtu.be/VIDEO_ID
+                                                    else if (videoUrl.Contains("youtu.be/"))
+                                                    {
+                                                        int startIndex = videoUrl.IndexOf("youtu.be/") + 9;
+                                                        if (startIndex >= 9)
+                                                        {
+                                                            int endIndex = videoUrl.IndexOf("?", startIndex);
+                                                            videoId = endIndex > startIndex 
+                                                                ? videoUrl.Substring(startIndex, endIndex - startIndex) 
+                                                                : videoUrl.Substring(startIndex);
+                                                        }
+                                                    }
+                                                    // Format: youtube.com/embed/VIDEO_ID
+                                                    else if (videoUrl.Contains("youtube.com/embed/"))
+                                                    {
+                                                        int startIndex = videoUrl.IndexOf("embed/") + 6;
+                                                        if (startIndex >= 6)
+                                                        {
+                                                            int endIndex = videoUrl.IndexOf("?", startIndex);
+                                                            videoId = endIndex > startIndex 
+                                                                ? videoUrl.Substring(startIndex, endIndex - startIndex) 
+                                                                : videoUrl.Substring(startIndex);
+                                                        }
+                                                    }
+                                                    
+                                                    if (string.IsNullOrEmpty(videoId))
+                                                    {
+                                                        isValidVideo = false;
+                                                        errorMessage = "Could not extract video ID from YouTube URL";
+                                                    }
+                                                    else
+                                                    {
+                                                        embedUrl = $"https://www.youtube.com/embed/{videoId}?autoplay=0";
+                                                    }
+                                                }
+                                                // Vimeo URL handling
+                                                else if (videoUrl.Contains("vimeo.com"))
+                                                {
+                                                    string videoId = null;
+                                                    int startIndex = videoUrl.LastIndexOf("/") + 1;
+                                                    
+                                                    if (startIndex > 0)
+                                                    {
+                                                        int endIndex = videoUrl.IndexOf("?", startIndex);
+                                                        videoId = endIndex > startIndex 
+                                                            ? videoUrl.Substring(startIndex, endIndex - startIndex) 
+                                                            : videoUrl.Substring(startIndex);
+                                                        
+                                                        if (!string.IsNullOrEmpty(videoId))
+                                                        {
+                                                            embedUrl = $"https://player.vimeo.com/video/{videoId}";
+                                                        }
+                                                    }
+                                                    
+                                                    if (string.IsNullOrEmpty(videoId))
+                                                    {
+                                                        isValidVideo = false;
+                                                        errorMessage = "Could not extract video ID from Vimeo URL";
+                                                    }
+                                                }
+                                                // Direct video URL
+                                                else if (videoUrl.EndsWith(".mp4") || videoUrl.EndsWith(".webm") || videoUrl.EndsWith(".ogg"))
+                                                {
+                                                    // For direct video links, we'll use the HTML5 video tag
+                                                    <div class="ratio ratio-16x9">
+                                                        <video controls id="lecture-video" class="embed-responsive-item">
+                                                            <source src="@videoUrl" type="video/mp4">
+                                                            Your browser does not support HTML video.
+                                                        </video>
+                                                    </div>
+                                                    isValidVideo = false;
+                                                }
+                                                // Other embed URLs
+                                                else
+                                                {
+                                                    embedUrl = videoUrl;
+                                                }
+                                                
+                                                // Display the iframe if we have a valid embed URL
+                                                if (isValidVideo && !string.IsNullOrEmpty(embedUrl))
+                                                {
+                                                    <div class="ratio ratio-16x9">
+                                                        <iframe src="@embedUrl" frameborder="0" 
+                                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                                                allowfullscreen id="lecture-iframe">
+                                                        </iframe>
+                                                    </div>
+                                                }
+                                                else if (string.IsNullOrEmpty(embedUrl) && !videoUrl.EndsWith(".mp4") && !videoUrl.EndsWith(".webm") && !videoUrl.EndsWith(".ogg"))
+                                                {
+                                                    isValidVideo = false;
+                                                    if (string.IsNullOrEmpty(errorMessage))
+                                                    {
+                                                        errorMessage = "Unsupported video URL format";
+                                                    }
+                                                }
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                isValidVideo = false;
+                                                errorMessage = $"Error processing video URL: {ex.Message}";
+                                            }
+                                            
+                                            // Display debug information and error message if needed
+                                            if (!isValidVideo)
+                                            {
+                                                <div class="video-error">
+                                                    <h4><i class="fas fa-exclamation-triangle me-2"></i>Video Không Hiển Thị</h4>
+                                                    <p>Đã có lỗi khi hiển thị video này. Chi tiết:</p>
+                                                    <ul>
+                                                        <li>URL gốc: @videoUrl</li>
+                                                        @if (!string.IsNullOrEmpty(errorMessage))
+                                                        {
+                                                            <li>Lỗi: @errorMessage</li>
+                                                        }
+                                                    </ul>
+                                                    <div class="mt-3">
+                                                        <a href="@videoUrl" target="_blank" class="btn btn-primary">
+                                                            <i class="fas fa-external-link-alt me-2"></i>Mở Video Trong Tab Mới
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="video-error">
+                                                <h4><i class="fas fa-exclamation-triangle me-2"></i>Không Tìm Thấy URL Video</h4>
+                                                <p>URL video không được cung cấp cho bài giảng này.</p>
                                             </div>
-                                            <a href="@resource.Url" download class="btn btn-sm btn-outline-primary">
-                                                <i class="fas fa-download me-1"></i>Download
-                                            </a>
-                                        </li>
-                                }
-                            </ul>
-                        </div>
-                }
-
-                <!-- Notes Section (Optional) -->
-                <div class="notes-section">
-                    <h4>Notes</h4>
-                    <textarea class="form-control" id="lectureNotes" rows="3" 
-                              placeholder="Take notes for this lecture..."></textarea>
-                    <button class="btn btn-outline-primary mt-2" id="saveNotes">
-                        <i class="fas fa-save me-2"></i>Save Notes
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Course Content Section - Right (30%) -->
-        <div class="col-lg-3 course-content-list bg-light p-0 border-start">
-            <div class="course-header p-3 bg-primary text-white">
-                <h4 class="mb-0">@Model.ClassRoom.Name</h4>
-                <div class="d-flex align-items-center mt-2">
-                    <div class="progress flex-grow-1 me-2" style="height: 8px;">
-                        <div class="progress-bar" role="progressbar" style="width: @Model.CourseProgress%"></div>
-                    </div>
-                    <span>@Model.CourseProgress%</span>
-                </div>
-            </div>
-
-            <div class="course-content overflow-auto" style="height: calc(100vh - 150px);">
-                <div class="accordion" id="lessonsAccordion">
-                    @foreach (var lesson in Model.Lessons)
-                    {
-                            var isCurrentLesson = lesson.Id == Model.Lesson.Id;
-                            <div class="accordion-item border-0 border-bottom">
-                                <h2 class="accordion-header" id="heading-@lesson.Id">
-                                    <button class="accordion-button @(isCurrentLesson ? "" : "collapsed")" 
-                                            type="button" data-bs-toggle="collapse" 
-                                            data-bs-target="#collapse-@lesson.Id" 
-                                            aria-expanded="@(isCurrentLesson ? "true" : "false")" 
-                                            aria-controls="collapse-@lesson.Id">
-                                        <div class="d-flex align-items-center w-100">
-                                            <div class="me-2">
-                                                <i class="fas fa-layer-group text-primary"></i>
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <div class="lecture-title">@lesson.Title</div>
-                                                <div class="small text-muted">
-                                                    <span>@lesson.Lectures.Count lectures</span>
-                                                    <span class="ms-2">@lesson.DurationMinutes min</span>
+                                        }
+                                    }
+                                    else if (Model.Lecture.ContentType == LectureContentType.UploadedFile)
+                                    {
+                                        @if (!string.IsNullOrEmpty(Model.Lecture.FileUrl) && (Model.Lecture.FileUrl.EndsWith(".mp4") ||
+                                                            Model.Lecture.FileUrl.EndsWith(".webm")))
+                                        {
+                                            <div class="video-container">
+                                                <div class="ratio ratio-16x9">
+                                                    <video controls>
+                                                        <source src="@Model.Lecture.FileUrl" type="video/mp4">
+                                                        Your browser does not support HTML video.
+                                                    </video>
                                                 </div>
                                             </div>
+                                        }
+                                        else if (!string.IsNullOrEmpty(Model.Lecture.FileUrl) && Model.Lecture.FileUrl.EndsWith(".pdf"))
+                                        {
+                                            <div class="pdf-container">
+                                                <iframe src="@Model.Lecture.FileUrl" width="100%" height="100%"></iframe>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex justify-content-center align-items-center file-display-card">
+                                                <div class="text-center">
+                                                    <i class="fas fa-file fa-5x text-primary mb-4 pulse-animation"></i>
+                                                    <h4 class="mb-3">This content can't be displayed in browser</h4>
+                                                    <a href="@Model.Lecture.FileUrl" download
+                                                        class="btn btn-primary btn-lg rounded-pill shadow-sm">
+                                                        <i class="fas fa-download me-2"></i>Download File
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    else if (Model.Lecture.ContentType == LectureContentType.TextContent)
+                                    {
+                                        <div class="text-content-container">
+                                            <div class="content-area">
+                                                @Html.Raw(Model.Lecture.TextContent)
+                                            </div>
                                         </div>
-                                    </button>
-                                </h2>
-                                <div id="collapse-@lesson.Id" 
-                                     class="accordion-collapse collapse @(isCurrentLesson ? "show" : "")" 
-                                     aria-labelledby="heading-@lesson.Id" 
-                                     data-bs-parent="#lessonsAccordion">
-                                    <div class="accordion-body p-0">
-                                        <ul class="list-group list-group-flush">
-                                            @foreach (var lecture in lesson.Lectures.OrderBy(l => l.Order))
+                                    }
+                                </div>
+
+                                <!-- Content Information Section -->
+                                <div class="content-info">
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <div>
+                                            <h2 class="lecture-title mb-2">@Model.Lecture.Title</h2>
+                                            <div class="d-flex align-items-center lecture-meta">
+                                                <span class="lecture-badge me-3">
+                                                    <i class="fas fa-clock me-1"></i>@Model.Lecture.DurationMinutes min
+                                                </span>
+                                                <span class="lecture-source">
+                                                    <i class="fas fa-book me-1"></i>@Model.Lesson.Title
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="lecture-navigation">
+                                            @if (Model.PreviousLecture != null)
                                             {
-                                                    var isCurrentLecture = lecture.Id == Model.Lecture.Id;
-                                                    var lectureCompleted = Model.CompletedLectures.Contains(lecture.Id);
-                                            
-                                                    <li class="list-group-item border-0 @(isCurrentLecture ? "bg-light" : "")">
-                                                        <a href="@Url.Action("Watch", "Lectures", new { id = lecture.Id })" 
-                                                           class="lecture-link d-flex align-items-center p-2 @(isCurrentLecture ? "active" : "")">
-                                                            <div class="lecture-status me-2">
-                                                                @if (lectureCompleted)
-                                                                {
-                                                                        <i class="fas fa-check-circle text-success"></i>
-                                                                }
-                                                                else if (isCurrentLecture)
-                                                                {
-                                                                        <i class="fas fa-play-circle text-primary"></i>
-                                                                }
-                                                                else
-                                                                {
-                                                                        <i class="far fa-circle text-muted"></i>
-                                                                }
-                                                            </div>
-                                                            <div class="lecture-info flex-grow-1">
-                                                                <div class="lecture-title @(isCurrentLecture ? "text-primary" : "")">
-                                                                    @lecture.Title
-                                                                </div>
-                                                                <div class="small text-muted d-flex align-items-center">
-                                                                    @{
-                                                                            string icon = lecture.ContentType == LectureContentType.VideoUrl ||
-                                                                                                      (lecture.ContentType == LectureContentType.UploadedFile &&
-                                                                                                      lecture.FileUrl.EndsWith(".mp4"))
-                                                                                                      ? "fa-video"
-                                                                                                      : lecture.ContentType == LectureContentType.TextContent
-                                                                                                              ? "fa-file-alt"
-                                                                                                              : "fa-file";
-                                                                    }
-                                                                    <i class="fas @icon me-1"></i>
-                                                                    <span>@lecture.DurationMinutes min</span>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                    </li>
+                                                <a href="@Url.Action("Watch", "Lectures", new { id = Model.PreviousLecture.Id })"
+                                                    class="btn btn-outline-primary btn-nav me-2 rounded-pill">
+                                                    <i class="fas fa-chevron-left me-2"></i>Previous
+                                                </a>
                                             }
-                                        </ul>
+                                            <button id="markAsCompleted" class="btn btn-success btn-nav rounded-pill me-2">
+                                                <i class="fas fa-check-circle me-2"></i>Mark as Complete
+                                            </button>
+                                            @if (Model.NextLecture != null)
+                                            {
+                                                <a href="@Url.Action("Watch", "Lectures", new { id = Model.NextLecture.Id })"
+                                                    class="btn btn-primary btn-nav rounded-pill">
+                                                    Next<i class="fas fa-chevron-right ms-2"></i>
+                                                </a>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <!-- Notes Section (Optional) -->
+                                    <div class="notes-section">
+                                        <div class="section-header d-flex align-items-center mb-3">
+                                            <i class="fas fa-sticky-note me-2 text-primary"></i>
+                                            <h4 class="m-0">Personal Notes</h4>
+                                        </div>
+                                        <div class="notes-container shadow-sm">
+                                            <textarea class="form-control notes-textarea" id="lectureNotes" rows="4"
+                                                placeholder="Take notes for this lecture..."></textarea>
+                                            <div class="d-flex justify-content-end mt-2">
+                                                <button class="btn btn-primary rounded-pill shadow-sm" id="saveNotes">
+                                                    <i class="fas fa-save me-2"></i>Save Notes
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                    }
+                        </div>
+                    </div>
+
+                    <!-- Course Content Section -->
+                    <div class="course-content-list">
+                        <div class="course-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h4 class="mb-1">@Model.ClassRoom.Name</h4>
+                                <a href="@Url.Action("Details", "ClassRooms", new { id = Model.ClassRoom.Id })" 
+                                   class="back-to-class-btn">
+                                    <i class="fas fa-arrow-left me-1"></i> Back to Class
+                                </a>
+                            </div>
+                            <div class="d-flex align-items-center progress-container mt-2">
+                                <div class="progress flex-grow-1 me-2">
+                                    <div class="progress-bar" role="progressbar" style="width: @Model.CourseProgress%"></div>
+                                </div>
+                                <span class="progress-text">@Model.CourseProgress%</span>
+                            </div>
+                        </div>
+
+                        <div class="course-content">
+                            <div class="accordion custom-accordion" id="lessonsAccordion">
+                                @foreach (var lesson in Model.Lessons)
+                                {
+                                    var isCurrentLesson = lesson.Id == Model.Lesson.Id;
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header lesson-header" id="heading-@lesson.Id">
+                                            <div class="lesson-title-container p-3">
+                                                <div class="d-flex align-items-center w-100">
+                                                    <div class="lesson-icon me-2">
+                                                        <i class="fas fa-layer-group"></i>
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <div class="lesson-title fw-bold">@lesson.Title</div>
+                                                        <div class="lesson-meta">
+                                                            <span>@lesson.Lectures.Count lectures</span>
+                                                            <span class="ms-2">@lesson.DurationMinutes min</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </h2>
+                                        <div id="collapse-@lesson.Id" class="lesson-lectures-container">
+                                            <div class="accordion-body">
+                                                <ul class="lecture-list">
+                                                    @foreach (var lecture in lesson.Lectures.OrderBy(l => l.Order))
+                                                    {
+                                                        var isCurrentLecture = lecture.Id == Model.Lecture.Id;
+                                                        var lectureCompleted = Model.CompletedLectures.Contains(lecture.Id);
+
+                                                        <li class="lecture-item @(isCurrentLecture ? "current" : "")"
+                                                            data-lecture-id="@lecture.Id">
+                                                            <a href="@Url.Action("Watch", "Lectures", new { id = lecture.Id })"
+                                                                class="lecture-link @(isCurrentLecture ? "active" : "")">
+                                                                <div class="lecture-status">
+                                                                    @if (lectureCompleted)
+                                                                    {
+                                                                        <i class="fas fa-check-circle text-success"></i>
+                                                                    }
+                                                                    else if (isCurrentLecture)
+                                                                    {
+                                                                        <i class="fas fa-play-circle text-primary"></i>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <i class="far fa-circle"></i>
+                                                                    }
+                                                                </div>
+                                                                <div class="lecture-info">
+                                                                    <div class="lecture-name">@lecture.Title</div>
+                                                                    <div class="lecture-details">
+                                                                        @{
+                                                                            string icon = lecture.ContentType == LectureContentType.VideoUrl ||
+                                                                            (lecture.ContentType == LectureContentType.UploadedFile &&
+                                                                            !string.IsNullOrEmpty(lecture.FileUrl) &&
+                                                                            lecture.FileUrl.EndsWith(".mp4"))
+                                                                            ? "fa-video"
+                                                                            : lecture.ContentType == LectureContentType.TextContent
+                                                                            ? "fa-file-alt"
+                                                                            : "fa-file";
+                                                                        }
+                                                                        <i class="fas @icon"></i>
+                                                                        <span>@lecture.DurationMinutes min</span>
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 
-<style>
-    /* General Course Player Styles */
-    .course-player-container {
-        height: calc(100vh - 56px); /* Assuming navbar is 56px */
-        overflow: hidden;
-        margin-top: -24px; /* Offset default container padding */
-        margin-bottom: -24px;
-    }
-    
-    /* Video Player Styles */
-    .video-content-section {
-        height: 100vh;
-        overflow-y: auto;
-    }
-    
-    /* Content List Styles */
-    .course-content-list {
-        height: calc(100vh - 56px);
-        overflow: hidden;
-    }
-    
-    .lecture-link {
-        text-decoration: none;
-        color: inherit;
-        border-radius: 4px;
-        transition: background-color 0.2s;
-    }
-    
-    .lecture-link:hover {
-        background-color: rgba(0,0,0,0.05);
-    }
-    
-    .lecture-link.active {
-        background-color: rgba(13,110,253,0.1);
-    }
-    
-    /* Adjustments for smaller screens */
-    @media (max-width: 992px) {
-        .course-player-container {
-            height: auto;
-        }
-        
-        .video-content-section, .course-content-list {
-            height: auto;
-        }
-        
-        .course-content {
-            height: 300px !important;
-        }
-    }
-</style>
+            @section Scripts {
+                <script>
+                    $(document).ready(function () {
+                        // Highlight current lesson
+                        const currentLectureElement = $('.lecture-item.current');
+                        if (currentLectureElement.length) {
+                            const currentLessonContainer = currentLectureElement.closest('.accordion-item');
+                            if (currentLessonContainer.length) {
+                                currentLessonContainer.addClass('current-lesson');
+                            }
+                        }
+                        
+                        // Scroll to current lecture
+                        setTimeout(function () {
+                            const currentLectureElement = $('.lecture-link.active');
+                            if (currentLectureElement.length) {
+                                currentLectureElement[0].scrollIntoView({
+                                    behavior: 'smooth',
+                                    block: 'center'
+                                });
+                            }
+                        }, 300);
 
-@section Scripts {
-        <script>
-            $(document).ready(function() {
-                // Toggle completed status for lectures
-                $('.lecture-status').click(function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                
-                    const icon = $(this).find('i');
-                    if (icon.hasClass('fa-circle') || icon.hasClass('fa-play-circle')) {
-                        icon.removeClass('fa-circle fa-play-circle text-muted text-primary')
-                            .addClass('fa-check-circle text-success');
-                    
-                        // Here you would make an AJAX call to mark the lecture as completed
-                        // const lectureId = $(this).closest('.lecture-link').data('lecture-id');
-                        // $.post('/Lectures/MarkAsCompleted', { lectureId: lectureId });
-                    } else {
-                        icon.removeClass('fa-check-circle text-success')
-                            .addClass('fa-circle text-muted');
-                    
-                        // Here you would make an AJAX call to mark the lecture as not completed
-                        // $.post('/Lectures/MarkAsNotCompleted', { lectureId: lectureId });
-                    }
-                });
-            
-                // Save notes functionality
-                $('#saveNotes').click(function() {
-                    const notes = $('#lectureNotes').val();
-                    // Here you would make an AJAX call to save the notes
-                    // $.post('/Lectures/SaveNotes', { 
-                    //    lectureId: '@Model.Lecture.Id', 
-                    //    notes: notes 
-                    // });
-                
-                    // Show success message
-                    alert('Notes saved successfully!');
-                });
-            
-                // Auto-expand current lesson
-                setTimeout(function() {
-                    const currentLectureElement = $('.lecture-link.active');
-                    if (currentLectureElement.length) {
-                        currentLectureElement[0].scrollIntoView();
-                    }
-                }, 200);
-            });
-        </script>
-}
+                        // Toggle completed status for lectures
+                        $('.lecture-status').click(function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            const icon = $(this).find('i');
+                            const lectureItem = $(this).closest('.lecture-item');
+                            const lectureId = lectureItem.data('lecture-id');
+
+                            if (icon.hasClass('fa-circle') || icon.hasClass('fa-play-circle')) {
+                                icon.removeClass('fa-circle fa-play-circle text-muted text-primary')
+                                    .addClass('fa-check-circle text-success completed-animation');
+
+                                // Call AJAX to mark lecture as completed
+                                $.post('/Lectures/MarkAsCompleted', { lectureId: lectureId });
+
+                                // Update progress bar
+                                updateProgressBar(1);
+                            } else {
+                                icon.removeClass('fa-check-circle text-success')
+                                    .addClass('fa-circle');
+
+                                // Call AJAX to mark lecture as not completed
+                                $.post('/Lectures/MarkAsNotCompleted', { lectureId: lectureId });
+
+                                // Update progress bar
+                                updateProgressBar(-1);
+                            }
+                        });
+
+                        // Mark as completed button
+                        $('#markAsCompleted').click(function () {
+                            const currentLectureItem = $('.lecture-item.current');
+                            const icon = currentLectureItem.find('.lecture-status i');
+                            const lectureId = currentLectureItem.data('lecture-id');
+
+                            if (!icon.hasClass('fa-check-circle')) {
+                                icon.removeClass('fa-circle fa-play-circle text-muted text-primary')
+                                    .addClass('fa-check-circle text-success completed-animation');
+
+                                // Call AJAX to mark lecture as completed
+                                $.post('/Lectures/MarkAsCompleted', { lectureId: lectureId });
+
+                                // Update progress bar
+                                updateProgressBar(1);
+
+                                // Change button text
+                                $(this).html('<i class="fas fa-check-double me-2"></i>Completed!');
+
+                                // After 2 seconds, if there's a next lecture, suggest moving to it
+                                setTimeout(function () {
+                                    const nextButton = $('.lecture-navigation .btn-primary');
+                                    if (nextButton.length) {
+                                        $('#markAsCompleted').html('<i class="fas fa-arrow-right me-2"></i>Continue to Next');
+                                        $('#markAsCompleted').removeClass('btn-success').addClass('btn-primary');
+
+                                        // Add click handler to redirect to next lecture
+                                        $('#markAsCompleted').off('click').on('click', function () {
+                                            window.location.href = nextButton.attr('href');
+                                        });
+                                    }
+                                }, 2000);
+                            }
+                        });
+
+                        // Function to update progress bar
+                        function updateProgressBar(change) {
+                            const progressBar = $('.progress-bar');
+                            const progressText = $('.progress-text');
+                            let currentProgress = parseInt(progressText.text());
+
+                            if (isNaN(currentProgress)) {
+                                currentProgress = 0;
+                            }
+
+                            const totalLectures = $('.lecture-item').length;
+                            const progressPerLecture = totalLectures > 0 ? (100 / totalLectures) : 0;
+                            const newProgress = Math.min(100, Math.max(0, currentProgress + (change * progressPerLecture)));
+
+                            progressBar.css('width', newProgress + '%');
+                            progressText.text(Math.round(newProgress) + '%');
+                        }
+
+                        // Save notes functionality with animation
+                        $('#saveNotes').click(function () {
+                            const notes = $('#lectureNotes').val();
+                            const lectureId = $('.lecture-item.current').data('lecture-id');
+
+                            // Make AJAX call to save notes
+                            $.post('/Lectures/SaveNotes', {
+                                lectureId: lectureId,
+                                notes: notes
+                            });
+
+                            // Show success message with animation
+                            const btn = $(this);
+                            const originalText = btn.html();
+
+                            btn.html('<i class="fas fa-check me-2"></i>Saved');
+                            btn.addClass('btn-success').removeClass('btn-primary');
+
+                            setTimeout(function () {
+                                btn.html(originalText);
+                                btn.addClass('btn-primary').removeClass('btn-success');
+                            }, 2000);
+                        });
+
+                        // Add smooth scrolling to lecture links
+                        $('.lecture-link').click(function (e) {
+                            // The normal navigation still happens, but we add a nice effect
+                            const target = $(this).attr('href');
+                            const currentId = $('.lecture-link.active').attr('href');
+
+                            if (target !== currentId) {
+                                $('.video-container').addClass('fade');
+                                setTimeout(function () {
+                                    $('.video-container').removeClass('fade');
+                                }, 1000);
+                            }
+                        });
+
+                        // Keyboard shortcuts
+                        $(document).keydown(function (e) {
+                            // Right arrow key - next lecture
+                            if (e.keyCode == 39) {
+                                const nextButton = $('.lecture-navigation .btn-primary');
+                                if (nextButton.length) {
+                                    window.location.href = nextButton.attr('href');
+                                }
+                            }
+
+                            // Left arrow key - previous lecture
+                            if (e.keyCode == 37) {
+                                const prevButton = $('.lecture-navigation .btn-outline-primary');
+                                if (prevButton.length) {
+                                    window.location.href = prevButton.attr('href');
+                                }
+                            }
+
+                            // Space bar (when not in text area) - play/pause video
+                            if (e.keyCode == 32 && !$(e.target).is('textarea, input')) {
+                                e.preventDefault();
+                                const video = $('video')[0];
+                                if (video) {
+                                    if (video.paused) video.play();
+                                    else video.pause();
+                                }
+                            }
+                        });
+                    });
+                </script>
+            }

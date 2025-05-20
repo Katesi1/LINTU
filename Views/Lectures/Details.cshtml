@@ -1,0 +1,99 @@
+@model LMS.Data.Entities.Lecture
+
+@{
+    ViewData["Title"] = "Lecture Details";
+}
+
+<div class="container-fluid py-4">
+    <div class="card">
+        <div class="card-header">
+            <h3>Lecture Details (Debug View)</h3>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">ID:</dt>
+                <dd class="col-sm-9">@Model.Id</dd>
+
+                <dt class="col-sm-3">Title:</dt>
+                <dd class="col-sm-9">@Model.Title</dd>
+
+                <dt class="col-sm-3">Description:</dt>
+                <dd class="col-sm-9">@Model.Description</dd>
+
+                <dt class="col-sm-3">Content Type:</dt>
+                <dd class="col-sm-9">@Model.ContentType</dd>
+
+                <dt class="col-sm-3">Video URL:</dt>
+                <dd class="col-sm-9">
+                    @if (!string.IsNullOrEmpty(Model.VideoUrl))
+                    {
+                            <span>@Model.VideoUrl</span>
+                            <a href="@Model.VideoUrl" target="_blank" class="btn btn-sm btn-primary ms-2">Open Video</a>
+                    }
+                    else
+                    {
+                            <span class="text-muted">No video URL set</span>
+                    }
+                </dd>
+
+                <dt class="col-sm-3">File URL:</dt>
+                <dd class="col-sm-9">
+                    @if (!string.IsNullOrEmpty(Model.FileUrl))
+                    {
+                            <span>@Model.FileUrl</span>
+                            <a href="@Model.FileUrl" target="_blank" class="btn btn-sm btn-primary ms-2">Open File</a>
+                    }
+                    else
+                    {
+                            <span class="text-muted">No file uploaded</span>
+                    }
+                </dd>
+
+                <dt class="col-sm-3">Text Content:</dt>
+                <dd class="col-sm-9">
+                    @if (!string.IsNullOrEmpty(Model.TextContent))
+                    {
+                            <div class="border p-3">@Html.Raw(Model.TextContent)</div>
+                    }
+                    else
+                    {
+                            <span class="text-muted">No text content</span>
+                    }
+                </dd>
+
+                <dt class="col-sm-3">Order:</dt>
+                <dd class="col-sm-9">@Model.Order</dd>
+
+                <dt class="col-sm-3">Duration:</dt>
+                <dd class="col-sm-9">@Model.DurationMinutes minutes</dd>
+
+                <dt class="col-sm-3">Lesson ID:</dt>
+                <dd class="col-sm-9">@Model.LessonId</dd>
+
+                <dt class="col-sm-3">ClassRoom ID:</dt>
+                <dd class="col-sm-9">@Model.ClassRoomId</dd>
+
+                <dt class="col-sm-3">Created:</dt>
+                <dd class="col-sm-9">@Model.CreateDate.ToString("yyyy-MM-dd HH:mm:ss")</dd>
+
+                <dt class="col-sm-3">Last Modified:</dt>
+                <dd class="col-sm-9">
+                    @if (Model.LastModifiedDate.HasValue)
+                    {
+                            @Model.LastModifiedDate.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                    }
+                    else
+                    {
+                            <span class="text-muted">Never modified</span>
+                    }
+                </dd>
+            </dl>
+            
+            <div class="mt-4">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+                <a asp-action="Watch" asp-route-id="@Model.Id" class="btn btn-info">Watch</a>
+                <a asp-controller="ClassRooms" asp-action="Details" asp-route-id="@Model.ClassRoomId" class="btn btn-secondary">Back to Class</a>
+            </div>
+        </div>
+    </div>
+</div> 

@@ -1,0 +1,129 @@
+<mxfile host="app.diagrams.net" modified="2024-03-19T04:30:12.285Z" agent="Mozilla/5.0" version="22.1.21">
+  <diagram id="sequence-diagram" name="Sequence Diagram">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        
+        <!-- Frame -->
+        <mxCell id="frame" value="sd Quản lý lớp học" style="shape=umlFrame;whiteSpace=wrap;html=1;width=160;height=30;" vertex="1" parent="1">
+          <mxGeometry x="50" y="20" width="750" height="600" as="geometry"/>
+        </mxCell>
+
+        <!-- Actors and Objects -->
+        <mxCell id="teacher" value="Giáo viên" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="90" y="80" width="30" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="homepage" value=":Trang chủ" style="html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="90" width="100" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="classroomPage" value=":Trang quản lý&#xa;lớp học" style="html=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="90" width="100" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="api" value=":API" style="html=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="90" width="100" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="controller" value=":ClassRooms&#xa;Controller" style="html=1;" vertex="1" parent="1">
+          <mxGeometry x="650" y="90" width="100" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Lifelines -->
+        <mxCell id="teacherLine" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;" vertex="1" parent="1">
+          <mxGeometry x="100" y="160" width="10" height="440" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="homepageLine" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;" vertex="1" parent="1">
+          <mxGeometry x="245" y="160" width="10" height="440" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="classroomPageLine" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;" vertex="1" parent="1">
+          <mxGeometry x="395" y="160" width="10" height="440" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="apiLine" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;" vertex="1" parent="1">
+          <mxGeometry x="545" y="160" width="10" height="440" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="controllerLine" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;" vertex="1" parent="1">
+          <mxGeometry x="695" y="160" width="10" height="440" as="geometry"/>
+        </mxCell>
+
+        <!-- Messages -->
+        <mxCell id="msg1" value="1: Đăng nhập" style="html=1;verticalAlign=bottom;endArrow=block;entryX=0;entryY=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="110" y="200" as="sourcePoint"/>
+            <mxPoint x="245" y="200" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="msg2" value="2: Chọn quản lý lớp học" style="html=1;verticalAlign=bottom;endArrow=block;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="255" y="240" as="sourcePoint"/>
+            <mxPoint x="395" y="240" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="msg3" value="3: Gọi API lấy danh sách" style="html=1;verticalAlign=bottom;endArrow=block;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="405" y="280" as="sourcePoint"/>
+            <mxPoint x="545" y="280" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="msg4" value="4: GetClassRooms()" style="html=1;verticalAlign=bottom;endArrow=block;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="555" y="320" as="sourcePoint"/>
+            <mxPoint x="695" y="320" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="msg5" value="5: Danh sách lớp học" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="695" y="360" as="sourcePoint"/>
+            <mxPoint x="555" y="360" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="msg6" value="6: Trả về dữ liệu JSON" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="545" y="400" as="sourcePoint"/>
+            <mxPoint x="405" y="400" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="msg7" value="7: Hiển thị danh sách lớp học" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="395" y="440" as="sourcePoint"/>
+            <mxPoint x="110" y="440" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="msg8" value="8: Thao tác CRUD lớp học" style="html=1;verticalAlign=bottom;endArrow=block;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="110" y="480" as="sourcePoint"/>
+            <mxPoint x="395" y="480" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="msg9" value="9: Gọi API tương ứng" style="html=1;verticalAlign=bottom;endArrow=block;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="405" y="520" as="sourcePoint"/>
+            <mxPoint x="545" y="520" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="msg10" value="10: Xử lý yêu cầu" style="html=1;verticalAlign=bottom;endArrow=block;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="555" y="560" as="sourcePoint"/>
+            <mxPoint x="695" y="560" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

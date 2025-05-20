@@ -91,7 +91,7 @@ namespace LMS.Controllers
                 .Select(c => new
                 {
                     id = c.Id,
-                    userImage = c.User.ImageUrl,
+                    userImage = c.User!.ImageUrl,
                     userName = c.User.FullName,
                     content = c.Content,
                     createdAt = c.CreatedAt.ToString("dd/MM/yyyy HH:mm")

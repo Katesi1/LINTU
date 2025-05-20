@@ -1,0 +1,55 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" version="27.0.1">
+  <diagram id="notification-usecase" name="Notification Use Case Diagram">
+    <mxGraphModel dx="1042" dy="546" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="teacher" value="Giáo viên" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="190" y="207.5" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="student" value="Học sinh" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="660" y="165" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uc1" value="Tạo thông báo" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="320" y="120" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uc2" value="Gửi thông báo" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="320" y="220" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uc3" value="Quản lý thông báo" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="320" y="320" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="rel1" value="" style="endArrow=none;html=1;" parent="1" source="teacher" target="uc1" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel2" value="" style="endArrow=none;html=1;" parent="1" source="teacher" target="uc2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel3" value="" style="endArrow=none;html=1;" parent="1" source="teacher" target="uc3" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel4" value="" style="endArrow=none;html=1;" parent="1" source="student" target="uc4" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel5" value="" style="endArrow=none;html=1;" parent="1" source="student" target="uc5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OAj4YtLYpf1Y0znsIrmS-1" value="Hệ thống Quản lý Thông báo" style="swimlane;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="308" y="77" width="317" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="uc4" value="Xem thông báo" style="ellipse;whiteSpace=wrap;html=1;" parent="OAj4YtLYpf1Y0znsIrmS-1" vertex="1">
+          <mxGeometry x="180" y="130" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uc5" value="Đánh dấu đã đọc" style="ellipse;whiteSpace=wrap;html=1;" parent="OAj4YtLYpf1Y0znsIrmS-1" vertex="1">
+          <mxGeometry x="180" y="47" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uc6" value="Nhận thông báo qua email" style="ellipse;whiteSpace=wrap;html=1;" parent="OAj4YtLYpf1Y0znsIrmS-1" vertex="1">
+          <mxGeometry x="180" y="244" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ext1" value="&amp;lt;&amp;lt;Extend&amp;gt;&amp;gt;" style="endArrow=open;endSize=12;dashed=1;html=1;" parent="OAj4YtLYpf1Y0znsIrmS-1" source="uc6" target="uc4" edge="1">
+          <mxGeometry width="160" relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

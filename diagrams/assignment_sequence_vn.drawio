@@ -1,0 +1,255 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" version="26.2.14">
+  <diagram name="Page-1" id="2YBvvXClWsGukQMizWep">
+    <mxGraphModel dx="1826" dy="761" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title1" value="Biểu đồ tuần tự 8: Chức năng bài tập" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="160" y="20" width="560" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="student" value="Học viên" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-11" y="80" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="teacher" value="Giảng viên" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" parent="1" vertex="1">
+          <mxGeometry x="772" y="80" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="assignmentUI" value="Giao diện bài tập" style="shape=umlBoundary;whiteSpace=wrap;html=1;fillColor=#CCE5FF;" parent="1" vertex="1">
+          <mxGeometry x="99" y="80" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="submissionUI" value="Giao diện nộp bài" style="shape=umlBoundary;whiteSpace=wrap;html=1;fillColor=#CCE5FF;" parent="1" vertex="1">
+          <mxGeometry x="219" y="80" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gradingUI" value="Giao diện chấm điểm" style="shape=umlBoundary;whiteSpace=wrap;html=1;fillColor=#CCE5FF;" parent="1" vertex="1">
+          <mxGeometry x="672" y="80" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="assignmentController" value="Assignment Controller" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;fillColor=#CCE5FF;" parent="1" vertex="1">
+          <mxGeometry x="329" y="75" width="70" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="submissionController" value="Submission Controller" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;fillColor=#CCE5FF;" parent="1" vertex="1">
+          <mxGeometry x="500" y="75" width="70" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="assignment" value="Assignment" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;fillColor=#CCE5FF;" parent="1" vertex="1">
+          <mxGeometry x="422" y="85" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="submission" value="Submission" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;fillColor=#CCE5FF;" parent="1" vertex="1">
+          <mxGeometry x="607" y="80" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="studentLine" value="" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="studentActivation" target="student" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="4" y="680" as="sourcePoint" />
+            <mxPoint x="4" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="teacherLine" value="" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" target="teacher" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="787" y="661" as="sourcePoint" />
+            <mxPoint x="787" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="assignmentUILine" value="" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" target="assignmentUI" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="139" y="657" as="sourcePoint" />
+            <mxPoint x="139" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="submissionUILine" value="" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" target="submissionUI" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="259" y="661" as="sourcePoint" />
+            <mxPoint x="259" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gradingUILine" value="" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" target="gradingUI" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="714" y="672" as="sourcePoint" />
+            <mxPoint x="712" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="assignmentControllerLine" value="" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" target="assignmentController" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="364" y="664" as="sourcePoint" />
+            <mxPoint x="364" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="submissionControllerLine" value="" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" target="submissionController" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="535" y="663" as="sourcePoint" />
+            <mxPoint x="535" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="assignmentLine" value="" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="assignmentActivation" target="assignment" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="455" y="669.1379310344828" as="sourcePoint" />
+            <mxPoint x="404" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="submissionLine" value="" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" target="submission" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="637" y="663" as="sourcePoint" />
+            <mxPoint x="612" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="teacherActivation" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" parent="1" vertex="1">
+          <mxGeometry x="782" y="210" width="10" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="studentActivation" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" parent="1" vertex="1">
+          <mxGeometry x="-1" y="365" width="10" height="290" as="geometry" />
+        </mxCell>
+        <mxCell id="assignmentUIActivation" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" parent="1" vertex="1">
+          <mxGeometry x="134" y="225" width="10" height="133" as="geometry" />
+        </mxCell>
+        <mxCell id="assignmentUIActivation2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" parent="1" vertex="1">
+          <mxGeometry x="134" y="365" width="10" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="submissionUIActivation" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" parent="1" vertex="1">
+          <mxGeometry x="254" y="445" width="10" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="gradingUIActivation" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" parent="1" vertex="1">
+          <mxGeometry x="707" y="585" width="10" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="assignmentControllerActivation" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" parent="1" vertex="1">
+          <mxGeometry x="359" y="250" width="10" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="submissionControllerActivation" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" parent="1" vertex="1">
+          <mxGeometry x="530" y="445" width="10" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="submissionActivation" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" parent="1" vertex="1">
+          <mxGeometry x="632" y="491" width="10" height="157" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow1" value="1. Tạo bài tập mới" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;" parent="1" edge="1" source="teacherActivation">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="760" y="234" as="sourcePoint" />
+            <mxPoint x="144.00000000000023" y="234.16666666666674" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow2" value="2. Nhập thông tin bài tập" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="144" y="260" as="sourcePoint" />
+            <mxPoint x="359" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow5" value="5. Xác nhận tạo thành công" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="359" y="332" as="sourcePoint" />
+            <mxPoint x="144" y="332" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow6" value="6. Hiển thị thông báo" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;" parent="1" edge="1" target="teacherActivation">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="144.00000000000023" y="349.16666666666674" as="sourcePoint" />
+            <mxPoint x="760" y="349" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow7" value="7. Xem danh sách bài tập" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="9" y="370" as="sourcePoint" />
+            <mxPoint x="134" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow8" value="8. Lấy danh sách bài tập" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="144" y="375" as="sourcePoint" />
+            <mxPoint x="359" y="375" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow9" value="9. Trả về danh sách" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="359" y="397" as="sourcePoint" />
+            <mxPoint x="144" y="397" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow10" value="10. Hiển thị danh sách bài tập" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="134" y="415" as="sourcePoint" />
+            <mxPoint x="9" y="415" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow11" value="11. Nộp bài tập" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="9" y="445" as="sourcePoint" />
+            <mxPoint x="254" y="445" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow12" value="12. Tải lên tệp bài làm" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;exitX=1.1;exitY=0.167;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" edge="1" source="submissionUIActivation">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="335" y="465" as="sourcePoint" />
+            <mxPoint x="530" y="465" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow13" value="13. Tạo bản nộp bài" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;" parent="1" edge="1" target="submissionActivation">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="540" y="495" as="sourcePoint" />
+            <mxPoint x="585" y="495" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow14" value="14. Xác nhận lưu thành công" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;" parent="1" edge="1" source="submissionActivation">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="585" y="525" as="sourcePoint" />
+            <mxPoint x="540" y="525" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow15" value="15. Thông báo nộp thành công" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="254" y="545" as="sourcePoint" />
+            <mxPoint x="9" y="545" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow16" value="16. Xem bài nộp và chấm điểm" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="782" y="585" as="sourcePoint" />
+            <mxPoint x="717" y="585" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow17" value="17. Gửi điểm và nhận xét" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;" parent="1" edge="1" target="submissionControllerActivation">
+          <mxGeometry x="-0.1024" y="-2" relative="1" as="geometry">
+            <mxPoint x="685" y="605" as="sourcePoint" />
+            <mxPoint x="540" y="605" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="707" y="605" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow18" value="18. Cập nhật bản nộp" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;" parent="1" edge="1" target="submissionActivation">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="541" y="643" as="sourcePoint" />
+            <mxPoint x="610" y="642.9615384615385" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow19" value="19. Xác nhận chấm điểm thành công" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;" parent="1" edge="1" source="gradingUIActivation">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="707" y="635" as="sourcePoint" />
+            <mxPoint x="782" y="635" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow20" value="20. Thông báo điểm" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;" parent="1" edge="1" target="studentActivation">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="530" y="645" as="sourcePoint" />
+            <mxPoint x="80" y="645" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_GAQ5vmjKlFDMe8yHGxa-2" value="" style="endArrow=none;dashed=1;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" target="assignmentActivation">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="450" y="667" as="sourcePoint" />
+            <mxPoint x="452" y="145" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="assignmentActivation" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" parent="1" vertex="1">
+          <mxGeometry x="447" y="254" width="10" height="67" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow4" value="4. Lưu bài tập thành công" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="447" y="318.66666666666663" as="sourcePoint" />
+            <mxPoint x="369" y="318.66666666666663" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow3" value="3. Tạo đối tượng bài tập" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;" parent="1" edge="1">
+          <mxGeometry x="0.0021" relative="1" as="geometry">
+            <mxPoint x="369" y="279.66666666666663" as="sourcePoint" />
+            <mxPoint x="447" y="279.66666666666663" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

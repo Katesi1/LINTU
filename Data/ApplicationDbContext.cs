@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace LMS.Data;
 
@@ -15,6 +16,15 @@ public class ApplicationDbContext : IdentityDbContext<User>
 
     public ApplicationDbContext()
     {
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+
+        // Bỏ qua cảnh báo về pending model changes
+        optionsBuilder.ConfigureWarnings(warnings =>
+            warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -82,6 +92,59 @@ public class ApplicationDbContext : IdentityDbContext<User>
             .WithMany()
             .HasForeignKey(c => c.UserId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        // Cấu hình mối quan hệ giữa CompletedLecture và Lecture để tránh multiple cascade paths
+        builder.Entity<CompletedLecture>()
+            .HasOne(cl => cl.Lecture)
+            .WithMany()
+            .HasForeignKey(cl => cl.LectureId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        // Cấu hình mối quan hệ giữa Lesson và ClassRoom
+        builder.Entity<Lesson>()
+            .Property(l => l.ClassRoomId)
+            .HasColumnType("uniqueidentifier");
+
+        builder.Entity<Lesson>()
+            .HasOne(l => l.ClassRoom)
+            .WithMany()
+            .HasForeignKey(l => l.ClassRoomId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Cấu hình mối quan hệ giữa Lecture và Lesson
+        builder.Entity<Lecture>()
+            .HasOne(l => l.Lesson)
+            .WithMany(l => l.Lectures)
+            .HasForeignKey(l => l.LessonId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Cấu hình mối quan hệ giữa Lecture và ClassRoom
+        builder.Entity<Lecture>()
+            .Property(l => l.ClassRoomId)
+            .HasColumnType("uniqueidentifier");
+
+        // Cấu hình mối quan hệ giữa LectureNote và các entity khác
+        builder.Entity<LectureNote>()
+            .Property(ln => ln.ClassRoomId)
+            .HasColumnType("uniqueidentifier");
+
+        builder.Entity<LectureNote>()
+            .HasOne(ln => ln.Lecture)
+            .WithMany()
+            .HasForeignKey(ln => ln.LectureId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<LectureNote>()
+            .HasOne(ln => ln.User)
+            .WithMany()
+            .HasForeignKey(ln => ln.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<LectureNote>()
+            .HasOne(ln => ln.ClassRoom)
+            .WithMany()
+            .HasForeignKey(ln => ln.ClassRoomId)
+            .OnDelete(DeleteBehavior.NoAction);
 
     }
     public DbSet<Topic> Topics { get; set; }

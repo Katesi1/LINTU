@@ -25,12 +25,9 @@
                         }
                         else
                         {
-                            <form method="post" asp-controller="ClassRooms" asp-action="ConfirmPayment">
-                                <input type="hidden" name="id" value="@Model.Id" />
-                                <button type="submit" class="btn btn-danger w-100">
-                                    <i class="feather icon-shopping-cart me-2"></i>Buy Course
-                                </button>
-                            </form>
+                            <a href="javascript:void(0)" class="btn btn-danger w-100" id="buyBtn">
+                                <i class="feather icon-shopping-cart me-2"></i>Buy Course
+                            </a>
                         }
                     }
                     else
@@ -123,6 +120,66 @@
         </div>
     </div>
 </div>
+
+<!-- Modal confirmation dialog -->
+<div class="modal fade" id="confirmPurchaseModal" tabindex="-1" aria-labelledby="confirmPurchaseModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmPurchaseModalLabel">Xác nhận thanh toán</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn mua khóa học này với giá @String.Format("{0:0,0} VND", Model.Price) không?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                <form method="post" asp-controller="ClassRooms" asp-action="ConfirmPayment">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-primary">Xác nhận</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get the button and the modal
+            var buyBtn = document.getElementById('buyBtn');
+            var modalElement = document.getElementById('confirmPurchaseModal');
+            var modal = new bootstrap.Modal(modalElement);
+
+            // Get the cancel button
+            var cancelBtn = modalElement.querySelector('.btn-secondary');
+            var closeBtn = modalElement.querySelector('.btn-close');
+
+            // Open modal when button is clicked
+            buyBtn.addEventListener('click', function () {
+                modal.show();
+            });
+
+            // Close modal when cancel button is clicked
+            cancelBtn.addEventListener('click', function () {
+                modal.hide();
+            });
+
+            // Close modal when X button is clicked
+            closeBtn.addEventListener('click', function () {
+                modal.hide();
+            });
+
+            // Close modal when clicking outside the modal
+            modalElement.addEventListener('click', function (event) {
+                if (event.target === modalElement) {
+                    modal.hide();
+                }
+            });
+        });
+    </script>
+}
 
 <style>
     /* Image and price badge */

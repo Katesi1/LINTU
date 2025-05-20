@@ -1,73 +1,564 @@
 @model LMS.Data.Entities.Assignment
+@using Microsoft.AspNetCore.Identity
+@using LMS.Data.Entities
+@inject UserManager<User> UserManager
+@inject SignInManager<User> SignInManager
+
 @{
     ViewData["Title"] = "Assignment Details";
+    var currentUser = await UserManager.GetUserAsync(User);
+    bool isAuthorized = (currentUser != null && Model.ClassRoom != null && Model.ClassRoom.UserId == currentUser.Id) || 
+                         User.IsInRole("Administrator") || 
+                         User.IsInRole("Manager");
+    bool isStudent = !isAuthorized;
 }
 
-<div class="card shadow-sm">
-    <div class="card-header bg-primary text-white">
-        <h3>@Model.Title</h3>
-    </div>
-    <div class="card-body">
-        <p><strong>Description:</strong> @Model.Description</p>
-        <p><strong>Due Date:</strong> @Model.DueDate.ToString("dd/MM/yyyy")</p>
-
-        @if (!string.IsNullOrEmpty(Model.FileUrl))
-        {
-            <a href="@Model.FileUrl" class="btn btn-info">Download Assignment</a>
-        }
-    </div>
-</div>
-
-<hr>
-
-<!-- Form nộp bài -->
-<div class="card shadow-sm mt-4">
-    <div class="card-header bg-secondary text-white">
-        <h4>Submit Your Answer</h4>
-    </div>
-    <div class="card-body">
-        <form asp-action="Submit" asp-controller="Assignments" method="post" enctype="multipart/form-data">
-            @Html.AntiForgeryToken()
-            <input type="hidden" name="AssignmentId" value="@Model.Id" />
-
-            <div class="mb-3">
-                <label for="AnswerText" class="form-label">Your Answer</label>
-                <textarea name="AnswerText" class="form-control" rows="3"></textarea>
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">@Model.Title</h3>
+                    @if (Model.ClassRoom != null)
+                    {
+                        <a href="@Url.Action("Details", "ClassRooms", new { id = Model.ClassRoomId })" class="btn btn-outline-light btn-sm">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Class
+                        </a>
+                    }
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5 class="text-primary">Description</h5>
+                            <div class="p-3 bg-light rounded mb-4">
+                                @Html.Raw(Model.Description)
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card mb-3 border-0 bg-light">
+                                <div class="card-body">
+                                    <h5 class="text-primary mb-3">Details</h5>
+                                    <p><i class="fas fa-calendar-alt me-2 text-primary"></i><strong>Due Date:</strong> @Model.DueDate.ToString("dd MMMM yyyy, hh:mm tt")</p>
+                                    <p><i class="fas fa-star me-2 text-primary"></i><strong>Maximum Score:</strong> @(Model.MaxScore ?? 10)</p>
+                                    <p><i class="fas fa-users me-2 text-primary"></i><strong>Submissions:</strong> @(Model.Submissions?.Count ?? 0)</p>
+                                    
+                                    @{
+                                        var dueDate = Model.DueDate;
+                                        var isOverdue = dueDate < DateTime.Now;
+                                        var isDueSoon = !isOverdue && dueDate < DateTime.Now.AddDays(3);
+                                        
+                                        var statusClass = isOverdue ? "danger" : (isDueSoon ? "warning" : "success");
+                                        var statusIcon = isOverdue ? "exclamation-circle" : (isDueSoon ? "clock" : "check-circle");
+                                        var statusText = isOverdue ? "Overdue" : (isDueSoon ? "Due soon" : "Active");
+                                    }
+                                    
+                                    <div class="alert alert-@statusClass d-flex align-items-center" role="alert">
+                                        <i class="fas fa-@statusIcon me-2"></i>
+                                        <div>Status: <strong>@statusText</strong></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            @if (!string.IsNullOrEmpty(Model.FileUrl))
+                            {
+                                <div class="card border-0 bg-light">
+                                    <div class="card-body">
+                                        <h5 class="text-primary mb-3">Assignment File</h5>
+                                        <a href="@Model.FileUrl" class="btn btn-primary w-100">
+                                            <i class="fas fa-download me-2"></i>Download Assignment
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="File" class="form-label">Upload File (optional)</label>
-                <input type="file" name="File" class="form-control" />
-            </div>
-            <button type="submit" class="btn btn-success">Submit</button>
-        </form>
+        </div>
     </div>
-</div>
-
-<hr>
-
-<!-- Danh sách các bài nộp -->
-<h3>Answers</h3>
-@if (Model.Submissions.Any())
-{
-    @foreach (var submission in Model.Submissions)
+    
+    <!-- Form nộp bài (chỉ hiển thị cho học viên) -->
+    @if (isStudent && (Model.Submissions == null || !Model.Submissions.Any(s => s.UserId == currentUser.Id)))
     {
-        <div class="card shadow-sm mt-2">
-            <div class="card-body">
-                <p>
-                    <strong>
-                        <i class="fas fa-user-circle"></i> @submission.User?.FullName
-                    </strong> 
-                    submitted on @submission.SubmitDate.ToString("dd/MM/yyyy HH:mm")</p>
-                <p>@submission.AnswerText</p>
-                @if (!string.IsNullOrEmpty(submission.FileUrl))
-                {
-                    <a href="@submission.FileUrl" class="btn btn-primary btn-sm">Download Submission</a>
-                }
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0"><i class="fas fa-paper-plane me-2"></i>Submit Your Answer</h4>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Submit" asp-controller="Assignments" method="post" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="AssignmentId" value="@Model.Id" />
+
+                            <div class="mb-3">
+                                <label for="AnswerText" class="form-label">Your Answer</label>
+                                <textarea name="AnswerText" id="answerText" class="form-control" rows="6" placeholder="Write your answer here..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="File" class="form-label">Upload File (optional)</label>
+                                <input type="file" name="File" class="form-control" />
+                                <small class="text-muted">Accepted formats: PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX, ZIP, RAR (max 10MB)</small>
+                            </div>
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-paper-plane me-2"></i>Submit
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     }
-}
-else
-{
-    <p>No submissions yet.</p>
+    
+    @if (isStudent && Model.Submissions != null && Model.Submissions.Any(s => s.UserId == currentUser.Id))
+    {
+        var mySubmission = Model.Submissions.FirstOrDefault(s => s.UserId == currentUser.Id);
+        
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header bg-info text-white">
+                        <h4 class="mb-0"><i class="fas fa-check-circle me-2"></i>Your Submission</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span><i class="fas fa-calendar-check me-2 text-primary"></i>Submitted on: <strong>@mySubmission.SubmitDate.ToString("dd MMMM yyyy, hh:mm tt")</strong></span>
+                            
+                            @if (mySubmission.IsGraded)
+                            {
+                                <span class="badge bg-success p-2"><i class="fas fa-star me-1"></i>Score: @mySubmission.Score/@(Model.MaxScore ?? 10)</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning p-2"><i class="fas fa-hourglass-half me-1"></i>Not graded yet</span>
+                            }
+                        </div>
+                        
+                        <div class="p-3 bg-light rounded mb-3">
+                            <h5 class="text-primary">Your Answer</h5>
+                            <p>@mySubmission.AnswerText</p>
+                        </div>
+                        
+                        @if (!string.IsNullOrEmpty(mySubmission.FileUrl))
+                        {
+                            <div class="mb-3">
+                                <a href="@mySubmission.FileUrl" class="btn btn-outline-primary">
+                                    <i class="fas fa-download me-2"></i>Download Your File
+                                </a>
+                            </div>
+                        }
+                        
+                        @if (mySubmission.IsGraded && !string.IsNullOrEmpty(mySubmission.Feedback))
+                        {
+                            <div class="mt-4">
+                                <h5 class="text-primary">Teacher Feedback</h5>
+                                <div class="p-3 border border-primary rounded">
+                                    <p>@mySubmission.Feedback</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Danh sách các bài nộp (chỉ hiển thị cho giáo viên) -->
+    @if (isAuthorized)
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0"><i class="fas fa-list-alt me-2"></i>Student Submissions</h4>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.Submissions != null && Model.Submissions.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Student</th>
+                                            <th>Submitted Date</th>
+                                            <th>Status</th>
+                                            <th>Score</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var submission in Model.Submissions.OrderBy(s => s.IsGraded).ThenByDescending(s => s.SubmitDate))
+                                        {
+                                            <tr class="submission-item" data-id="@submission.Id">
+                                                <td>@(Model.Submissions.ToList().IndexOf(submission) + 1)</td>
+                                                <td>@submission.User?.FullName</td>
+                                                <td>@submission.SubmitDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                                <td class="grade-status">
+                                                    @if (submission.IsGraded)
+                                                    {
+                                                        <span class="badge bg-success">Graded</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-warning">Not graded</span>
+                                                    }
+                                                </td>
+                                                <td class="grade-badge">
+                                                    @if (submission.IsGraded)
+                                                    {
+                                                        <span>@submission.Score/@(Model.MaxScore ?? 10)</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>-</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-primary btn-sm viewSubmission" 
+                                                           data-id="@submission.Id"
+                                                           data-student="@submission.User?.FullName"
+                                                           data-answer="@submission.AnswerText"
+                                                           data-file="@submission.FileUrl"
+                                                           data-graded="@submission.IsGraded"
+                                                           data-score="@submission.Score"
+                                                           data-feedback="@submission.Feedback">
+                                                        <i class="fas fa-eye me-1"></i>View
+                                                    </button>
+                                                    
+                                                    <button class="btn btn-info btn-sm" 
+                                                           onclick="showGradingModal('@submission.Id', '@submission.User?.FullName', '@Model.Title', @(submission.IsGraded ? submission.Score.ToString() : "''"), '@(submission.Feedback ?? "")')">
+                                                        <i class="fas fa-star me-1"></i>Grade
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-5">
+                                <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                                <h5>No submissions yet</h5>
+                                <p class="text-muted">Students have not submitted any answers yet.</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Modal xem chi tiết bài làm -->
+<div class="modal fade" id="submissionModal" tabindex="-1" role="dialog" aria-labelledby="submissionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="submissionModalLabel">
+                    <i class="fas fa-file-alt me-2"></i>Assignment & Submission Details
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Thông tin bài tập -->
+                <div class="card mb-4 border-0 bg-light">
+                    <div class="card-body">
+                        <h5 class="text-primary mb-3"><i class="fas fa-tasks me-2"></i>Assignment Information</h5>
+                        <p><strong>Title:</strong> @Model.Title</p>
+                        <p><strong>Due Date:</strong> @Model.DueDate.ToString("dd MMMM yyyy, hh:mm tt")</p>
+                        <p><strong>Maximum Score:</strong> @(Model.MaxScore ?? 10)</p>
+                        
+                        <div class="mt-3">
+                            <h6>Description:</h6>
+                            <div class="p-3 bg-white rounded">
+                                @Html.Raw(Model.Description)
+                            </div>
+                        </div>
+                        
+                        @if (!string.IsNullOrEmpty(Model.FileUrl))
+                        {
+                            <div class="mt-3">
+                                <a href="@Model.FileUrl" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-download me-2"></i>Download Assignment Files
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <!-- Thông tin bài nộp -->
+                <h5 class="text-primary mb-3"><i class="fas fa-user me-2"></i>Student Submission</h5>
+                <h6 id="submissionStudentName" class="mb-3"></h6>
+                
+                <div class="mb-3">
+                    <h6 class="text-primary">Answer</h6>
+                    <div class="p-3 bg-light rounded" id="submissionAnswerText"></div>
+                </div>
+                
+                <div id="submissionFileContainer" class="mb-3 d-none">
+                    <h6 class="text-primary">Attached File</h6>
+                    <a href="#" id="submissionFileUrl" class="btn btn-outline-primary">
+                        <i class="fas fa-download me-2"></i>Download File
+                    </a>
+                </div>
+                
+                <div id="submissionFeedbackContainer" class="mb-3 d-none">
+                    <h6 class="text-primary">Teacher Feedback</h6>
+                    <div class="p-3 border border-primary rounded" id="submissionFeedback"></div>
+                </div>
+                
+                <div id="submissionScoreContainer" class="d-none">
+                    <div class="alert alert-success">
+                        <i class="fas fa-star me-2"></i>Score: <span id="submissionScore"></span>/@(Model.MaxScore ?? 10)
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="gradeSubmissionBtn" class="btn btn-primary" 
+                        onclick="showGradingModalFromDetails()">
+                    <i class="fas fa-star me-2"></i>Grade This Submission
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal chấm điểm -->
+<div class="modal fade" id="gradingModal" tabindex="-1" role="dialog" aria-labelledby="gradingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="gradingModalLabel">
+                    <i class="fas fa-star me-2"></i>Grade Assignment
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="gradingForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="submissionId" name="SubmissionId" />
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <p><strong>Student:</strong> <span id="gradingStudentName"></span></p>
+                            <p><strong>Assignment:</strong> <span id="gradingAssignmentTitle"></span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="gradeScore" class="form-label">Score</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="fas fa-star"></i></span>
+                            <input type="number" class="form-control" id="gradeScore" name="Score" 
+                                min="0" max="@(Model.MaxScore ?? 10)" required placeholder="Enter score">
+                            <span class="input-group-text bg-light">/@(Model.MaxScore ?? 10) points</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="gradeFeedback" class="form-label">Feedback</label>
+                        <textarea class="form-control" id="gradeFeedback" name="Feedback" rows="4" 
+                            placeholder="Provide feedback to the student"></textarea>
+                    </div>
+                    
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-secondary me-2" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" onclick="submitGrade()">Submit Grade</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Biến lưu trữ giữa các modal
+        let currentSubmissionId = '';
+        
+        // Đăng ký sự kiện khi trang đã tải
+        $(document).ready(function() {
+            // Đăng ký sự kiện cho nút xem bài làm
+            $('.viewSubmission').on('click', function() {
+                const button = $(this);
+                const submissionId = button.data('id');
+                const studentName = button.data('student');
+                const answerText = button.attr('data-answer');
+                const fileUrl = button.data('file');
+                const isGraded = button.data('graded');
+                const score = button.data('score');
+                const feedback = button.attr('data-feedback');
+                
+                // Hiển thị thông tin
+                viewSubmissionDetails(submissionId, studentName, answerText, fileUrl, isGraded, score, feedback);
+            });
+            
+            // Tự động mở modal nếu có ID trong URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const submissionId = urlParams.get('submissionId');
+            if (submissionId) {
+                // Tìm và kích hoạt nút View tương ứng
+                $(`button[data-id='${submissionId}']`).click();
+            }
+        });
+        
+        // Xem chi tiết bài làm
+        function viewSubmissionDetails(submissionId, studentName, answerText, fileUrl, isGraded, score, feedback) {
+            // Lưu ID bài làm để dùng khi chuyển qua modal chấm điểm
+            currentSubmissionId = submissionId;
+            
+            // Cập nhật thông tin học viên và bài làm
+            $('#submissionStudentName').text(studentName || "");
+            
+            // Hiển thị nội dung bài làm
+            if (answerText && answerText.trim() !== '') {
+                $('#submissionAnswerText').text(answerText);
+            } else {
+                $('#submissionAnswerText').text("Không có nội dung");
+            }
+            
+            // Xử lý file đính kèm
+            if (fileUrl && fileUrl !== '') {
+                $('#submissionFileContainer').removeClass('d-none');
+                $('#submissionFileUrl').attr('href', fileUrl);
+            } else {
+                $('#submissionFileContainer').addClass('d-none');
+            }
+            
+            // Hiển thị điểm và feedback nếu đã chấm
+            if (isGraded === true || isGraded === "true") {
+                $('#submissionScoreContainer').removeClass('d-none');
+                $('#submissionScore').text(score);
+                
+                if (feedback && feedback !== '') {
+                    $('#submissionFeedbackContainer').removeClass('d-none');
+                    $('#submissionFeedback').text(feedback);
+                } else {
+                    $('#submissionFeedbackContainer').addClass('d-none');
+                }
+                
+                // Đổi nút thành "Edit Grade"
+                $('#gradeSubmissionBtn').html('<i class="fas fa-edit me-2"></i>Edit Grade');
+            } else {
+                $('#submissionScoreContainer').addClass('d-none');
+                $('#submissionFeedbackContainer').addClass('d-none');
+                
+                // Đổi nút thành "Grade"
+                $('#gradeSubmissionBtn').html('<i class="fas fa-star me-2"></i>Grade This Submission');
+            }
+            
+            // Hiển thị modal
+            $('#submissionModal').modal('show');
+        }
+        
+        // Hiển thị modal chấm điểm từ modal chi tiết
+        function showGradingModalFromDetails() {
+            // Đóng modal chi tiết
+            $('#submissionModal').modal('hide');
+            
+            // Hiển thị modal chấm điểm với dữ liệu đã lưu
+            setTimeout(function() {
+                showGradingModal(
+                    currentSubmissionId,
+                    $('#submissionStudentName').text(),
+                    '@Model.Title',
+                    $('#submissionScore').text() || '',
+                    $('#submissionFeedback').text() || ''
+                );
+            }, 500);
+        }
+        
+        // Hiển thị modal chấm điểm
+        function showGradingModal(submissionId, studentName, assignmentTitle, score, feedback) {
+            $('#gradingStudentName').text(studentName);
+            $('#gradingAssignmentTitle').text(assignmentTitle);
+            $('#submissionId').val(submissionId);
+            
+            // Điền giá trị đã có nếu đang sửa điểm
+            if (score) {
+                $('#gradeScore').val(score);
+            } else {
+                $('#gradeScore').val('');
+            }
+            
+            if (feedback) {
+                $('#gradeFeedback').val(feedback);
+            } else {
+                $('#gradeFeedback').val('');
+            }
+            
+            $('#gradingModal').modal('show');
+        }
+        
+        // Gửi điểm và nhận xét
+        function submitGrade() {
+            var submissionId = $('#submissionId').val();
+            var score = $('#gradeScore').val();
+            var feedback = $('#gradeFeedback').val();
+            
+            // Kiểm tra dữ liệu
+            if (!score) {
+                alert("Vui lòng nhập điểm.");
+                return;
+            }
+            
+            // Hiển thị loading
+            var submitButton = $('#gradingForm button[type="button"].btn-primary');
+            var originalButtonText = submitButton.html();
+            submitButton.html('<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...');
+            submitButton.prop('disabled', true);
+            
+            // Gửi điểm qua AJAX
+            $.ajax({
+                url: '@Url.Action("Grade", "Assignments")',
+                type: 'POST',
+                data: {
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+                    SubmissionId: submissionId,
+                    Score: score,
+                    Feedback: feedback
+                },
+                success: function (result) {
+                    if (result.success) {
+                        $('#gradingModal').modal('hide');
+                        
+                        // Cập nhật giao diện
+                        const rowElement = $(`.submission-item[data-id="${submissionId}"]`);
+                        rowElement.find('.grade-badge').html(`<span>${score}/@(Model.MaxScore ?? 10)</span>`);
+                        rowElement.find('.grade-status').html('<span class="badge bg-success">Graded</span>');
+                        
+                        // Thông báo thành công
+                        alert("Đã chấm điểm thành công!");
+                        
+                        // Reload trang để cập nhật đầy đủ thông tin
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                    } else {
+                        alert("Lỗi: " + result.message);
+                    }
+                },
+                error: function () {
+                    alert("Có lỗi xảy ra khi gửi điểm.");
+                },
+                complete: function() {
+                    // Khôi phục nút
+                    submitButton.html(originalButtonText);
+                    submitButton.prop('disabled', false);
+                }
+            });
+        }
+    </script>
 }

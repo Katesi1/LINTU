@@ -1,0 +1,55 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" version="26.2.14">
+  <diagram id="grading-usecase" name="Grading Use Case Diagram">
+    <mxGraphModel dx="1042" dy="546" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="teacher" value="Giáo viên" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="147" y="201" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="student" value="Học sinh" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="147" y="401" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="rel1" value="" style="endArrow=none;html=1;" parent="1" source="teacher" target="uc1" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel2" value="" style="endArrow=none;html=1;" parent="1" source="teacher" target="uc2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel3" value="" style="endArrow=none;html=1;" parent="1" source="teacher" target="uc3" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel4" value="" style="endArrow=none;html=1;" parent="1" source="student" target="uc4" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel5" value="" style="endArrow=none;html=1;" parent="1" source="student" target="uc5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CxV3eTUZdIfkmIrP4BHR-1" value="Hệ thống Quản lý Điểm số" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="271" y="97" width="478" height="503" as="geometry" />
+        </mxCell>
+        <mxCell id="uc1" value="Nhập điểm" style="ellipse;whiteSpace=wrap;html=1;" parent="CxV3eTUZdIfkmIrP4BHR-1" vertex="1">
+          <mxGeometry x="78" y="26" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uc2" value="Sửa điểm" style="ellipse;whiteSpace=wrap;html=1;" parent="CxV3eTUZdIfkmIrP4BHR-1" vertex="1">
+          <mxGeometry x="78" y="126" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uc3" value="Xuất bảng điểm" style="ellipse;whiteSpace=wrap;html=1;" parent="CxV3eTUZdIfkmIrP4BHR-1" vertex="1">
+          <mxGeometry x="78" y="226" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uc4" value="Xem điểm" style="ellipse;whiteSpace=wrap;html=1;" parent="CxV3eTUZdIfkmIrP4BHR-1" vertex="1">
+          <mxGeometry x="78" y="326" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uc5" value="Xem thống kê điểm" style="ellipse;whiteSpace=wrap;html=1;" parent="CxV3eTUZdIfkmIrP4BHR-1" vertex="1">
+          <mxGeometry x="78" y="426" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uc6" value="Gửi phản hồi" style="ellipse;whiteSpace=wrap;html=1;" parent="CxV3eTUZdIfkmIrP4BHR-1" vertex="1">
+          <mxGeometry x="333" y="326" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ext1" value="&amp;lt;&amp;lt;Extend&amp;gt;&amp;gt;" style="endArrow=open;endSize=12;dashed=1;html=1;" parent="CxV3eTUZdIfkmIrP4BHR-1" source="uc6" target="uc4" edge="1">
+          <mxGeometry width="160" relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

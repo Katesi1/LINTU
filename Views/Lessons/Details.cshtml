@@ -1,0 +1,561 @@
+@model LMS.Data.Entities.Lesson
+@using LMS.Data.Entities
+@using LMS.Data.Entities.Enums
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> UserManager
+@inject SignInManager<User> SignInManager
+
+@{
+    ViewData["Title"] = Model.Title;
+    var currentUser = await UserManager.GetUserAsync(User);
+    // Check if current user is the creator or has admin/manager role
+    bool isAuthorized = (currentUser != null && Model.ClassRoom?.UserId == currentUser.Id) ||
+    User.IsInRole("Administrator") ||
+    User.IsInRole("Manager");
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<style>
+    .lesson-header {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px 20px;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        border-left: 5px solid #007bff;
+    }
+
+    .breadcrumb {
+        background-color: transparent;
+        padding: 0;
+        margin-bottom: 1rem;
+    }
+
+    .breadcrumb-item a {
+        color: #007bff;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .breadcrumb-item a:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+
+    .lesson-title {
+        color: #2c3e50;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .lesson-meta {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 1rem;
+        color: #6c757d;
+    }
+
+    .lesson-meta-item {
+        display: flex;
+        align-items: center;
+    }
+
+    .lesson-meta-item i {
+        margin-right: 5px;
+        color: #007bff;
+    }
+
+    .lesson-description {
+        color: #6c757d;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+    }
+
+    .lecture-card {
+        transition: all 0.3s ease;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        position: relative;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .lecture-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .progress-circle {
+        position: relative;
+        width: 36px;
+        height: 36px;
+        background-color: #e9ecef;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 14px;
+        z-index: 1;
+        color: #495057;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .progress-line {
+        position: absolute;
+        top: 50%;
+        left: 18px;
+        width: calc(100% - 36px);
+        height: 2px;
+        background-color: #e9ecef;
+        z-index: 0;
+    }
+
+    .completed .progress-circle {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .in-progress .progress-circle {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .lecture-title {
+        color: #343a40;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .lecture-title:hover {
+        color: #007bff;
+    }
+
+    .lecture-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+    }
+
+    .lecture-icon.video {
+        background-color: rgba(0, 123, 255, 0.1);
+        color: #007bff;
+    }
+
+    .lecture-icon.file {
+        background-color: rgba(255, 193, 7, 0.1);
+        color: #ffc107;
+    }
+
+    .lecture-icon.text {
+        background-color: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+    }
+
+    .lecture-badge {
+        font-size: 12px;
+        padding: 5px 10px;
+        border-radius: 30px;
+        background-color: #f8f9fa;
+        color: #6c757d;
+        display: inline-flex;
+        align-items: center;
+        margin-right: 8px;
+    }
+
+    .lecture-badge i {
+        margin-right: 5px;
+        font-size: 10px;
+    }
+
+    .btn-action {
+        border-radius: 6px;
+        padding: 6px 12px;
+        font-weight: 500;
+        font-size: 13px;
+        transition: all 0.2s;
+    }
+
+    .btn-action:hover {
+        transform: translateY(-2px);
+    }
+
+    .lesson-sidebar {
+        position: sticky;
+        top: 20px;
+    }
+
+    .sidebar-card {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+    }
+
+    .sidebar-card-header {
+        background-color: #007bff;
+        color: white;
+        padding: 15px;
+        font-weight: 600;
+    }
+
+    .sidebar-card-body {
+        padding: 20px;
+    }
+
+    .sidebar-info-item {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .sidebar-info-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        background-color: rgba(0, 123, 255, 0.1);
+        color: #007bff;
+    }
+
+    .sidebar-info-content span {
+        display: block;
+        color: #6c757d;
+        font-size: 13px;
+    }
+
+    .sidebar-info-content strong {
+        color: #343a40;
+        font-weight: 600;
+    }
+
+    .no-lectures-container {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 40px;
+        text-align: center;
+    }
+
+    .no-lectures-icon {
+        font-size: 48px;
+        color: #6c757d;
+        margin-bottom: 15px;
+    }
+
+    .btn-add-lecture {
+        border-radius: 30px;
+        padding: 10px 20px;
+        font-weight: 500;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="lesson-header">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")">
+                        <i class="fas fa-home me-1"></i>Trang chủ
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Details", "ClassRooms", new { id = Model.ClassRoomId })">
+                        <i class="fas fa-chalkboard me-1"></i>@Model.ClassRoom?.Name
+                    </a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <i class="fas fa-book-open me-1"></i>@Model.Title
+                </li>
+            </ol>
+        </nav>
+
+        <h1 class="lesson-title">@Model.Title</h1>
+        
+        <div class="lesson-meta">
+            <div class="lesson-meta-item">
+                <i class="fas fa-clock"></i>
+                <span>@Model.DurationMinutes phút</span>
+            </div>
+            <div class="lesson-meta-item">
+                <i class="fas fa-list-ol"></i>
+                <span>@Model.Lectures.Count bài giảng</span>
+            </div>
+            <div class="lesson-meta-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Ngày tạo: @Model.CreateDate.ToString("dd/MM/yyyy")</span>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            <div class="lesson-description">
+                @Model.Description
+            </div>
+        }
+
+        @if (isAuthorized)
+        {
+            <div class="d-flex gap-2 mt-3">
+                <a href="@Url.Action("Edit", "Lessons", new { id = Model.Id })" class="btn btn-outline-primary btn-action">
+                    <i class="fas fa-edit me-1"></i>Chỉnh sửa
+                </a>
+                <a href="@Url.Action("Delete", "Lessons", new { id = Model.Id })" class="btn btn-outline-danger btn-action">
+                    <i class="fas fa-trash me-1"></i>Xóa
+                </a>
+            </div>
+        }
+    </div>
+
+    <div class="row">
+        <!-- Sidebar: Lesson Information -->
+        <div class="col-md-4 mb-4">
+            <div class="lesson-sidebar">
+                <div class="sidebar-card">
+                    <div class="sidebar-card-header">
+                        <i class="fas fa-info-circle me-2"></i>Thông tin bài học
+                    </div>
+                    <div class="sidebar-card-body">
+                        <div class="sidebar-info-item">
+                            <div class="sidebar-info-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="sidebar-info-content">
+                                <span>Lớp học</span>
+                                <strong>@Model.ClassRoom?.Name</strong>
+                            </div>
+                        </div>
+                        
+                        <div class="sidebar-info-item">
+                            <div class="sidebar-info-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="sidebar-info-content">
+                                <span>Thời lượng</span>
+                                <strong>@Model.DurationMinutes phút</strong>
+                            </div>
+                        </div>
+                        
+                        <div class="sidebar-info-item">
+                            <div class="sidebar-info-icon">
+                                <i class="fas fa-list-ol"></i>
+                            </div>
+                            <div class="sidebar-info-content">
+                                <span>Số bài giảng</span>
+                                <strong>@Model.Lectures.Count bài giảng</strong>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-info-item">
+                            <div class="sidebar-info-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="sidebar-info-content">
+                                <span>Ngày tạo</span>
+                                <strong>@Model.CreateDate.ToString("dd/MM/yyyy")</strong>
+                            </div>
+                        </div>
+
+                        @if (Model.LastModifiedDate != null)
+                        {
+                            <div class="sidebar-info-item">
+                                <div class="sidebar-info-icon">
+                                    <i class="fas fa-edit"></i>
+                                </div>
+                                <div class="sidebar-info-content">
+                                    <span>Cập nhật lần cuối</span>
+                                    <strong>@Model.LastModifiedDate.Value.ToString("dd/MM/yyyy")</strong>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="sidebar-card">
+                    <div class="sidebar-card-header">
+                        <i class="fas fa-graduation-cap me-2"></i>Hướng dẫn
+                    </div>
+                    <div class="sidebar-card-body">
+                        <p>Bạn có thể xem tất cả các bài giảng trong bài học này. Nhấn vào nút tương ứng để:</p>
+                        <ul class="mb-0">
+                            <li>Xem video bài giảng</li>
+                            <li>Tải xuống tài liệu</li>
+                            <li>Đọc nội dung bài giảng</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content: Lectures List -->
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fas fa-play-circle me-2 text-primary"></i>Danh sách bài giảng
+                    </h5>
+                    @if (isAuthorized)
+                    {
+                        <button class="btn btn-primary btn-action" 
+                                onclick="prepareAddLecture(@Model.Id, '@Model.Title')" 
+                                data-toggle="modal" 
+                                data-target="#lectureModal">
+                            <i class="fas fa-plus me-2"></i>Thêm bài giảng
+                        </button>
+                    }
+                </div>
+                <div class="card-body">
+                    @if (Model.Lectures != null && Model.Lectures.Any())
+                    {
+                        <div class="lectures-list">
+                            @foreach (var (lecture, index) in Model.Lectures.OrderBy(l => l.Order).Select((l, i) => (l, i)))
+                            {
+                                var iconClass = "video";
+                                var icon = "fa-play-circle";
+                                var contentType = "Video";
+
+                                @if (lecture.ContentType == LectureContentType.UploadedFile)
+                                {
+                                    iconClass = "file";
+                                    icon = "fa-file-pdf";
+                                    contentType = "Tài liệu";
+                                }
+                                else if (lecture.ContentType == LectureContentType.TextContent)
+                                {
+                                    iconClass = "text";
+                                    icon = "fa-file-alt";
+                                    contentType = "Bài đọc";
+                                }
+
+                                <div class="lecture-card mb-4">
+                                    <div class="p-3">
+                                        <div class="d-flex align-items-start">
+                                            <div class="progress-circle me-3">
+                                                @(index + 1)
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h5 class="mb-2">
+                                                    <a href="@Url.Action("Details", "Lectures", new { id = lecture.Id })" class="lecture-title">
+                                                        @lecture.Title
+                                                    </a>
+                                                </h5>
+                                                
+                                                @if (!string.IsNullOrEmpty(lecture.Description))
+                                                {
+                                                    <p class="mb-3 text-muted small">@lecture.Description</p>
+                                                }
+                                                
+                                                <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                                    <div class="mb-2 mb-md-0">
+                                                        <span class="lecture-badge">
+                                                            <i class="fas @icon"></i>
+                                                            @contentType
+                                                        </span>
+                                                        <span class="lecture-badge">
+                                                            <i class="fas fa-clock"></i>
+                                                            @lecture.DurationMinutes phút
+                                                        </span>
+                                                    </div>
+                                                    <div class="d-flex flex-wrap gap-1">
+                                                        @if (isAuthorized)
+                                                        {
+                                                            <a href="@Url.Action("Edit", "Lectures", new { id = lecture.Id })" 
+                                                                class="btn btn-sm btn-outline-primary btn-action me-1">
+                                                                <i class="fas fa-edit"></i>
+                                                            </a>
+                                                            <a href="@Url.Action("Delete", "Lectures", new { id = lecture.Id })" 
+                                                                class="btn btn-sm btn-outline-danger btn-action me-2">
+                                                                <i class="fas fa-trash"></i>
+                                                            </a>
+                                                        }
+                                                        @if (lecture.ContentType == LectureContentType.VideoUrl)
+                                                        {
+                                                            <a href="@Url.Action("Watch", "Lectures", new { id = lecture.Id })" 
+                                                                class="btn btn-sm btn-primary btn-action">
+                                                                <i class="fas fa-play me-1"></i>Xem video
+                                                            </a>
+                                                        }
+                                                        else if (lecture.ContentType == LectureContentType.UploadedFile)
+                                                        {
+                                                            <a href="@lecture.FileUrl" class="btn btn-sm btn-primary btn-action" 
+                                                                target="_blank">
+                                                                <i class="fas fa-download me-1"></i>Tải xuống
+                                                            </a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a href="@Url.Action("Details", "Lectures", new { id = lecture.Id })" 
+                                                                class="btn btn-sm btn-primary btn-action">
+                                                                <i class="fas fa-book-reader me-1"></i>Đọc
+                                                            </a>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                @if (index < Model.Lectures.Count() - 1)
+                                {
+                                    <div class="progress-line ms-5 mb-3"></div>
+                                }
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="no-lectures-container">
+                            <div class="no-lectures-icon">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <h5 class="mb-2">Chưa có bài giảng</h5>
+                            <p class="text-muted mb-4">Bài học này chưa có bài giảng nào.</p>
+                            @if (isAuthorized)
+                            {
+                                <button class="btn btn-primary btn-add-lecture" 
+                                        onclick="prepareAddLecture(@Model.Id, '@Model.Title')" 
+                                        data-toggle="modal" 
+                                        data-target="#lectureModal">
+                                    <i class="fas fa-plus me-2"></i>Thêm bài giảng đầu tiên
+                                </button>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function prepareAddLecture(lessonId, lessonTitle) {
+        // Set the selected lesson in the dropdown
+        if (document.getElementById('lessonSelect')) {
+            document.getElementById('lessonSelect').value = lessonId;
+        }
+    }
+    
+    // Đánh dấu link active trong breadcrumb
+    document.addEventListener('DOMContentLoaded', function() {
+        const breadcrumbItems = document.querySelectorAll('.breadcrumb-item a');
+        const currentUrl = window.location.href;
+        
+        breadcrumbItems.forEach(item => {
+            if (currentUrl.includes(item.getAttribute('href'))) {
+                item.style.fontWeight = '600';
+            }
+        });
+    });
+</script>

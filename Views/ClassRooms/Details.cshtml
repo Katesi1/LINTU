@@ -1,7 +1,16 @@
-@model ClassRoomViewModel
+@model LMS.ViewModels.ClassRoomViewModel
+@using LMS.Data.Entities
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> UserManager
+@inject SignInManager<User> SignInManager
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.ClassRoom!.Name;
+    var currentUser = await UserManager.GetUserAsync(User);
+    // Check if current user is the creator or has admin/manager role
+    bool isAuthorized = (currentUser != null && Model.ClassRoom.UserId == currentUser.Id) || 
+                         User.IsInRole("Administrator") || 
+                         User.IsInRole("Manager");
 }
 
 <!-- Add Font Awesome CSS -->
@@ -129,25 +138,35 @@
                             </div>
                         </div>
                         <div class="members-list" style="max-height: 400px; overflow-y: auto;" id="members-container">
-                            @foreach (var participant in Model.Participants!)
+                            @if (Model.Participants != null && Model.Participants.Any())
                             {
-                                <div class="d-flex align-items-center p-3 border-bottom hover-card member-item"
-                                    data-username="@participant.UserName.ToLower()"
-                                    data-fullname="@participant.FullName.ToLower()">
-                                    <div class="mr-3">
-                                        <img src="@(!string.IsNullOrEmpty(participant.ImageUrl) ? participant.ImageUrl : Url.Content("~/files/assets/images/user.png"))"
-                                            class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;"
-                                            alt="@participant.FullName">
+                                @foreach (var participant in Model.Participants)
+                                {
+                                    <div class="d-flex align-items-center p-3 border-bottom hover-card member-item"
+                                        data-username="@participant.UserName?.ToLower()"
+                                        data-fullname="@participant.FullName?.ToLower()">
+                                        <div class="mr-3">
+                                            <img src="@(!string.IsNullOrEmpty(participant.ImageUrl) ? participant.ImageUrl : Url.Content("~/files/assets/images/user.png"))"
+                                                class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;"
+                                                alt="@participant.FullName">
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-0 font-weight-bold">@participant.FullName</h6>
+                                            <small class="text-muted">@participant.UserName</small>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-light btn-sm rounded-circle">
+                                                <i class="fas fa-ellipsis-v text-muted"></i>
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-0 font-weight-bold">@participant.FullName</h6>
-                                        <small class="text-muted">@participant.UserName</small>
-                                    </div>
-                                    <div>
-                                        <button class="btn btn-light btn-sm rounded-circle">
-                                            <i class="fas fa-ellipsis-v text-muted"></i>
-                                        </button>
-                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="text-center py-4">
+                                    <i class="fas fa-user-slash fa-2x text-muted mb-2"></i>
+                                    <p class="text-muted">No participants found</p>
                                 </div>
                             }
                         </div>
@@ -197,101 +216,104 @@
                     </div>
                 </div>
 
-                @foreach (var post in Model.Posts!)
+                @if (Model.Posts != null)
                 {
-                    var timeSpan = DateTime.Now - post.CreateDate;
+                    @foreach (var post in Model.Posts)
+                    {
+                        var timeSpan = DateTime.Now - post.CreateDate;
 
-                    string timeString;
-                    if (timeSpan.TotalSeconds < 60)
-                    {
-                        timeString = "now";
-                    }
-                    else if (timeSpan.TotalMinutes < 60)
-                    {
-                        timeString = $"{timeSpan.Minutes} minutes ago";
-                    }
-                    else if (timeSpan.TotalHours < 24)
-                    {
-                        timeString = $"{timeSpan.Hours} hours ago";
-                    }
-                    else if (timeSpan.TotalDays < 7)
-                    {
-                        timeString = $"{timeSpan.Days} days ago";
-                    }
-                    else
-                    {
-                        timeString = post.CreateDate.ToString("dd/MM/yyyy");
-                    }
+                        string timeString;
+                        if (timeSpan.TotalSeconds < 60)
+                        {
+                            timeString = "now";
+                        }
+                        else if (timeSpan.TotalMinutes < 60)
+                        {
+                            timeString = $"{timeSpan.Minutes} minutes ago";
+                        }
+                        else if (timeSpan.TotalHours < 24)
+                        {
+                            timeString = $"{timeSpan.Hours} hours ago";
+                        }
+                        else if (timeSpan.TotalDays < 7)
+                        {
+                            timeString = $"{timeSpan.Days} days ago";
+                        }
+                        else
+                        {
+                            timeString = post.CreateDate.ToString("dd/MM/yyyy");
+                        }
 
-                    <div class="card shadow-sm mt-3 hover-card">
-                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0 font-weight-bold">@post.Title</h5>
-                            <div class="d-flex align-items-center">
-                                <span class="text-muted mr-3"><i class="far fa-clock mr-1"></i>@timeString</span>
-                                <div class="dropdown">
-                                    <button class="btn btn-light btn-sm rounded-circle" type="button"
-                                        id="dropdownMenuButton_@post.Id" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v"></i>
+                        <div class="card shadow-sm mt-3 hover-card">
+                            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0 font-weight-bold">@post.Title</h5>
+                                <div class="d-flex align-items-center">
+                                    <span class="text-muted mr-3"><i class="far fa-clock mr-1"></i>@timeString</span>
+                                    <div class="dropdown">
+                                        <button class="btn btn-light btn-sm rounded-circle" type="button"
+                                            id="dropdownMenuButton_@post.Id" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right"
+                                            aria-labelledby="dropdownMenuButton_@post.Id">
+                                            <a class="dropdown-item" href="#" onclick="deletePost(@post.Id)"><i
+                                                    class="fas fa-trash mr-2"></i>Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="media-container">
+                                    @Html.Raw(post.Message)
+                                </div>
+                            </div>
+                            <div class="card-footer bg-white">
+                                <div class="d-flex justify-content-between">
+                                    <button class="btn btn-light btn-sm like-button" data-post-id="@post.Id"
+                                        onclick="likePost(@post.Id)">
+                                        <i class="far fa-thumbs-up mr-1" aria-hidden="true"></i> <span
+                                            class="like-count">0</span> Like
                                     </button>
-                                    <div class="dropdown-menu dropdown-menu-right"
-                                        aria-labelledby="dropdownMenuButton_@post.Id">
-                                        <a class="dropdown-item" href="#" onclick="deletePost(@post.Id)"><i
-                                                class="fas fa-trash mr-2"></i>Delete</a>
-                                    </div>
+                                    <button class="btn btn-light btn-sm" onclick="toggleComments(@post.Id)">
+                                        <i class="far fa-comment mr-1" aria-hidden="true"></i> Comment
+                                    </button>
+                                    <button class="btn btn-light btn-sm">
+                                        <i class="fas fa-share mr-1" aria-hidden="true"></i> Share
+                                    </button>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="media-container">
-                                @Html.Raw(post.Message)
-                            </div>
-                        </div>
-                        <div class="card-footer bg-white">
-                            <div class="d-flex justify-content-between">
-                                <button class="btn btn-light btn-sm like-button" data-post-id="@post.Id"
-                                    onclick="likePost(@post.Id)">
-                                    <i class="far fa-thumbs-up mr-1" aria-hidden="true"></i> <span
-                                        class="like-count">0</span> Like
-                                </button>
-                                <button class="btn btn-light btn-sm" onclick="toggleComments(@post.Id)">
-                                    <i class="far fa-comment mr-1" aria-hidden="true"></i> Comment
-                                </button>
-                                <button class="btn btn-light btn-sm">
-                                    <i class="fas fa-share mr-1" aria-hidden="true"></i> Share
-                                </button>
-                            </div>
 
-                            <!-- Comment section (initially hidden) -->
-                            <div id="comments-section-@post.Id" class="comments-section mt-3" style="display: none;">
-                                <hr>
-                                <div class="comments-container" id="comments-container-@post.Id">
-                                    <!-- Comments will be loaded here -->
-                                    <div class="text-center text-muted py-3">
-                                        <p><i class="far fa-comment-dots fa-2x mb-2"></i><br>No comments yet</p>
+                                <!-- Comment section (initially hidden) -->
+                                <div id="comments-section-@post.Id" class="comments-section mt-3" style="display: none;">
+                                    <hr>
+                                    <div class="comments-container" id="comments-container-@post.Id">
+                                        <!-- Comments will be loaded here -->
+                                        <div class="text-center text-muted py-3">
+                                            <p><i class="far fa-comment-dots fa-2x mb-2"></i><br>No comments yet</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="d-flex mt-2">
-                                    <div class="mr-2">
-                                        <img src="@Url.Content("~/files/assets/images/user.png")" class="rounded-circle"
-                                            style="width: 40px; height: 40px; object-fit: cover;">
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" id="comment-text-@post.Id"
-                                                placeholder="Write a comment...">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary" type="button"
-                                                    onclick="addComment(@post.Id)">
-                                                    <i class="fas fa-paper-plane"></i>
-                                                </button>
+                                    <div class="d-flex mt-2">
+                                        <div class="mr-2">
+                                            <img src="@Url.Content("~/files/assets/images/user.png")" class="rounded-circle"
+                                                style="width: 40px; height: 40px; object-fit: cover;">
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="comment-text-@post.Id"
+                                                    placeholder="Write a comment...">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-primary" type="button"
+                                                        onclick="addComment(@post.Id)">
+                                                        <i class="fas fa-paper-plane"></i>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 }
             </div>
         </div>
@@ -305,13 +327,16 @@
                 <button class="btn btn-outline-primary rounded-pill me-2" data-toggle="modal" data-target="#lessonModal">
                     <i class="fas fa-folder-plus me-2"></i>New Lesson
                 </button>
-                <button class="btn btn-primary rounded-pill shadow-sm" data-toggle="modal" data-target="#lectureModal">
-                    <i class="fas fa-video me-2"></i>Add Lecture
-                </button>
+                @if (isAuthorized)
+                {
+                    <button class="btn btn-primary rounded-pill shadow-sm" data-toggle="modal" data-target="#lectureModal">
+                        <i class="fas fa-video me-2"></i>Add Lecture
+                    </button>
+                }
             </div>
         </div>
 
-        <div class="mb-4 p-3 bg-light rounded-lg border-left border-primary" style="border-left-width: 4px !important;">
+        <div class="mb-4 p-3 bg-light rounded-lg border-start border-primary" style="border-left-width: 4px !important;">
             <div class="d-flex align-items-center">
                 <i class="fas fa-info-circle text-primary me-3 fa-lg"></i>
                 <p class="mb-0">Organize your course content into lessons and lectures. Add videos by URL or upload files to create comprehensive learning materials.</p>
@@ -390,9 +415,13 @@
                                     <span class="input-group-text bg-light"><i class="fas fa-layer-group"></i></span>
                                     <select id="lessonSelect" name="LessonId" class="form-control" required>
                                         <option value="">Choose a lesson...</option>
-                                        <!-- Dynamic options will be loaded here -->
-                                        <option value="lesson1">Lesson 1: Introduction</option>
-                                        <option value="lesson2">Lesson 2: Basic Concepts</option>
+                                        @if (Model.Lessons != null && Model.Lessons.Any())
+                                        {
+                                            @foreach (var lesson in Model.Lessons.OrderBy(l => l.Order))
+                                            {
+                                                <option value="@lesson.Id">@lesson.Title</option>
+                                            }
+                                        }
                                     </select>
                                 </div>
                                 <small class="text-muted">The lecture will be added to this lesson</small>
@@ -461,6 +490,16 @@
                                 <small class="text-muted">Use the rich text editor to format your content</small>
                             </div>
                             
+                            <div class="mb-3">
+                                <label for="lectureDuration" class="form-label text-muted">Duration (minutes)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-clock"></i></span>
+                                    <input type="number" id="lectureDuration" name="DurationMinutes" class="form-control"
+                                        placeholder="Enter lecture duration in minutes" value="10" min="1" max="1000" />
+                                </div>
+                                <small class="text-muted">Estimated time to complete this lecture</small>
+                            </div>
+                            
                             <div class="text-end mt-4">
                                 <button type="button" class="btn btn-light me-2" data-dismiss="modal">Cancel</button>
                                 <button type="button" class="btn btn-primary" onclick="createLecture()">
@@ -475,186 +514,161 @@
 
         <!-- Lessons and Lectures Display -->
         <div class="accordion mb-4" id="lessonsAccordion">
-            <!-- Lesson 1 -->
-            <div class="card border-0 shadow-sm mb-3">
-                <div class="card-header bg-white p-0" id="headingOne">
-                    <div class="d-flex justify-content-between align-items-center p-3" data-toggle="collapse" 
-                        data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" 
-                        style="cursor: pointer;">
-                        <div class="d-flex align-items-center">
-                            <div class="me-3 text-primary">
-                                <i class="fas fa-layer-group fa-lg"></i>
-                            </div>
-                            <div>
-                                <h5 class="mb-0 fw-bold">Lesson 1: Introduction</h5>
-                                <small class="text-muted">3 lectures • 45 min total</small>
-                            </div>
-                        </div>
-                        <div>
-                            <i class="fas fa-chevron-down"></i>
-                        </div>
-                    </div>
-                </div>
+            @if (Model.Lessons != null && Model.Lessons.Any())
+            {
+                @for (int i = 0; i < Model.Lessons.Count; i++)
+                {
+                    var lesson = Model.Lessons[i];
+                    var lectureCount = lesson.Lectures?.Count ?? 0;
+                    var totalMinutes = lesson.Lectures != null ? lesson.Lectures.Sum(l => l.DurationMinutes) : 0;
+                    var collapseId = $"collapse{i}";
+                    var headingId = $"heading{i}";
 
-                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#lessonsAccordion">
-                    <div class="card-body pt-0">
-                        <ul class="list-group list-group-flush">
-                            <!-- Lecture 1.1 -->
-                            <li class="list-group-item px-0 py-3 border-0 border-bottom">
+                    <div class="card border-0 shadow-sm mb-3">
+                        <div class="card-header bg-white p-0" id="@headingId">
+                            <div class="d-flex justify-content-between align-items-center p-3" data-toggle="collapse"
+                                data-target="#@collapseId" aria-expanded="@(i == 0 ? "true" : "false")" aria-controls="@collapseId"
+                                style="cursor: pointer;">
                                 <div class="d-flex align-items-center">
-                                    <div class="me-3 text-info">
-                                        <i class="fas fa-play-circle fa-lg"></i>
+                                    <div class="me-3 text-primary">
+                                        <i class="fas fa-layer-group fa-lg"></i>
                                     </div>
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-0">Course Overview</h6>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <small class="text-muted">Video • 15:30</small>
-                                            <div>
-                                                <button class="btn btn-sm btn-light me-2" title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-primary" title="Watch" onclick="playVideo('https://www.youtube.com/embed/dQw4w9WgXcQ')">
-                                                    <i class="fas fa-play"></i>
-                                                </button>
-                                            </div>
-                                        </div>
+                                    <div>
+                                        <h5 class="mb-0">@lesson.Title</h5>
+                                        <small class="text-muted">@lectureCount lectures • @totalMinutes min total</small>
                                     </div>
                                 </div>
-                            </li>
-                            
-                            <!-- Lecture 1.2 -->
-                            <li class="list-group-item px-0 py-3 border-0 border-bottom">
                                 <div class="d-flex align-items-center">
-                                    <div class="me-3 text-info">
-                                        <i class="fas fa-play-circle fa-lg"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-0">Getting Started</h6>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <small class="text-muted">Video • 12:45</small>
-                                            <div>
-                                                <button class="btn btn-sm btn-light me-2" title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-primary" title="Watch" onclick="playVideo('https://www.youtube.com/embed/dQw4w9WgXcQ')">
-                                                    <i class="fas fa-play"></i>
-                                                </button>
-                                            </div>
+                                    @if (isAuthorized)
+                                    {
+                                        <div class="btn-group me-2">
+                                            <button class="btn btn-sm btn-primary" 
+                                                onclick="prepareAddLecture(@lesson.Id, '@lesson.Title')" 
+                                                data-toggle="modal" 
+                                                data-target="#lectureModal" 
+                                                title="Add Lecture to this Lesson">
+                                                <i class="fas fa-plus"></i> Add Lecture
+                                            </button>
+                                            <a href="@Url.Action("Edit", "Lessons", new { id = lesson.Id })" class="btn btn-sm btn-outline-primary" title="Edit Lesson">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="@Url.Action("Delete", "Lessons", new { id = lesson.Id })" class="btn btn-sm btn-outline-danger" title="Delete Lesson">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
                                         </div>
-                                    </div>
+                                    }
+                                    <i class="fas fa-chevron-down"></i>
                                 </div>
-                            </li>
-                            
-                            <!-- Lecture 1.3 -->
-                            <li class="list-group-item px-0 py-3 border-0">
-                                <div class="d-flex align-items-center">
-                                    <div class="me-3 text-warning">
-                                        <i class="fas fa-file-pdf fa-lg"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-0">Course Resources</h6>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <small class="text-muted">PDF • 4 pages</small>
-                                            <div>
-                                                <button class="btn btn-sm btn-light me-2" title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-primary" title="Download">
-                                                    <i class="fas fa-download"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Lesson 2 -->
-            <div class="card border-0 shadow-sm mb-3">
-                <div class="card-header bg-white p-0" id="headingTwo">
-                    <div class="d-flex justify-content-between align-items-center p-3" data-toggle="collapse" 
-                        data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" 
-                        style="cursor: pointer;">
-                        <div class="d-flex align-items-center">
-                            <div class="me-3 text-primary">
-                                <i class="fas fa-layer-group fa-lg"></i>
-                            </div>
-                            <div>
-                                <h5 class="mb-0 fw-bold">Lesson 2: Basic Concepts</h5>
-                                <small class="text-muted">2 lectures • 30 min total</small>
                             </div>
                         </div>
-                        <div>
-                            <i class="fas fa-chevron-down"></i>
-                        </div>
-                    </div>
-                </div>
 
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#lessonsAccordion">
-                    <div class="card-body pt-0">
-                        <ul class="list-group list-group-flush">
-                            <!-- Lecture 2.1 -->
-                            <li class="list-group-item px-0 py-3 border-0 border-bottom">
-                                <div class="d-flex align-items-center">
-                                    <div class="me-3 text-info">
-                                        <i class="fas fa-play-circle fa-lg"></i>
+                        <div id="@collapseId" class="collapse @(i == 0 ? "show" : "")" aria-labelledby="@headingId" data-parent="#lessonsAccordion">
+                            <div class="card-body pt-0">
+                                @if (lesson.Lectures != null && lesson.Lectures.Any())
+                                {
+                                    <ul class="list-group list-group-flush">
+                                        @foreach (var lecture in lesson.Lectures.OrderBy(l => l.Order))
+                                        {
+                                            var iconClass = "text-info";
+                                            var icon = "fa-play-circle";
+                                            var contentType = "Video";
+
+                                            @if (lecture.ContentType == LectureContentType.UploadedFile)
+                                            {
+                                                iconClass = "text-warning";
+                                                icon = "fa-file-pdf";
+                                                contentType = "File";
+                                            }
+                                            else if (lecture.ContentType == LectureContentType.TextContent)
+                                            {
+                                                iconClass = "text-success";
+                                                icon = "fa-file-alt";
+                                                contentType = "Text";
+                                            }
+
+                                            <li class="list-group-item px-0 py-3 border-0 @(lecture != lesson.Lectures.OrderBy(l => l.Order).Last() ? "border-bottom" : "")">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="me-3 @iconClass">
+                                                        <i class="fas @icon fa-lg"></i>
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <h6 class="mb-0">@lecture.Title</h6>
+                                                        <p class="text-muted small mb-1">@lecture.Description</p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <small class="text-muted">@contentType • @lecture.DurationMinutes min</small>
+                                                            <div>
+                                                                @if (isAuthorized)
+                                                                {
+                                                                    <a href="@Url.Action("Edit", "Lectures", new { id = lecture.Id })" class="btn btn-sm btn-outline-primary me-1" title="Edit Lecture">
+                                                                        <i class="fas fa-edit"></i>
+                                                                    </a>
+                                                                    <a href="@Url.Action("Delete", "Lectures", new { id = lecture.Id })" class="btn btn-sm btn-outline-danger me-1" title="Delete Lecture">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </a>
+                                                                }
+                                                                @if (lecture.ContentType == LectureContentType.VideoUrl)
+                                                                {
+                                                                    <a href="@Url.Action("Watch", "Lectures", new { id = lecture.Id })" class="btn btn-sm btn-primary" title="Watch">
+                                                                        <i class="fas fa-play"></i> Watch
+                                                                    </a>
+                                                                }
+                                                                else if (lecture.ContentType == LectureContentType.UploadedFile)
+                                                                {
+                                                                    <a href="@lecture.FileUrl" class="btn btn-sm btn-primary" title="Download" target="_blank">
+                                                                        <i class="fas fa-download"></i> Download
+                                                                    </a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a href="@Url.Action("Details", "Lectures", new { id = lecture.Id })" class="btn btn-sm btn-primary" title="Read">
+                                                                        <i class="fas fa-book-reader"></i> Read
+                                                                    </a>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <!-- Empty state when no lectures exist for this lesson -->
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-file-video fa-2x text-muted mb-3"></i>
+                                        <p class="text-muted mb-2">No lectures in this lesson yet</p>
+                                        @if (isAuthorized)
+                                        {
+                                            <button class="btn btn-sm btn-primary mt-2" 
+                                                onclick="prepareAddLecture(@lesson.Id, '@lesson.Title')" 
+                                                data-toggle="modal" 
+                                                data-target="#lectureModal">
+                                                <i class="fas fa-plus me-2"></i>Add lecture
+                                            </button>
+                                        }
                                     </div>
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-0">Core Principles</h6>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <small class="text-muted">Video • 18:20</small>
-                                            <div>
-                                                <button class="btn btn-sm btn-light me-2" title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-primary" title="Watch">
-                                                    <i class="fas fa-play"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            
-                            <!-- Lecture 2.2 -->
-                            <li class="list-group-item px-0 py-3 border-0">
-                                <div class="d-flex align-items-center">
-                                    <div class="me-3 text-info">
-                                        <i class="fas fa-play-circle fa-lg"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-0">Practical Examples</h6>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <small class="text-muted">Video • 11:45</small>
-                                            <div>
-                                                <button class="btn btn-sm btn-light me-2" title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-primary" title="Watch">
-                                                    <i class="fas fa-play"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
+                                }
+                            </div>
+                        </div>
                     </div>
+                }
+            }
+            else
+            {
+                <!-- Empty state (shown when no lessons exist) -->
+                <div class="text-center py-5 bg-light rounded">
+                    <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
+                    <h5>No lessons yet</h5>
+                    <p class="text-muted mb-3">Start building your course by creating lessons and adding lectures.</p>
+                    @if (isAuthorized)
+                    {
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#lessonModal">
+                            <i class="fas fa-plus me-2"></i>Create your first lesson
+                        </button>
+                    }
                 </div>
-            </div>
-        </div>
-        
-        <!-- Empty state (shown when no lessons exist) -->
-        <div class="text-center py-5 d-none">
-            <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
-            <h5>No lessons yet</h5>
-            <p class="text-muted">Start building your course by creating lessons and adding lectures.</p>
-            <button class="btn btn-primary mt-2" data-toggle="modal" data-target="#lessonModal">
-                <i class="fas fa-plus me-2"></i>Create your first lesson
-            </button>
+            }
         </div>
     </div>
 
@@ -776,7 +790,7 @@
                                     </div>
                                 </div>
                                 
-                                <p class="card-text">@(assignment.Description.Length > 100 ? assignment.Description.Substring(0, 100) + "..." : assignment.Description)</p>
+                                <p class="card-text">@(assignment.Description!.Length > 100 ? assignment.Description.Substring(0, 100) + "..." : assignment.Description)</p>
                                 
                                 <div class="d-flex mt-3 justify-content-between align-items-center">
                                     @if (!string.IsNullOrEmpty(assignment.FileUrl))
@@ -878,13 +892,788 @@
         }
 
         function createLecture() {
-            // TODO: Implement lecture creation logic
-            alert('Feature will be implemented soon!');
+            var lessonId = $('#lessonSelect').val();
+            var title = $('#lectureTitle').val();
+            var description = $('#lectureDescription').val();
+            var classRoomId = $('input[name="ClassRoomId"]').val();
+            var contentType = $('input[name="contentType"]:checked').val();
+            var videoUrl = $('#videoUrl').val();
+            var durationMinutes = $('#lectureDuration').val() || 10;
+            var order = 1; // Mặc định là 1, sẽ được tính toán ở phía máy chủ
+            var textContent = '';
+
+            // Kiểm tra nếu có trường bắt buộc nào bị trống
+            if (!lessonId) {
+                alert("Vui lòng chọn bài học.");
+                return;
+            }
+
+            if (!title) {
+                alert("Vui lòng nhập tiêu đề bài giảng.");
+                return;
+            }
+
+            // Chuyển đổi giá trị contentType từ chuỗi sang số (để khớp với LectureContentType enum)
+            var numericContentType;
+            if (contentType === 'videoUrl') {
+                numericContentType = 0; // VideoUrl
+                if (!videoUrl) {
+                    alert("Vui lòng nhập URL video.");
+                    return;
+                }
+            } else if (contentType === 'upload') {
+                numericContentType = 1; // UploadedFile
+            } else if (contentType === 'text') {
+                numericContentType = 2; // TextContent
+                
+                // Lấy nội dung từ Froala Editor nếu có
+                if (typeof FroalaEditor !== 'undefined' && FroalaEditor.INSTANCES && FroalaEditor.INSTANCES.length > 0) {
+                    // Tìm instance của editor theo ID
+                    const editorInstance = FroalaEditor.INSTANCES.find(instance => 
+                        instance.el.id === 'lectureContent');
+                    if (editorInstance) {
+                        textContent = editorInstance.html.get();
+                    } else {
+                        textContent = $('#lectureContent').val();
+                    }
+                } else {
+                    textContent = $('#lectureContent').val();
+                }
+                
+                if (!textContent) {
+                    alert("Vui lòng nhập nội dung bài giảng.");
+                    return;
+                }
+            }
+
+            // Hiển thị loading
+            var createButton = $('#lectureForm button[type="button"].btn-primary');
+            var originalButtonText = createButton.html();
+            createButton.html('<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...');
+            createButton.prop('disabled', true);
+
+            // Tạo FormData để gửi dữ liệu (bao gồm cả file nếu có)
+            var formData = new FormData();
+            formData.append('Title', title);
+            formData.append('Description', description);
+            formData.append('LessonId', lessonId);
+            formData.append('ClassRoomId', classRoomId);
+            formData.append('ContentType', numericContentType);
+            formData.append('VideoUrl', videoUrl);
+            formData.append('TextContent', textContent);
+            formData.append('DurationMinutes', durationMinutes);
+            formData.append('Order', order);
+            formData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
+
+            // Thêm file nếu có
+            if (numericContentType === 1 && $('#lectureFileUrl')[0].files[0]) { // UploadedFile
+                formData.append('UploadedFile', $('#lectureFileUrl')[0].files[0]);
+            }
+
+            // Gửi dữ liệu qua AJAX
+            $.ajax({
+                url: '@Url.Action("Create", "Lectures")',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (result) {
+                    $('#lectureModal').modal('hide');
+                    showToast("Bài giảng đã được tạo thành công!", "success");
+                    
+                    // Thay vì reload toàn bộ trang, chỉ load lại danh sách lectures cho lesson cụ thể
+                    loadLectures(lessonId);
+                    
+                    // Đặt lại form
+                    $('#lectureTitle').val('');
+                    $('#lectureDescription').val('');
+                    $('#videoUrl').val('');
+                    if ($('#lectureContent').length > 0) {
+                        try {
+                            // Xử lý cả trường hợp cũ và mới của Froala Editor
+                            var editor = $('#lectureContent').data('froala.editor');
+                            if (editor) {
+                                editor.html.set('');
+                            } else if (typeof FroalaEditor !== 'undefined' && FroalaEditor.INSTANCES) {
+                                const editorInstance = FroalaEditor.INSTANCES.find(instance => 
+                                    instance.el.id === 'lectureContent');
+                                if (editorInstance) {
+                                    editorInstance.html.set('');
+                                }
+                            }
+                        } catch (e) {
+                            console.error('Error resetting editor:', e);
+                        }
+                    }
+                },
+                error: function (xhr) {
+                    var errorMessage = "Có lỗi xảy ra khi tạo bài giảng.";
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                    showToast(errorMessage, "error");
+                },
+                complete: function() {
+                    // Khôi phục nút
+                    createButton.html(originalButtonText);
+                    createButton.prop('disabled', false);
+                }
+            });
+        }
+
+        function addLectureToUI(lecture) {
+            // Find the correct lesson collapse section
+            const collapseSection = document.querySelector(`[data-lesson-id="${lecture.lessonId}"] .card-body`);
+            
+            if (!collapseSection) {
+                console.error('Lesson collapse section not found:', lecture.lessonId);
+                return;
+            }
+            
+            // Check if there are no lectures yet and remove the empty state if it exists
+            const emptyState = collapseSection.querySelector('.text-center.py-4.text-muted');
+            if (emptyState) {
+                emptyState.remove();
+            }
+            
+            // Check if we need to create the lectures list
+            let lecturesList = collapseSection.querySelector('.list-group');
+            if (!lecturesList) {
+                lecturesList = document.createElement('ul');
+                lecturesList.className = 'list-group list-group-flush';
+                collapseSection.appendChild(lecturesList);
+            }
+            
+            // Create the new lecture item
+            const lectureItem = document.createElement('li');
+            lectureItem.className = 'list-group-item px-0 py-3 border-0 border-bottom';
+            lectureItem.setAttribute('data-lecture-id', lecture.id);
+            
+            // Determine the icon based on content type
+            let iconClass = 'fas fa-file-alt';
+            let iconColorClass = 'text-primary';
+            
+            switch (lecture.contentType) {
+                case 'VideoUrl':
+                    iconClass = 'fas fa-play-circle';
+                    iconColorClass = 'text-info';
+                    break;
+                case 'UploadedFile':
+                    iconClass = 'fas fa-file-pdf';
+                    iconColorClass = 'text-warning';
+                    break;
+                case 'TextContent':
+                    iconClass = 'fas fa-file-alt';
+                    iconColorClass = 'text-success';
+                    break;
+            }
+            
+            // Create the HTML for the lecture item
+            lectureItem.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <div class="me-3 ${iconColorClass}">
+                        <i class="${iconClass} fa-lg"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="mb-0">${lecture.title}</h6>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">${lecture.contentType} • ${lecture.durationMinutes} min</small>
+                            <div>
+                                <a href="/Lectures/Edit/${lecture.id}" class="btn btn-sm btn-light me-2" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button class="btn btn-sm btn-primary" title="View" onclick="viewLecture(${lecture.id})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add the new lecture item to the list
+            lecturesList.appendChild(lectureItem);
+            
+            // Update the lesson header to reflect the new lecture count and duration
+            updateLessonHeader(lecture.lessonId);
+        }
+        
+        function updateLessonHeader(lessonId) {
+            // Find all lectures for this lesson
+            const lessonCard = document.querySelector(`[data-lesson-id="${lessonId}"]`);
+            if (!lessonCard) return;
+            
+            const lectures = lessonCard.querySelectorAll('[data-lecture-id]');
+            const lectureCount = lectures.length;
+            
+            // Sum up the durations - in a real app you'd get this from the server
+            // For this example, we'll assume each lecture is 10 minutes
+            const totalDuration = lectureCount * 10;
+            
+            // Update the lesson header
+            const lectureInfo = lessonCard.querySelector('small.text-muted');
+            if (lectureInfo) {
+                lectureInfo.textContent = `${lectureCount} lecture${lectureCount !== 1 ? 's' : ''} • ${totalDuration} min total`;
+            }
+        }
+        
+        function viewLecture(lectureId) {
+            // TODO: Implement lecture viewing logic
+            alert('Lecture viewing will be implemented soon!');
         }
 
         function createLesson() {
-            // TODO: Implement lesson creation logic
-            alert('Feature will be implemented soon!');
+            var title = $('#lessonTitle').val();
+            var description = $('#lessonDescription').val();
+            var classRoomId = $('input[name="ClassRoomId"]').val();
+
+            // Kiểm tra nếu tiêu đề trống
+            if (!title) {
+                alert("Vui lòng nhập tiêu đề bài học.");
+                return;
+            }
+
+            // Hiển thị loading
+            var createButton = $('#lessonForm button[type="button"].btn-primary');
+            var originalButtonText = createButton.html();
+            createButton.html('<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...');
+            createButton.prop('disabled', true);
+
+            // Gửi dữ liệu qua AJAX
+            $.ajax({
+                url: '@Url.Action("CreateAjax", "Lessons")',
+                type: 'POST',
+                data: {
+                    Title: title,
+                    Description: description,
+                    ClassRoomId: classRoomId,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (result) {
+                    if (result.success) {
+                        $('#lessonModal').modal('hide');
+                        showToast(result.message, "success");
+                        
+                        // Thay vì reload toàn bộ trang, chỉ load lại danh sách lessons
+                        loadLessons();
+                        
+                        // Đặt lại form
+                        $('#lessonTitle').val('');
+                        $('#lessonDescription').val('');
+                    } else {
+                        showToast("Có lỗi xảy ra: " + result.message, "error");
+                    }
+                },
+                error: function () {
+                    showToast("Có lỗi xảy ra khi gửi yêu cầu tạo bài học.", "error");
+                },
+                complete: function() {
+                    // Khôi phục nút
+                    createButton.html(originalButtonText);
+                    createButton.prop('disabled', false);
+                }
+            });
+        }
+        
+        function addLessonToUI(lesson) {
+            const accordion = document.getElementById('lessonsAccordion');
+            
+            // Create a unique ID for the new elements
+            const headingId = `heading-${lesson.id}`;
+            const collapseId = `collapse-${lesson.id}`;
+            
+            // Create the new lesson card
+            const lessonCard = document.createElement('div');
+            lessonCard.className = 'card border-0 shadow-sm mb-3';
+            lessonCard.setAttribute('data-lesson-id', lesson.id);
+            
+            // HTML for the new lesson card
+            lessonCard.innerHTML = `
+                <div class="card-header bg-white p-0" id="${headingId}">
+                    <div class="d-flex justify-content-between align-items-center p-3" 
+                        data-toggle="collapse" data-target="#${collapseId}" 
+                        aria-expanded="true" aria-controls="${collapseId}" 
+                        style="cursor: pointer;">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3 text-primary">
+                                <i class="fas fa-layer-group fa-lg"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-0 fw-bold">${lesson.title}</h5>
+                                <small class="text-muted">${lesson.lectureCount || 0} lectures • ${lesson.durationMinutes || 0} min total</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="dropdown me-2" onclick="event.stopPropagation();">
+                                <button class="btn btn-sm btn-light rounded-circle" type="button" data-toggle="dropdown">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" href="/Lessons/Edit/${lesson.id}">
+                                        <i class="fas fa-edit text-primary me-2"></i>Edit Lesson
+                                    </a>
+                                    <a class="dropdown-item" href="/Lessons/Delete/${lesson.id}">
+                                        <i class="fas fa-trash text-danger me-2"></i>Delete Lesson
+                                    </a>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <div id="${collapseId}" class="collapse" aria-labelledby="${headingId}" data-parent="#lessonsAccordion">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0 text-muted">Lectures</h6>
+                            <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation();" data-toggle="modal" data-target="#lectureModal">
+                                <i class="fas fa-plus me-1"></i> Add Lecture
+                            </button>
+                        </div>
+                        <div class="text-center py-4 text-muted">
+                            <i class="fas fa-file-video fa-3x mb-3 opacity-50"></i>
+                            <p>No lectures in this lesson yet</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add the new lesson card to the accordion
+            accordion.appendChild(lessonCard);
+            
+            // Remove the "no lessons" message if it exists
+            const noLessonsMessage = document.querySelector('.no-lessons-message');
+            if (noLessonsMessage) {
+                noLessonsMessage.remove();
+            }
+        }
+        
+        function updateLessonDropdown(lesson) {
+            const dropdown = document.getElementById('lessonSelect');
+            
+            // Create a new option
+            const option = document.createElement('option');
+            option.value = lesson.id;
+            option.text = lesson.title;
+            
+            // Add to dropdown
+            dropdown.appendChild(option);
+        }
+
+        function loadLessons() {
+            const classRoomId = document.querySelector('input[name="ClassRoomId"]').value;
+            if (!classRoomId) {
+                console.error('No classroom ID found');
+                return;
+            }
+            
+            console.log('Loading lessons for classroom ID:', classRoomId);
+            
+            const accordion = document.getElementById('lessonsAccordion');
+            if (!accordion) {
+                console.error('Lessons accordion container not found');
+                return;
+            }
+            
+            // Show loading
+            accordion.innerHTML = `
+                <div class="text-center py-4">
+                    <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+                    <p>Loading lessons...</p>
+                </div>
+            `;
+            
+            // Fetch lessons
+            $.ajax({
+                url: '@Url.Action("GetLessons", "Lessons")',
+                type: 'GET',
+                data: { 
+                    classRoomId: classRoomId
+                },
+                dataType: 'json',
+                cache: false,
+                success: function(response) {
+                    console.log('GetLessons response:', response);
+                    
+                    // Clear accordion
+                    accordion.innerHTML = '';
+                    
+                    // Clear lesson dropdown in the lecture creation modal
+                    const dropdown = document.getElementById('lessonSelect');
+                    if (dropdown) {
+                        dropdown.innerHTML = '<option value="">Choose a lesson...</option>';
+                    }
+                    
+                    // Check for successful response
+                    if (!response.success) {
+                        accordion.innerHTML = `
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                ${response.message || 'Failed to load lessons'}
+                                <button class="btn btn-outline-danger mt-2" onclick="loadLessons()">
+                                    <i class="fas fa-sync-alt me-1"></i> Try Again
+                                </button>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    // Check if there are any lessons
+                    const lessons = response.data || [];
+                    if (lessons.length === 0) {
+                        // No lessons message
+                        accordion.innerHTML = `
+                            <div class="text-center py-5">
+                                <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
+                                <h5>No lessons yet</h5>
+                                <p class="text-muted">Start building your course by creating lessons and adding lectures.</p>
+                                @if (isAuthorized)
+                                {
+                                    <button class="btn btn-primary mt-2" data-toggle="modal" data-target="#lessonModal">
+                                        <i class="fas fa-plus me-2"></i>Create your first lesson
+                                    </button>
+                                }
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    // Add each lesson to the UI
+                    lessons.forEach(function(lesson, index) {
+                        const headingId = `heading-${lesson.id}`;
+                        const collapseId = `collapse-${lesson.id}`;
+                        
+                        // Create the new lesson card
+                        const lessonCard = document.createElement('div');
+                        lessonCard.className = 'card border-0 shadow-sm mb-3';
+                        lessonCard.setAttribute('data-lesson-id', lesson.id);
+                        
+                        const lectureCountText = lesson.lectureCount === 1 
+                            ? '1 lecture' 
+                            : `${lesson.lectureCount} lectures`;
+                        
+                        // HTML for the new lesson card
+                        lessonCard.innerHTML = `
+                            <div class="card-header bg-white p-0" id="${headingId}">
+                                <div class="d-flex justify-content-between align-items-center p-3" 
+                                    data-toggle="collapse" data-target="#${collapseId}" 
+                                    aria-expanded="${index === 0 ? 'true' : 'false'}" aria-controls="${collapseId}" 
+                                    style="cursor: pointer;">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3 text-primary">
+                                            <i class="fas fa-layer-group fa-lg"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-0 fw-bold">${lesson.title || 'Untitled Lesson'}</h5>
+                                            <small class="text-muted">${lectureCountText} • ${lesson.totalDuration || 0} min total</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        @if (isAuthorized)
+                                        {
+                                            <div class="btn-group me-2">
+                                                <a href="@Url.Action("Edit", "Lessons")/${lesson.id}" class="btn btn-sm btn-outline-primary" title="Edit Lesson">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="@Url.Action("Delete", "Lessons")/${lesson.id}" class="btn btn-sm btn-outline-danger" title="Delete Lesson">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        }
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="${collapseId}" class="collapse ${index === 0 ? 'show' : ''}" 
+                                aria-labelledby="${headingId}" data-parent="#lessonsAccordion">
+                                <div class="card-body pt-0">
+                                    <!-- Lectures will be loaded here -->
+                                    <div class="text-center py-3">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        <p class="mb-0">Loading lectures...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        // Add the new lesson card to the accordion
+                        accordion.appendChild(lessonCard);
+                        
+                        // Add to dropdown in lecture creation modal
+                        if (dropdown) {
+                            const option = document.createElement('option');
+                            option.value = lesson.id;
+                            option.text = lesson.title || 'Untitled Lesson';
+                            dropdown.appendChild(option);
+                        }
+                        
+                        // Load lectures for this lesson
+                        setTimeout(() => {
+                            loadLectures(lesson.id);
+                        }, 100); // Small delay to ensure the DOM is ready
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error loading lessons:', error);
+                    console.error('Status:', status);
+                    console.error('Response:', xhr.responseText);
+                    
+                    let errorMessage = 'Failed to load lessons. Network error or server unavailable.';
+                    
+                    accordion.innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            ${errorMessage}
+                            <button class="btn btn-outline-danger mt-2" onclick="loadLessons()">
+                                <i class="fas fa-sync-alt me-1"></i> Try Again
+                            </button>
+                        </div>
+                    `;
+                }
+            });
+        }
+        
+        function loadLectures(lessonId) {
+            if (!lessonId) {
+                console.error('No lesson ID provided to loadLectures()');
+                return;
+            }
+
+            console.log('Loading lectures for lesson ID:', lessonId);
+            
+            // Tìm lesson element dựa vào data-lesson-id
+            const lessonElements = document.querySelectorAll(`[data-lesson-id="${lessonId}"]`);
+            if (lessonElements.length === 0) {
+                console.error(`Could not find element with data-lesson-id="${lessonId}"`);
+                
+                // Thử tìm dựa vào collapse ID
+                const collapseElements = document.querySelectorAll(`.collapse`);
+                let lessonElement = null;
+                
+                for (let i = 0; i < collapseElements.length; i++) {
+                    const el = collapseElements[i];
+                    const headingId = el.getAttribute('aria-labelledby');
+                    if (headingId) {
+                        const headingEl = document.getElementById(headingId);
+                        if (headingEl) {
+                            const parentCard = headingEl.closest('.card');
+                            if (parentCard) {
+                                lessonElement = parentCard;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                if (!lessonElement) {
+                    showToast(`Không thể tìm thấy lesson với ID ${lessonId}`, "error");
+                    return;
+                }
+            }
+            
+            const lessonElement = lessonElements[0] || document.querySelector(`.card:has([aria-labelledby="heading${lessonId}"])`);
+            if (!lessonElement) {
+                showToast(`Không thể tìm thấy lesson với ID ${lessonId}`, "error");
+                return;
+            }
+            
+            const collapseSection = lessonElement.querySelector('.card-body') || 
+                                  lessonElement.querySelector('.collapse .card-body');
+            
+            if (!collapseSection) {
+                console.error(`Could not find card-body within lesson ${lessonId}`);
+                return;
+            }
+            
+            // Show loading
+            collapseSection.innerHTML = `
+                <div class="text-center py-4">
+                    <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+                    <p>Đang tải bài giảng...</p>
+                </div>
+            `;
+            
+            // Fetch lectures
+            $.ajax({
+                url: '@Url.Action("GetLectures", "Lectures")',
+                type: 'GET',
+                data: { 
+                    lessonId: lessonId
+                },
+                dataType: 'json',
+                cache: false,
+                success: function(response) {
+                    console.log('GetLectures response:', response);
+                    
+                    // Kiểm tra cấu trúc dữ liệu phản hồi
+                    if (typeof response !== 'object') {
+                        collapseSection.innerHTML = `
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Phản hồi không hợp lệ từ máy chủ
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    // Xây dựng lại giao diện
+                    let headerHtml = `
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0 text-muted">Bài giảng</h6>
+                            @if (isAuthorized)
+                            {
+                                <button class="btn btn-sm btn-outline-primary" 
+                                    onclick="prepareAddLecture(${lessonId}, 'Lesson')" 
+                                    data-toggle="modal" 
+                                    data-target="#lectureModal">
+                                    <i class="fas fa-plus me-1"></i> Thêm bài giảng
+                                </button>
+                            }
+                        </div>
+                    `;
+                    
+                    // Check if we have lectures
+                    const lectures = response.data || [];
+                    if (lectures.length === 0) {
+                        // No lectures
+                        collapseSection.innerHTML = headerHtml + `
+                            <div class="text-center py-4">
+                                <i class="fas fa-file-video fa-2x text-muted mb-2"></i>
+                                <p class="text-muted mb-0">Chưa có bài giảng nào trong bài học này</p>
+                                @if (isAuthorized)
+                                {
+                                    <button class="btn btn-sm btn-primary mt-2" 
+                                        onclick="prepareAddLecture(${lessonId}, 'Lesson')" 
+                                        data-toggle="modal" 
+                                        data-target="#lectureModal">
+                                        <i class="fas fa-plus me-2"></i>Thêm bài giảng
+                                    </button>
+                                }
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    // Build the lectures list
+                    let lecturesListHtml = `
+                        ${headerHtml}
+                        <ul class="list-group list-group-flush">
+                    `;
+                    
+                    // Add each lecture
+                    lectures.forEach(function(lecture) {
+                        let iconClass = "text-info";
+                        let icon = "fa-play-circle";
+                        let contentType = "Video";
+                        let actionButton = "";
+                        
+                        // Determine icon and action based on content type
+                        if (lecture.contentType === 0 || lecture.contentType === "VideoUrl") {
+                            iconClass = "text-info";
+                            icon = "fa-play-circle";
+                            contentType = "Video";
+                            actionButton = `
+                                <a href="@Url.Action("Watch", "Lectures")/${lecture.id}" class="btn btn-sm btn-primary" title="Watch">
+                                    <i class="fas fa-play"></i> Xem
+                                </a>
+                            `;
+                        } else if (lecture.contentType === 1 || lecture.contentType === "UploadedFile") {
+                            iconClass = "text-warning";
+                            icon = "fa-file-pdf";
+                            contentType = "File";
+                            actionButton = `
+                                <a href="${lecture.fileUrl}" class="btn btn-sm btn-primary" title="Download" target="_blank">
+                                    <i class="fas fa-download"></i> Tải xuống
+                                </a>
+                            `;
+                        } else if (lecture.contentType === 2 || lecture.contentType === "TextContent") {
+                            iconClass = "text-success";
+                            icon = "fa-file-alt";
+                            contentType = "Text";
+                            actionButton = `
+                                <a href="@Url.Action("Details", "Lectures")/${lecture.id}" class="btn btn-sm btn-primary" title="Read">
+                                    <i class="fas fa-book-reader"></i> Đọc
+                                </a>
+                            `;
+                        }
+                        
+                        // Append lecture item
+                        lecturesListHtml += `
+                            <li class="list-group-item px-0 py-3 border-0 ${lecture !== lectures[lectures.length - 1] ? "border-bottom" : ""}">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3 ${iconClass}">
+                                        <i class="fas ${icon} fa-lg"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-0">
+                                            <a href="@Url.Action("Details", "Lessons")/${lecture.lessonId}" class="text-decoration-none text-dark">
+                                                ${lecture.title}
+                                            </a>
+                                        </h6>
+                                        <p class="text-muted small mb-1">${lecture.description || ''}</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <small class="text-muted">${contentType} • ${lecture.durationMinutes} min</small>
+                                            <div>
+                                                @if (isAuthorized)
+                                                {
+                                                    <a href="@Url.Action("Edit", "Lectures")/${lecture.id}" class="btn btn-sm btn-outline-primary me-1" title="Edit Lecture">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a href="@Url.Action("Delete", "Lectures")/${lecture.id}" class="btn btn-sm btn-outline-danger me-1" title="Delete Lecture">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                }
+                                                <a href="@Url.Action("Details", "Lessons")/${lecture.lessonId}" class="btn btn-sm btn-primary me-1" title="View Lesson">
+                                                    <i class="fas fa-eye"></i> View
+                                                </a>
+                                                ${actionButton}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        `;
+                    });
+                    
+                    lecturesListHtml += `
+                        </ul>
+                    `;
+                    
+                    // Update the content
+                    collapseSection.innerHTML = lecturesListHtml;
+                    
+                    // Update the lesson header with new lecture count and duration
+                    updateLessonHeader(lessonId, lectures.length, lectures.reduce((total, l) => total + l.durationMinutes, 0));
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error loading lectures:', error);
+                    console.error('Status:', status);
+                    console.error('Response:', xhr.responseText);
+                    
+                    collapseSection.innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Lỗi khi tải bài giảng: ${error || 'Lỗi không xác định'}
+                            <button class="btn btn-sm btn-outline-danger mt-2" onclick="loadLectures(${lessonId})">
+                                <i class="fas fa-sync-alt me-1"></i> Thử lại
+                            </button>
+                        </div>
+                    `;
+                }
+            });
+        }
+        
+        // Helper function to update lesson header with lecture info
+        function updateLessonHeader(lessonId, lectureCount, totalMinutes) {
+            // Tìm lesson element
+            const lessonElement = document.querySelector(`[data-lesson-id="${lessonId}"]`) || 
+                                document.querySelector(`.card:has([aria-labelledby="heading${lessonId}"])`);
+            if (!lessonElement) return;
+            
+            // Tìm small text hiển thị thông tin lecture
+            const lectureInfoEl = lessonElement.querySelector('small.text-muted');
+            if (lectureInfoEl) {
+                lectureInfoEl.textContent = `${lectureCount} bài giảng • ${totalMinutes} phút`;
+            }
         }
 
         function toggleContentType() {
@@ -1053,6 +1842,18 @@
                 placeholderText: 'Input lecture content...',
             });
         }
+
+        // Load lessons when the lecture tab is activated
+        $(document).ready(function() {
+            $('#lecture-tab').on('shown.bs.tab', function (e) {
+                loadLessons();
+            });
+            
+            // Also load if the tab is active by default
+            if ($('#lecture-tab').hasClass('active')) {
+                loadLessons();
+            }
+        });
 
         // Like post functionality
         function likePost(postId) {
@@ -1260,8 +2061,74 @@
                 // Random initial like count for demo purposes
                 count.textContent = Math.floor(Math.random() * 10);
             });
+
+            // Add event listener for the Add Lecture button to set the correct lesson ID
+            $(document).on('click', '[data-toggle="modal"][data-target="#lectureModal"]', function(e) {
+                const lessonId = $(this).data('lesson-id');
+                if (lessonId) {
+                    $('#lessonSelect').val(lessonId);
+                }
+            });
         });
     </script>
+    
+    <script>
+        // Function to prepare Add Lecture modal with pre-selected lesson
+        function prepareAddLecture(lessonId, lessonTitle) {
+            // Select the correct lesson in the dropdown
+            $('#lessonSelect').val(lessonId);
+            
+            // Update the modal title to reflect the selected lesson
+            $('#lectureModalLabel').html('<i class="fas fa-video me-2"></i>Add new lecture to: ' + lessonTitle);
+            
+            // Focus the title field when modal opens
+            $('#lectureModal').on('shown.bs.modal', function () {
+                $('#lectureTitle').focus();
+            });
+        }
+        
+        // Function to play video in modal
+        function playVideo(videoUrl) {
+            // Extract YouTube video ID if it's a YouTube URL
+            let videoSrc = videoUrl;
+            
+            if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+                const videoId = extractYouTubeId(videoUrl);
+                if (videoId) {
+                    videoSrc = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+                }
+            } else if (videoUrl.includes('vimeo.com')) {
+                const vimeoId = extractVimeoId(videoUrl);
+                if (vimeoId) {
+                    videoSrc = `https://player.vimeo.com/video/${vimeoId}?autoplay=1`;
+                }
+            }
+            
+            // Set the iframe source and show the modal
+            $('#videoFrame').attr('src', videoSrc);
+            $('#videoPlayerModal').modal('show');
+        }
+        
+        // Function to stop video when modal is closed
+        function stopVideo() {
+            $('#videoFrame').attr('src', '');
+        }
+        
+        // Helper function to extract YouTube video ID
+        function extractYouTubeId(url) {
+            const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[7].length === 11) ? match[7] : null;
+        }
+        
+        // Helper function to extract Vimeo video ID
+        function extractVimeoId(url) {
+            const regExp = /vimeo\.com\/([0-9]+)/;
+            const match = url.match(regExp);
+            return match ? match[1] : null;
+        }
+    </script>
+    
     <script>
         $(document).ready(function () {
             $('#post-tab').on('click', function () {
@@ -1300,25 +2167,4 @@
             right: 20px;
         }
     </style>
-
-    <!-- Video Player Modal -->
-    <div class="modal fade" id="videoPlayerModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header bg-dark text-white">
-                    <h5 class="modal-title">
-                        <i class="fas fa-play-circle me-2"></i><span id="videoTitle">Lecture Video</span>
-                    </h5>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" onclick="stopVideo()">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body p-0">
-                    <div class="ratio ratio-16x9">
-                        <iframe id="videoFrame" src="" allowfullscreen></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 }

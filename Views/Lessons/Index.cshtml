@@ -1,0 +1,188 @@
+@model LessonsIndexViewModel
+@{
+    ViewData["Title"] = "Lectures";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" asp-controller="Home" asp-action="Index">
+                        <i class="feather icon-home"></i> News Feed
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" asp-controller="Lessons" asp-action="Index" asp-route-classRoomId="@Model.ClassRoom.Id">
+                        <i class="feather icon-book"></i> Lecture
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" asp-controller="Assignments" asp-action="Index" asp-route-classRoomId="@Model.ClassRoom.Id">
+                        <i class="feather icon-clipboard"></i> Assignment
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <a asp-action="Create" asp-route-classRoomId="@Model.ClassRoom.Id" class="btn btn-primary me-2">
+                <i class="feather icon-plus"></i> New Lesson
+            </a>
+            <a asp-controller="Lectures" asp-action="Create" asp-route-classRoomId="@Model.ClassRoom.Id" class="btn btn-success">
+                <i class="feather icon-plus"></i> Add Lecture
+            </a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <h5 class="mb-0 text-primary">
+                <i class="feather icon-book-open me-2"></i>Lectures
+            </h5>
+            <p class="text-muted mb-0">Organize your course content into lessons and lectures. Add videos by URL or upload files to create comprehensive learning materials.</p>
+        </div>
+        <div class="card-body p-0">
+            @if (Model.Lessons.Any())
+            {
+                <div class="list-group list-group-flush">
+                    @foreach (var lesson in Model.Lessons)
+                    {
+                        <div class="list-group-item p-0">
+                            <div class="accordion" id="lesson-@lesson.Id">
+                                <div class="accordion-item border-0">
+                                    <h2 class="accordion-header" id="heading-@lesson.Id">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" 
+                                                data-bs-target="#collapse-@lesson.Id" aria-expanded="true" 
+                                                aria-controls="collapse-@lesson.Id">
+                                            <div class="d-flex align-items-center w-100">
+                                                <div class="me-3">
+                                                    <i class="feather icon-layers text-primary fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <h6 class="mb-0">@lesson.Title</h6>
+                                                    <small class="text-muted">@lesson.Lectures.Count lectures • @lesson.DurationMinutes min total</small>
+                                                </div>
+                                                <div class="ms-auto">
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" 
+                                                                id="dropdownMenuButton-@lesson.Id" data-bs-toggle="dropdown" 
+                                                                aria-expanded="false">
+                                                            <i class="feather icon-more-vertical"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@lesson.Id">
+                                                            <li>
+                                                                <a class="dropdown-item" asp-action="Edit" asp-route-id="@lesson.Id">
+                                                                    <i class="feather icon-edit-2 me-2"></i>Edit Lesson
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="dropdown-item" asp-action="Delete" asp-route-id="@lesson.Id">
+                                                                    <i class="feather icon-trash-2 me-2"></i>Delete Lesson
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </h2>
+                                    <div id="collapse-@lesson.Id" class="accordion-collapse collapse show" 
+                                         aria-labelledby="heading-@lesson.Id">
+                                        <div class="accordion-body p-0">
+                                            <ul class="list-group list-group-flush">
+                                                @foreach (var lecture in lesson.Lectures.OrderBy(l => l.Order))
+                                                {
+                                                    <li class="list-group-item py-3">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="me-3">
+                                                                @if (lecture.ContentType == LectureContentType.VideoUrl)
+                                                                {
+                                                                    <i class="feather icon-video text-danger fs-5"></i>
+                                                                }
+                                                                else if (lecture.ContentType == LectureContentType.UploadedFile)
+                                                                {
+                                                                    <i class="feather icon-file text-primary fs-5"></i>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <i class="feather icon-file-text text-success fs-5"></i>
+                                                                }
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <h6 class="mb-0">@lecture.Title</h6>
+                                                                <small class="text-muted">@lecture.DurationMinutes min</small>
+                                                            </div>
+                                                            <div class="ms-auto d-flex">
+                                                                <a href="@Url.Action("Watch", "Lectures", new { id = lecture.Id })" 
+                                                                   class="btn btn-sm btn-outline-primary me-2">
+                                                                    <i class="feather icon-play me-1"></i>Play
+                                                                </a>
+                                                                <div class="dropdown">
+                                                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                                                                            type="button" id="dropdownMenuButton-@lecture.Id" 
+                                                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                                                        <i class="feather icon-more-vertical"></i>
+                                                                    </button>
+                                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@lecture.Id">
+                                                                        <li>
+                                                                            <a class="dropdown-item" asp-controller="Lectures" 
+                                                                               asp-action="Edit" asp-route-id="@lecture.Id">
+                                                                                <i class="feather icon-edit-2 me-2"></i>Edit
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a class="dropdown-item" asp-controller="Lectures" 
+                                                                               asp-action="Delete" asp-route-id="@lecture.Id">
+                                                                                <i class="feather icon-trash-2 me-2"></i>Delete
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                }
+                                                <li class="list-group-item py-3 bg-light">
+                                                    <a asp-controller="Lectures" asp-action="Create" 
+                                                       asp-route-lessonId="@lesson.Id" asp-route-classRoomId="@Model.ClassRoom.Id" 
+                                                       class="btn btn-sm btn-outline-success w-100">
+                                                        <i class="feather icon-plus me-2"></i>Add Lecture to this Lesson
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <div class="mb-3">
+                        <i class="feather icon-book-open text-muted" style="font-size: 48px;"></i>
+                    </div>
+                    <h5 class="text-muted">No lessons yet</h5>
+                    <p class="text-muted">Start organizing your course by creating lessons and adding lectures.</p>
+                    <a asp-action="Create" asp-route-classRoomId="@Model.ClassRoom.Id" class="btn btn-primary">
+                        <i class="feather icon-plus me-2"></i>Create First Lesson
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Initialize tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
+        });
+    </script>
+}

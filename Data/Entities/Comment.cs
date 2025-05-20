@@ -16,21 +16,21 @@ namespace LMS.Data.Entities
         public Guid ClassRoomId { get; set; }
 
         [Required]
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         [Required]
-        public string Content { get; set; }
+        public string? Content { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
         // Navigation properties
         [ForeignKey("PostId")]
-        public virtual Post Post { get; set; }
+        public virtual Post? Post { get; set; }
 
         [ForeignKey("ClassRoomId")]
-        public virtual ClassRoom ClassRoom { get; set; }
+        public virtual ClassRoom? ClassRoom { get; set; }
 
         [ForeignKey("UserId")]
-        public virtual User User { get; set; }
+        public virtual User? User { get; set; }
     }
 }

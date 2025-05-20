@@ -1,139 +1,132 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" version="26.2.13">
-  <diagram id="activity-diagram" name="Activity Diagram">
-    <mxGraphModel dx="1694" dy="939" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1400" pageHeight="850" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-        <mxCell id="swimlane1" value="Học viên" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
-          <mxGeometry x="-2" y="40" width="242" height="800" as="geometry" />
-        </mxCell>
-        <mxCell id="start" value="" style="ellipse;fillColor=#000000;strokeColor=none;" parent="swimlane1" vertex="1">
-          <mxGeometry x="28" y="36" width="30" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="joinMethod" value="Phương thức&#xa;tham gia" style="rhombus;whiteSpace=wrap;html=1;" parent="swimlane1" vertex="1">
-          <mxGeometry x="3" y="83" width="80" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="enterCode" value="Nhập mã&#xa;lớp học" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane1" vertex="1">
-          <mxGeometry x="87" y="202" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="VW-2IoweA7O9J6nWvV7G-5" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#ff0000;" vertex="1" parent="swimlane1">
-          <mxGeometry x="98" y="676" width="30" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="swimlane2" value="Giao diện" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
-          <mxGeometry x="240" y="39" width="200" height="800" as="geometry" />
-        </mxCell>
-        <mxCell id="showCodeForm" value="Hiển thị form&#xa;nhập mã" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
-          <mxGeometry x="34" y="93" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="showClassList" value="Hiển thị danh sách&#xa;lớp học" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
-          <mxGeometry x="40" y="321" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="showClassDetails" value="Hiển thị giới thiệu&lt;br&gt;lớp học" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
-          <mxGeometry x="40" y="422" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="success" value="Tham gia&#xa;thành công" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
-          <mxGeometry x="30" y="662" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="error" value="Thông báo&#xa;lỗi" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
-          <mxGeometry x="34" y="525" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="swimlane3" value="Hệ thống" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
-          <mxGeometry x="440" y="39" width="294" height="800" as="geometry" />
-        </mxCell>
-        <mxCell id="validateCode" value="Kiểm tra&#xa;mã lớp" style="rhombus;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
-          <mxGeometry x="80" y="192" width="80" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="checkBalance" value="Kiểm tra&#xa;số dư" style="rhombus;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
-          <mxGeometry x="186" y="515" width="80" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="processPayment" value="Xử lý&#xa;thanh toán" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
-          <mxGeometry x="167" y="662" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="addToClass" value="Thêm vào&#xa;lớp học" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
-          <mxGeometry x="60" y="327" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="checkPrice" value="Kiểm tra&#xa;học phí" style="rhombus;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
-          <mxGeometry x="80" y="412" width="80" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="flow10" value="Miễn phí" style="endArrow=classic;html=1;edgeStyle=elbowEdgeStyle;rounded=0;curved=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="swimlane3" source="checkPrice" target="addToClass" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="226" y="390" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="flow11" value="Trả phí" style="endArrow=classic;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;rounded=0;edgeStyle=orthogonalEdgeStyle;" parent="swimlane3" source="checkPrice" target="checkBalance" edge="1">
-          <mxGeometry x="0.4154" relative="1" as="geometry">
-            <mxPoint as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="VW-2IoweA7O9J6nWvV7G-1" value="" style="endArrow=classic;html=1;" edge="1" parent="swimlane3" source="addToClass" target="checkPrice">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points" />
-            <mxPoint x="96" y="400" as="sourcePoint" />
-            <mxPoint x="-40" y="735" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="flow6" value="Hợp lệ" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;curved=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="swimlane3" source="validateCode" target="addToClass" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="137" y="232" as="sourcePoint" />
-            <mxPoint x="224" y="307" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="flow1" value="" style="endArrow=classic;html=1;" parent="1" source="start" target="joinMethod" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="flow2" value="Nhập mã" style="endArrow=classic;html=1;" parent="1" source="joinMethod" target="showCodeForm" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="flow3" value="Duyệt danh sách" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="joinMethod" target="showClassList" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="flow4" value="" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;curved=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="showCodeForm" target="enterCode" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="flow5" value="" style="endArrow=classic;html=1;" parent="1" source="enterCode" target="validateCode" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="flow8" value="" style="endArrow=classic;html=1;" parent="1" source="showClassList" target="showClassDetails" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="flow9" value="" style="endArrow=classic;html=1;rounded=0;curved=0;" parent="1" source="showClassDetails" target="checkPrice" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="flow12" value="Đủ số dư" style="endArrow=classic;html=1;" parent="1" source="checkBalance" target="processPayment" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="flow13" value="Không đủ" style="endArrow=classic;html=1;" parent="1" source="checkBalance" target="error" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="flow14" value="" style="endArrow=classic;html=1;" parent="1" source="processPayment" target="success" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="flow15" value="" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="checkPrice" target="success" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="VW-2IoweA7O9J6nWvV7G-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="validateCode" target="error">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="471" y="311" />
-              <mxPoint x="471" y="545" />
-              <mxPoint x="334" y="545" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="VW-2IoweA7O9J6nWvV7G-4" value="Không hợp lệ" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="VW-2IoweA7O9J6nWvV7G-3">
-          <mxGeometry x="-0.0626" y="2" relative="1" as="geometry">
-            <mxPoint as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="VW-2IoweA7O9J6nWvV7G-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="success" target="VW-2IoweA7O9J6nWvV7G-5">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="VW-2IoweA7O9J6nWvV7G-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="error" target="VW-2IoweA7O9J6nWvV7G-5">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
+<mxfile host="65bd71144e">
+    <diagram id="activity-diagram" name="Activity Diagram">
+        <mxGraphModel dx="640" dy="196" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1400" pageHeight="850" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="swimlane1" value="Học viên" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
+                    <mxGeometry x="-2" y="39" width="242" height="727" as="geometry"/>
+                </mxCell>
+                <mxCell id="start" value="" style="ellipse;fillColor=#000000;strokeColor=none;" parent="swimlane1" vertex="1">
+                    <mxGeometry x="28" y="36" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;rounded=0;curved=0;" edge="1" parent="swimlane1" source="joinMethod" target="9">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="joinMethod" value="Phương thức&#xa;tham gia" style="rhombus;whiteSpace=wrap;html=1;" parent="swimlane1" vertex="1">
+                    <mxGeometry x="3" y="83" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="enterCode" value="Nhập mã&#xa;lớp học" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane1" vertex="1">
+                    <mxGeometry x="87" y="202" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="VW-2IoweA7O9J6nWvV7G-5" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#ff0000;" parent="swimlane1" vertex="1">
+                    <mxGeometry x="98" y="676" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow4" value="" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;curved=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="swimlane1" source="joinMethod" target="enterCode" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="336" y="152" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="9" value="Danh sách lớp học" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="swimlane1">
+                    <mxGeometry x="87" y="285" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="swimlane2" value="Giao diện" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
+                    <mxGeometry x="240" y="39" width="200" height="727" as="geometry"/>
+                </mxCell>
+                <mxCell id="showClassDetails" value="Thông tin giới thiệu lớp học" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
+                    <mxGeometry x="4" y="338" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="success" value="Tham gia&#xa;thành công" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
+                    <mxGeometry x="30" y="662" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="error" value="Thông báo&#xa;lỗi" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
+                    <mxGeometry x="34" y="525" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="swimlane3" value="Hệ thống" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="39" width="294" height="727" as="geometry"/>
+                </mxCell>
+                <mxCell id="validateCode" value="Kiểm tra&#xa;mã lớp" style="rhombus;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
+                    <mxGeometry x="80" y="192" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="checkBalance" value="Kiểm tra&#xa;số dư" style="rhombus;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
+                    <mxGeometry x="187" y="515" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="processPayment" value="Xử lý&#xa;thanh toán" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
+                    <mxGeometry x="167" y="662" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="addToClass" value="Thêm vào&#xa;lớp học" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
+                    <mxGeometry x="67" y="598" width="100" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="checkPrice" value="Kiểm tra&#xa;học phí" style="rhombus;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
+                    <mxGeometry x="78" y="331" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow10" value="Miễn phí" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;edgeStyle=orthogonalEdgeStyle;" parent="swimlane3" source="checkPrice" target="addToClass" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow11" value="Trả phí" style="endArrow=classic;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;rounded=0;edgeStyle=orthogonalEdgeStyle;" parent="swimlane3" source="checkPrice" target="checkBalance" edge="1">
+                    <mxGeometry x="0.4154" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow6" value="Hợp lệ" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;curved=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="swimlane3" source="validateCode" target="checkPrice" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="137" y="232" as="sourcePoint"/>
+                        <mxPoint x="224" y="307" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow1" value="" style="endArrow=classic;html=1;" parent="1" source="start" target="joinMethod" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow3" value="Chọn lớp học" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;edgeStyle=orthogonalEdgeStyle;" parent="1" source="9" target="showClassDetails" edge="1">
+                    <mxGeometry x="0.0063" relative="1" as="geometry">
+                        <mxPoint x="291" y="390" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow5" value="" style="endArrow=classic;html=1;" parent="1" source="enterCode" target="validateCode" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow9" value="" style="endArrow=classic;html=1;rounded=0;curved=0;" parent="1" source="showClassDetails" target="checkPrice" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="Tham gia" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="flow9">
+                    <mxGeometry x="-0.148" y="3" relative="1" as="geometry">
+                        <mxPoint x="-11" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow12" value="Đủ số dư" style="endArrow=classic;html=1;" parent="1" source="checkBalance" target="processPayment" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow13" value="Không đủ" style="endArrow=classic;html=1;" parent="1" source="checkBalance" target="error" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow14" value="" style="endArrow=classic;html=1;" parent="1" source="processPayment" target="success" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="VW-2IoweA7O9J6nWvV7G-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0;exitY=1;exitDx=0;exitDy=0;" parent="1" source="validateCode" target="error" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="381" y="291"/>
+                            <mxPoint x="381" y="545"/>
+                            <mxPoint x="334" y="545"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="VW-2IoweA7O9J6nWvV7G-4" value="Không hợp lệ" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="VW-2IoweA7O9J6nWvV7G-3" vertex="1" connectable="0">
+                    <mxGeometry x="-0.0626" y="2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="VW-2IoweA7O9J6nWvV7G-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="success" target="VW-2IoweA7O9J6nWvV7G-5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="VW-2IoweA7O9J6nWvV7G-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="error" target="VW-2IoweA7O9J6nWvV7G-5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;rounded=0;curved=0;" edge="1" parent="1" source="addToClass" target="success">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
 </mxfile>

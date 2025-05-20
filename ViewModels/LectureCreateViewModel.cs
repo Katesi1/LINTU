@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using LMS.Data.Entities;
 
 namespace LMS.ViewModels;
@@ -33,4 +35,7 @@ public class LectureCreateViewModel
 
     [Required(ErrorMessage = "Vui lòng chọn lớp học")]
     public Guid ClassRoomId { get; set; }
+
+    // For dropdown list of lessons
+    public SelectList? LessonList { get; set; }
 }

@@ -5,8 +5,8 @@
         <div class="col-lg-8">
             <div class="page-header-title">
                 <div class="d-inline">
-                    <h4><i class="feather icon-book text-primary mr-2"></i>My Learning Journey</h4>
-                    <span>Classes you've enrolled in to expand your knowledge</span>
+                    <h4><i class="feather icon-book text-primary mr-2"></i>Hành trình học tập của tôi</h4>
+                    <span>Các lớp học bạn đã đăng ký để mở rộng kiến thức</span>
                 </div>
             </div>
         </div>
@@ -19,7 +19,7 @@
                         </a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a asp-controller="ClassRooms" asp-action="Registered">My Registrations</a>
+                        <a asp-controller="ClassRooms" asp-action="Registered">Đăng ký của tôi</a>
                     </li>
                 </ul>
             </div>
@@ -36,7 +36,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             <h4 class="text-white">@ViewBag.TotalItems</h4>
-                            <h6 class="text-white m-b-0">Total Registrations</h6>
+                            <h6 class="text-white m-b-0">Tổng số đăng ký</h6>
                         </div>
                         <div class="col-auto">
                             <i class="feather icon-book-open f-28"></i>
@@ -51,7 +51,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             <h4 class="text-white">@Model.Count(m => m.IsPaid)</h4>
-                            <h6 class="text-white m-b-0">Paid Courses</h6>
+                            <h6 class="text-white m-b-0">Khóa học đã thanh toán</h6>
                         </div>
                         <div class="col-auto">
                             <i class="feather icon-check-circle f-28"></i>
@@ -66,7 +66,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             <h4 class="text-white">@Model.Count(m => !m.IsPaid)</h4>
-                            <h6 class="text-white m-b-0">Pending Payment</h6>
+                            <h6 class="text-white m-b-0">Chờ thanh toán</h6>
                         </div>
                         <div class="col-auto">
                             <i class="feather icon-clock f-28"></i>
@@ -81,7 +81,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             <h4 class="text-white">@Model.Select(m => m.ClassRoom.Topic!.Name).Distinct().Count()</h4>
-                            <h6 class="text-white m-b-0">Subject Areas</h6>
+                            <h6 class="text-white m-b-0">Lĩnh vực học tập</h6>
                         </div>
                         <div class="col-auto">
                             <i class="feather icon-tag f-28"></i>
@@ -96,23 +96,24 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <h5><i class="feather icon-list mr-2"></i>My Registered Classes</h5>
-                    <span class="text-muted">Your learning materials in one place</span>
-                    
+                    <h5><i class="feather icon-list mr-2"></i>Lớp học đã đăng ký</h5>
+                    <span class="text-muted">Tài liệu học tập của bạn ở một nơi</span>
+
                     <!-- Search Box in Header Right -->
                     <div class="card-header-right">
-                        <form method="get" asp-controller="ClassRooms" asp-action="Registered" class="search-bar-header">
+                        <form method="get" asp-controller="ClassRooms" asp-action="Registered"
+                            class="search-bar-header">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search classes..." 
-                                       name="searchQuery" value="@ViewBag.SearchQuery" autocomplete="off">
+                                <input type="text" class="form-control" placeholder="Tìm kiếm lớp học..."
+                                    name="searchQuery" value="@ViewBag.SearchQuery" autocomplete="off">
                                 <div class="input-group-append">
                                     <button class="btn btn-primary waves-effect" type="submit">
                                         <i class="feather icon-search"></i>
                                     </button>
                                     @if (!string.IsNullOrEmpty(ViewBag.SearchQuery))
                                     {
-                                        <a asp-controller="ClassRooms" asp-action="Registered" 
-                                           class="btn btn-outline-secondary waves-effect">
+                                        <a asp-controller="ClassRooms" asp-action="Registered"
+                                            class="btn btn-outline-secondary waves-effect">
                                             <i class="feather icon-x"></i>
                                         </a>
                                     }
@@ -121,7 +122,7 @@
                         </form>
                     </div>
                 </div>
-                
+
                 <div class="card-block pb-0">
                     @if (!string.IsNullOrEmpty(ViewBag.SearchQuery))
                     {
@@ -129,12 +130,12 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <span>
                                     <i class="feather icon-info mr-2"></i>
-                                    Showing results for "<strong>@ViewBag.SearchQuery</strong>" 
-                                    (@ViewBag.TotalItems @(ViewBag.TotalItems == 1 ? "result" : "results") found)
+                                    Hiển thị kết quả cho "<strong>@ViewBag.SearchQuery</strong>"
+                                    (Tìm thấy @ViewBag.TotalItems @(ViewBag.TotalItems == 1 ? "kết quả" : "kết quả"))
                                 </span>
-                                <a asp-controller="ClassRooms" asp-action="Registered" 
-                                   class="btn btn-sm btn-outline-info waves-effect">
-                                    <i class="feather icon-x"></i> Clear Search
+                                <a asp-controller="ClassRooms" asp-action="Registered"
+                                    class="btn btn-sm btn-outline-info waves-effect">
+                                    <i class="feather icon-x"></i> Xóa tìm kiếm
                                 </a>
                             </div>
                         </div>
@@ -146,19 +147,22 @@
                             @if (!string.IsNullOrEmpty(ViewBag.SearchQuery))
                             {
                                 <i class="feather icon-search text-primary" style="font-size: 80px; opacity: 0.7;"></i>
-                                <h4 class="mt-4 mb-2">No Results Found</h4>
-                                <p class="text-muted mb-4">We couldn't find any classes matching your search criteria.</p>
-                                <a asp-controller="ClassRooms" asp-action="Registered" class="btn btn-primary btn-lg waves-effect">
-                                    <i class="feather icon-refresh-cw mr-1"></i> View All Classes
+                                <h4 class="mt-4 mb-2">Không tìm thấy kết quả</h4>
+                                <p class="text-muted mb-4">Chúng tôi không tìm thấy lớp học nào phù hợp với tiêu chí tìm kiếm
+                                    của bạn.</p>
+                                <a asp-controller="ClassRooms" asp-action="Registered"
+                                    class="btn btn-primary btn-lg waves-effect">
+                                    <i class="feather icon-refresh-cw mr-1"></i> Xem tất cả lớp học
                                 </a>
                             }
                             else
                             {
                                 <i class="feather icon-book text-primary" style="font-size: 80px; opacity: 0.7;"></i>
-                                <h4 class="mt-4 mb-2">Your Learning Journey Awaits</h4>
-                                <p class="text-muted mb-4">You haven't registered for any classes yet. Start exploring and enhance your skills!</p>
+                                <h4 class="mt-4 mb-2">Hành trình học tập của bạn đang chờ đợi</h4>
+                                <p class="text-muted mb-4">Bạn chưa đăng ký lớp học nào. Hãy bắt đầu khám phá và nâng cao kỹ
+                                    năng của mình!</p>
                                 <a asp-controller="ClassRooms" asp-action="Index" class="btn btn-primary btn-lg waves-effect">
-                                    <i class="feather icon-search mr-1"></i> Explore Available Classes
+                                    <i class="feather icon-search mr-1"></i> Khám phá lớp học có sẵn
                                 </a>
                             }
                         </div>
@@ -172,45 +176,57 @@
                                 var isPaid = item.IsPaid;
 
                                 <div class="col-lg-4 col-md-6 mb-4">
-                                    <div class="card app-design hover-shadow-2" style="border-radius: 8px; overflow: hidden; transition: all 0.25s ease;">
-                                        <div class="card-header @(isPaid ? "bg-gradient-success" : "bg-gradient-danger") text-white" style="border-radius: 0; padding: 15px 20px;">
+                                    <div class="card app-design hover-shadow-2"
+                                        style="border-radius: 8px; overflow: hidden; transition: all 0.25s ease;">
+                                        <div class="card-header @(isPaid ? "bg-gradient-success" : "bg-gradient-danger") text-white"
+                                            style="border-radius: 0; padding: 15px 20px;">
                                             <h5 class="card-title text-white mb-0">@classRoom.Name</h5>
                                         </div>
-                                        <div class="img-container position-relative" style="height: 180px; overflow: hidden;">
+                                        <div>
                                             <img src="@(!string.IsNullOrEmpty(classRoom.ImageUrl) ? classRoom.ImageUrl : "/files/assets/images/default-class.jpg")"
-                                                class="card-img-top" alt="Class Image"
+                                                class="card-img-top" alt="Ảnh lớp học"
                                                 style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;">
                                             <div class="overlay-status position-absolute" style="top: 10px; right: 10px;">
                                                 @if (isPaid)
                                                 {
-                                                    <span class="badge badge-pill badge-success px-3 py-2"><i class="feather icon-check mr-1"></i>Paid</span>
+                                                    <span class="badge badge-pill badge-success px-3 py-2"><i
+                                                            class="feather icon-check mr-1"></i>Đã thanh toán</span>
+                                                }
+                                                else if (classRoom.Price == 0)
+                                                {
+                                                    <span class="badge badge-pill badge-info px-3 py-2"><i
+                                                            class="feather icon-gift mr-1"></i>Miễn phí</span>
                                                 }
                                                 else
                                                 {
-                                                    <span class="badge badge-pill badge-danger px-3 py-2"><i class="feather icon-alert-circle mr-1"></i>Pending</span>
+                                                    <span class="badge badge-pill badge-danger px-3 py-2"><i
+                                                            class="feather icon-alert-circle mr-1"></i>Chờ thanh toán</span>
                                                 }
                                             </div>
                                         </div>
                                         <div class="card-block p-4">
                                             <div class="row align-items-center mb-3">
                                                 <div class="col-auto">
-                                                    <span class="badge badge-light text-dark f-14 px-3 py-2"><i class="feather icon-tag text-primary mr-1"></i>@classRoom.Topic!.Name</span>
+                                                    <span class="badge badge-light text-dark f-14 px-3 py-2"><i
+                                                            class="feather icon-tag text-primary mr-1"></i>@classRoom.Topic!.Name</span>
                                                 </div>
                                                 <div class="col text-right">
-                                                    <span class="text-muted"><i class="feather icon-calendar text-primary mr-1"></i>@classRoom.CreateDate.ToString("MMM dd, yyyy")</span>
+                                                    <span class="text-muted"><i
+                                                            class="feather icon-calendar text-primary mr-1"></i>@classRoom.CreateDate.ToString("dd/MM/yyyy")</span>
                                                 </div>
                                             </div>
-                                            <p class="card-text text-muted" style="height: 48px; overflow: hidden;">@classRoom.Introduction</p>
+                                            <p class="card-text text-muted" style="height: 48px; overflow: hidden;">
+                                                @classRoom.Introduction</p>
                                             <div class="d-flex justify-content-between align-items-center mt-4">
                                                 <div class="badge badge-light f-14 p-2 px-3" style="border-radius: 20px;">
                                                     <i class="feather icon-dollar-sign text-primary mr-1"></i>
-                                                    <span class="f-w-600">@classRoom.Price.ToString("0.00")</span>
+                                                    <span class="f-w-600">@String.Format("{0:0,0} VND", classRoom.Price)</span>
                                                 </div>
                                                 @if (classRoom.Students > 0)
                                                 {
                                                     <div class="badge badge-light f-14 p-2 px-3" style="border-radius: 20px;">
                                                         <i class="feather icon-users text-primary mr-1"></i>
-                                                        <span>@classRoom.Students students</span>
+                                                        <span>@classRoom.Students học viên</span>
                                                     </div>
                                                 }
                                             </div>
@@ -219,17 +235,27 @@
                                             <div class="d-flex justify-content-between">
                                                 @if (!isPaid)
                                                 {
-                                                    <a href="#" class="btn btn-outline-primary btn-round btn-sm waves-effect">
-                                                        <i class="feather icon-credit-card mr-1"></i> Pay Now
-                                                    </a>
+                                                    @if (classRoom.Price == 0)
+                                                    {
+                                                        <span class="text-info pt-2"><i class="feather icon-gift mr-1"></i>
+                                                            Miễn phí</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="#" class="btn btn-outline-primary btn-round btn-sm waves-effect">
+                                                            <i class="feather icon-credit-card mr-1"></i> Thanh toán ngay
+                                                        </a>
+                                                    }
                                                 }
                                                 else
                                                 {
-                                                    <span class="text-success pt-2"><i class="feather icon-check-circle mr-1"></i> Payment Complete</span>
+                                                    <span class="text-success pt-2"><i class="feather icon-check-circle mr-1"></i>
+                                                        Đã thanh toán</span>
                                                 }
-                                                <a asp-controller="ClassRooms" asp-action="Introduction" asp-route-id="@classRoom.Id"
+                                                <a asp-controller="ClassRooms" asp-action="Introduction"
+                                                    asp-route-id="@classRoom.Id"
                                                     class="btn btn-primary btn-round btn-sm waves-effect">
-                                                    <i class="feather icon-eye mr-1"></i> View Class
+                                                    <i class="feather icon-eye mr-1"></i> Xem lớp học
                                                 </a>
                                             </div>
                                         </div>
@@ -243,9 +269,9 @@
                             <div class="row">
                                 <div class="col-md-6 d-flex align-items-center">
                                     <p class="m-0 text-muted">
-                                        Showing @((ViewBag.CurrentPage - 1) * ViewBag.PageSize + 1) to 
-                                        @(Math.Min(ViewBag.CurrentPage * ViewBag.PageSize, ViewBag.TotalItems)) of 
-                                        @ViewBag.TotalItems results
+                                        Hiển thị @((ViewBag.CurrentPage - 1) * ViewBag.PageSize + 1) đến
+                                        @(Math.Min(ViewBag.CurrentPage * ViewBag.PageSize, ViewBag.TotalItems)) của
+                                        @ViewBag.TotalItems kết quả
                                     </p>
                                 </div>
                                 <div class="col-md-6">
@@ -253,14 +279,15 @@
                                         @if (ViewBag.CurrentPage > 1)
                                         {
                                             <li class="page-item">
-                                                <a class="page-link" asp-controller="ClassRooms" asp-action="Registered" 
-                                                   asp-route-page="1" asp-route-searchQuery="@ViewBag.SearchQuery">
+                                                <a class="page-link" asp-controller="ClassRooms" asp-action="Registered"
+                                                    asp-route-page="1" asp-route-searchQuery="@ViewBag.SearchQuery">
                                                     <i class="feather icon-chevrons-left"></i>
                                                 </a>
                                             </li>
                                             <li class="page-item">
-                                                <a class="page-link" asp-controller="ClassRooms" asp-action="Registered" 
-                                                   asp-route-page="@(ViewBag.CurrentPage - 1)" asp-route-searchQuery="@ViewBag.SearchQuery">
+                                                <a class="page-link" asp-controller="ClassRooms" asp-action="Registered"
+                                                    asp-route-page="@(ViewBag.CurrentPage - 1)"
+                                                    asp-route-searchQuery="@ViewBag.SearchQuery">
                                                     <i class="feather icon-chevron-left"></i>
                                                 </a>
                                             </li>
@@ -275,8 +302,8 @@
                                         @for (int i = startPage; i <= endPage; i++)
                                         {
                                             <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
-                                                <a class="page-link" asp-controller="ClassRooms" asp-action="Registered" 
-                                                   asp-route-page="@i" asp-route-searchQuery="@ViewBag.SearchQuery">
+                                                <a class="page-link" asp-controller="ClassRooms" asp-action="Registered"
+                                                    asp-route-page="@i" asp-route-searchQuery="@ViewBag.SearchQuery">
                                                     @i
                                                 </a>
                                             </li>
@@ -285,14 +312,16 @@
                                         @if (ViewBag.CurrentPage < ViewBag.TotalPages)
                                         {
                                             <li class="page-item">
-                                                <a class="page-link" asp-controller="ClassRooms" asp-action="Registered" 
-                                                   asp-route-page="@(ViewBag.CurrentPage + 1)" asp-route-searchQuery="@ViewBag.SearchQuery">
+                                                <a class="page-link" asp-controller="ClassRooms" asp-action="Registered"
+                                                    asp-route-page="@(ViewBag.CurrentPage + 1)"
+                                                    asp-route-searchQuery="@ViewBag.SearchQuery">
                                                     <i class="feather icon-chevron-right"></i>
                                                 </a>
                                             </li>
                                             <li class="page-item">
-                                                <a class="page-link" asp-controller="ClassRooms" asp-action="Registered" 
-                                                   asp-route-page="@ViewBag.TotalPages" asp-route-searchQuery="@ViewBag.SearchQuery">
+                                                <a class="page-link" asp-controller="ClassRooms" asp-action="Registered"
+                                                    asp-route-page="@ViewBag.TotalPages"
+                                                    asp-route-searchQuery="@ViewBag.SearchQuery">
                                                     <i class="feather icon-chevrons-right"></i>
                                                 </a>
                                             </li>
@@ -312,20 +341,25 @@
     .bg-gradient-success {
         background: linear-gradient(45deg, #0ac282, #0df3a3);
     }
+
     .bg-gradient-danger {
         background: linear-gradient(45deg, #fe5d70, #fe909d);
     }
+
     .hover-shadow-2:hover {
         box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
         transform: translateY(-3px);
     }
+
     .hover-shadow-2:hover .card-img-top {
         transform: scale(1.05);
     }
+
     .pagination-primary .page-item.active .page-link {
         background-color: #4099ff;
         border-color: #4099ff;
     }
+
     .waves-effect {
         position: relative;
         overflow: hidden;
@@ -336,14 +370,16 @@
         user-select: none;
         -webkit-tap-highlight-color: transparent;
     }
+
     .card {
         margin-bottom: 20px;
     }
-    
+
     /* Improved search bar */
     .search-bar-header {
         min-width: 280px;
     }
+
     .search-bar-header .form-control {
         border-radius: 30px 0 0 30px;
         height: 38px;
@@ -352,16 +388,19 @@
         padding-left: 15px;
         transition: all 0.3s ease;
     }
+
     .search-bar-header .form-control:focus {
         border-color: #4099ff;
         box-shadow: 0 0 0 0.2rem rgba(64, 153, 255, 0.15);
     }
+
     .search-bar-header .input-group-append .btn {
         border-radius: 0 30px 30px 0;
         height: 38px;
         padding-left: 15px;
         padding-right: 15px;
     }
+
     .search-bar-header .input-group-append .btn-outline-secondary {
         border-left: none;
     }

@@ -1,84 +1,78 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" version="26.2.9">
-  <diagram id="activity-diagram" name="Activity Diagram">
-    <mxGraphModel dx="1044" dy="546" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-        <mxCell id="swimlane1" value="Người dùng" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
-          <mxGeometry x="40" y="40" width="200" height="720" as="geometry" />
-        </mxCell>
-        <mxCell id="2" value="" style="ellipse;fillColor=#000000;strokeColor=none;" parent="swimlane1" vertex="1">
-          <mxGeometry x="85" y="40" width="30" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="3" value="Nhập thông tin&#xa;đăng ký" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane1" vertex="1">
-          <mxGeometry x="40" y="120" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="end" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#000000;" parent="swimlane1" vertex="1">
-          <mxGeometry x="85" y="660" width="30" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="swimlane2" value="Trang đăng ký" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
-          <mxGeometry x="240" y="40" width="200" height="720" as="geometry" />
-        </mxCell>
-        <mxCell id="4" value="Hiển thị form&#xa;đăng ký" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
-          <mxGeometry x="40" y="120" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="5" value="Kiểm tra&#xa;dữ liệu form" style="rhombus;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
-          <mxGeometry x="60" y="230" width="80" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="9" value="Chuyển đến trang&#xa;xác nhận đăng ký" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
-          <mxGeometry x="40" y="480" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="10" value="Hiển thị&#xa;thông báo lỗi" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
-          <mxGeometry x="40" y="397" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="swimlane3" value="Dịch vụ đăng ký" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
-          <mxGeometry x="440" y="40" width="200" height="720" as="geometry" />
-        </mxCell>
-        <mxCell id="6" value="Tạo tài khoản&#xa;người dùng" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
-          <mxGeometry x="40" y="242" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="7" value="Tạo mã&#xa;xác nhận" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
-          <mxGeometry x="40" y="360" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="swimlane4" value="Dịch vụ Email" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
-          <mxGeometry x="640" y="40" width="200" height="720" as="geometry" />
-        </mxCell>
-        <mxCell id="8" value="Gửi email&#xa;xác nhận" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane4" vertex="1">
-          <mxGeometry x="40" y="360" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="arrow1" value="" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" parent="1" source="2" target="4" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="arrow2" value="Nhập dữ liệu" style="endArrow=classic;html=1;" parent="1" source="4" target="3" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="arrow3" value="Gửi form" style="endArrow=classic;html=1;rounded=0;edgeStyle=elbowEdgeStyle;elbow=vertical;" parent="1" source="3" target="5" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="arrow4" value="Hợp lệ" style="endArrow=classic;html=1;" parent="1" source="5" target="6" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="arrow5" value="Không hợp lệ" style="endArrow=classic;html=1;" parent="1" source="5" target="10" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="arrow6" value="Tạo thành công" style="endArrow=classic;html=1;" parent="1" source="6" target="7" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="arrow7" value="Gửi mã xác nhận" style="endArrow=classic;html=1;" parent="1" source="7" target="8" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="arrow8" value="Email đã gửi" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;edgeStyle=orthogonalEdgeStyle;elbow=vertical;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="8" target="9" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="arrow9" value="" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="9" target="end" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="332" y="578" as="sourcePoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="arrow10" value="" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;curved=0;" parent="1" source="10" target="end" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
+<mxfile host="65bd71144e">
+    <diagram id="activity-diagram" name="Activity Diagram">
+        <mxGraphModel dx="411" dy="335" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="swimlane1" value="Người dùng" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="40" width="200" height="595" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="" style="ellipse;fillColor=#000000;strokeColor=none;" parent="swimlane1" vertex="1">
+                    <mxGeometry x="85" y="40" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="Đăng ký tài khoản" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane1" vertex="1">
+                    <mxGeometry x="40" y="120" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="end" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#000000;" parent="swimlane1" vertex="1">
+                    <mxGeometry x="85" y="550" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow1" value="" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="swimlane1" source="2" target="3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="swimlane2" value="Trang đăng ký" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
+                    <mxGeometry x="240" y="40" width="200" height="596" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="Kiểm tra&#xa;dữ liệu form" style="rhombus;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
+                    <mxGeometry x="60" y="230" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="Chuyển đến trang&lt;br&gt;đăng ký thành công" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
+                    <mxGeometry x="40" y="480" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="Hiển thị&#xa;thông báo lỗi" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane2" vertex="1">
+                    <mxGeometry x="40" y="397" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="swimlane3" value="Hệ Thống" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="40" width="200" height="596" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="Tạo tài khoản&#xa;người dùng" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
+                    <mxGeometry x="40" y="242" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="Tạo mã&#xa;xác nhận" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane3" vertex="1">
+                    <mxGeometry x="40" y="360" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="swimlane4" value="Email" style="swimlane;startSize=20;horizontal=1;" parent="1" vertex="1">
+                    <mxGeometry x="640" y="40" width="200" height="596" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="Gửi email&#xa;xác nhận" style="rounded=1;whiteSpace=wrap;html=1;" parent="swimlane4" vertex="1">
+                    <mxGeometry x="40" y="360" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow3" value="Gửi form" style="endArrow=classic;html=1;rounded=0;edgeStyle=elbowEdgeStyle;elbow=vertical;" parent="1" source="3" target="5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow4" value="Hợp lệ" style="endArrow=classic;html=1;" parent="1" source="5" target="6" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow5" value="Không hợp lệ" style="endArrow=classic;html=1;" parent="1" source="5" target="10" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow6" value="Tạo thành công" style="endArrow=classic;html=1;" parent="1" source="6" target="7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow7" value="Gửi mã xác nhận" style="endArrow=classic;html=1;" parent="1" source="7" target="8" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow8" value="Email đã gửi" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;edgeStyle=orthogonalEdgeStyle;elbow=vertical;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="8" target="9" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow9" value="" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="9" target="end" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="332" y="578" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="arrow10" value="" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;curved=0;" parent="1" source="10" target="end" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
 </mxfile>

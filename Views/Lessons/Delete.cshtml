@@ -1,0 +1,64 @@
+@model LMS.Data.Entities.Lesson
+@{
+    ViewData["Title"] = "Delete Lesson";
+}
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-sm border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">
+                        <i class="feather icon-alert-triangle me-2"></i>Delete Lesson
+                    </h5>
+                    <p class="mb-0">Are you sure you want to delete this lesson?</p>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="feather icon-alert-circle me-2"></i>
+                        <strong>Warning:</strong> This will permanently delete the lesson and all its lectures. This action cannot be undone.
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="text-muted mb-2">Lesson Details</h6>
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">@Model.Title</h5>
+                                @if (!string.IsNullOrEmpty(Model.Description))
+                                {
+                                    <p class="card-text mb-3">@Model.Description</p>
+                                }
+                                <div class="d-flex">
+                                    <div class="me-4">
+                                        <small class="text-muted d-block">Order</small>
+                                        <span>@Model.Order</span>
+                                    </div>
+                                    <div class="me-4">
+                                        <small class="text-muted d-block">Lectures</small>
+                                        <span>@Model.Lectures.Count</span>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Duration</small>
+                                        <span>@Model.DurationMinutes minutes</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" asp-route-classRoomId="@Model.ClassRoomId" class="btn btn-outline-secondary">
+                                <i class="feather icon-arrow-left me-2"></i>Back to List
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="feather icon-trash-2 me-2"></i>Delete Lesson
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

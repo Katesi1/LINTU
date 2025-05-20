@@ -1,11 +1,11 @@
 <nav class="pcoded-navbar">
     <div class="pcoded-inner-navbar main-menu">
-        <div class="pcoded-navigatio-lavel">Navigation</div>
+        <div class="pcoded-navigatio-lavel">Điều hướng</div>
         <ul class="pcoded-item pcoded-left-item">
             <li class="pcoded-hasmenu">
                 <a asp-controller="Home" asp-action="Index">
                     <span class="pcoded-micon"><i class="feather icon-home"></i></span>
-                    <span class="pcoded-mtext">Home</span>
+                    <span class="pcoded-mtext">Trang chủ</span>
                 </a>
             </li>
             @if (User.IsInRole("Administrator") || User.IsInRole("Manager"))
@@ -13,45 +13,45 @@
                 <li class="pcoded-hasmenu">
                     <a asp-controller="ClassRooms" asp-action="Index">
                         <span class="pcoded-micon"><i class="feather icon-layers"></i></span>
-                        <span class="pcoded-mtext">Classroom</span>
+                        <span class="pcoded-mtext">Lớp học</span>
                     </a>
                 </li>
                 <li class="pcoded-hasmenu">
                     <a asp-controller="Topics" asp-action="Index">
                         <span class="pcoded-micon"><i class="feather icon-book"></i></span>
-                        <span class="pcoded-mtext">Topic</span>
+                        <span class="pcoded-mtext">Chủ đề</span>
                     </a>
                 </li>
                 <li class="pcoded-hasmenu">
                     <a asp-controller="UserRoles" asp-action="Index">
                         <span class="pcoded-micon"><i class="feather icon-user-check"></i></span>
-                        <span class="pcoded-mtext">Role User</span>
+                        <span class="pcoded-mtext">Phân quyền</span>
                     </a>
                 </li>
             }
             <li class="pcoded-hasmenu">
                 <a asp-action="Index" asp-controller="Calendar">
                     <span class="pcoded-micon"><i class="feather icon-calendar"></i></span>
-                    <span class="pcoded-mtext">Calendar</span>
+                    <span class="pcoded-mtext">Lịch</span>
                 </a>
             </li>
             <li class="pcoded-hasmenu">
                 <a asp-controller="Chat" asp-action="Index">
                     <span class="pcoded-micon"><i class="feather icon-message-circle"></i></span>
                     <span class="pcoded-mtext">Blog</span>
-                    <span class="pcoded-badge label label-warning">NEW</span>
+                    <span class="pcoded-badge label label-warning">MỚI</span>
                 </a>
             </li>
             <li class="pcoded-hasmenu">
                 <a asp-controller="ClassRooms" asp-action="Teach">
                     <span class="pcoded-micon"><i class="feather icon-monitor"></i></span>
-                    <span class="pcoded-mtext">Teach</span>
+                    <span class="pcoded-mtext">Giảng dạy</span>
                 </a>
             </li>
             <li class="pcoded-hasmenu">
                 <a asp-controller="ClassRooms" asp-action="Registered">
                     <span class="pcoded-micon"><i class="feather icon-user-plus"></i></span>
-                    <span class="pcoded-mtext">Registered</span>
+                    <span class="pcoded-mtext">Đã đăng ký</span>
                 </a>
             </li>
         </ul>

@@ -1,0 +1,76 @@
+<mxfile host="app.diagrams.net" modified="2024-03-19T04:23:12.285Z" agent="Mozilla/5.0" version="22.1.21">
+  <diagram id="sequence-diagram" name="Payment Sequence">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        
+        <!-- Frame -->
+        <mxCell id="frame" value="sd Thanh toán khóa học" style="shape=umlFrame;whiteSpace=wrap;html=1;width=160;height=30;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="760" height="560" as="geometry"/>
+        </mxCell>
+
+        <!-- Actors/Objects -->
+        <mxCell id="user" value="Học viên" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="80" width="30" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="system" value=":System" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="280" y="80" width="100" height="480" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="vnpay" value=":VNPay" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="480" y="80" width="100" height="480" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="database" value=":Database" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="680" y="80" width="100" height="480" as="geometry"/>
+        </mxCell>
+
+        <!-- Messages -->
+        <mxCell id="msg1" value="initializePayment(courseId)" style="html=1;verticalAlign=bottom;endArrow=block;" edge="1" parent="1" source="user" target="system">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="140" y="160" as="sourcePoint"/>
+            <mxPoint x="280" y="160" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="msg2" value="createPaymentURL()" style="html=1;verticalAlign=bottom;endArrow=block;" edge="1" parent="1" source="system" target="vnpay">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330" y="200" as="sourcePoint"/>
+            <mxPoint x="480" y="200" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="msg3" value="returnPaymentURL" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;" edge="1" parent="1" source="vnpay" target="system">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="480" y="240" as="sourcePoint"/>
+            <mxPoint x="330" y="240" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="msg4" value="redirect to VNPay" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;" edge="1" parent="1" source="system" target="user">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="280" y="280" as="sourcePoint"/>
+            <mxPoint x="140" y="280" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="msg5" value="paymentCallback()" style="html=1;verticalAlign=bottom;endArrow=block;" edge="1" parent="1" source="vnpay" target="system">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="480" y="320" as="sourcePoint"/>
+            <mxPoint x="330" y="320" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="msg6" value="updatePaymentStatus()" style="html=1;verticalAlign=bottom;endArrow=block;" edge="1" parent="1" source="system" target="database">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330" y="360" as="sourcePoint"/>
+            <mxPoint x="680" y="360" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
