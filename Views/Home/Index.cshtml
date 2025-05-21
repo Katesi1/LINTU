@@ -129,71 +129,68 @@
 </div>
 
 <!-- Results Statistics -->
-@if (Model.Any())
-{
-    <div class="row mb-4">
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-c-blue text-white border-0 mb-3 hover-shadow-2" style="border-radius: 12px; box-shadow: 0 4px 20px rgba(64, 153, 255, 0.2); transition: all 0.3s ease;">
-                <div class="card-block">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h4 class="text-white m-b-5 f-w-600">@Model.Count()</h4>
-                            <h6 class="text-white m-b-0 f-w-400">Lớp học</h6>
-                        </div>
-                        <div class="col-auto">
-                            <i class="feather icon-layers f-30" style="opacity: 0.8;"></i>
-                        </div>
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-c-blue text-white border-0 mb-3 hover-shadow-2" style="border-radius: 12px; box-shadow: 0 4px 20px rgba(64, 153, 255, 0.2); transition: all 0.3s ease;">
+            <div class="card-block">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h4 class="text-white m-b-5 f-w-600">@ViewBag.TotalClasses</h4>
+                        <h6 class="text-white m-b-0 f-w-400">Lớp học</h6>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-c-green text-white border-0 mb-3 hover-shadow-2" style="border-radius: 12px; box-shadow: 0 4px 20px rgba(46, 204, 113, 0.2); transition: all 0.3s ease;">
-                <div class="card-block">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h4 class="text-white m-b-5 f-w-600">@Model.Where(c => c.Price == 0).Count()</h4>
-                            <h6 class="text-white m-b-0 f-w-400">Khóa học miễn phí</h6>
-                        </div>
-                        <div class="col-auto">
-                            <i class="feather icon-gift f-30" style="opacity: 0.8;"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-c-yellow text-white border-0 mb-3 hover-shadow-2" style="border-radius: 12px; box-shadow: 0 4px 20px rgba(255, 193, 7, 0.2); transition: all 0.3s ease;">
-                <div class="card-block">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h4 class="text-white m-b-5 f-w-600">@Model.Where(c => (now - c.CreateDate).TotalDays <= 7).Count()</h4>
-                            <h6 class="text-white m-b-0 f-w-400">Mới trong tuần này</h6>
-                        </div>
-                        <div class="col-auto">
-                            <i class="feather icon-star f-30" style="opacity: 0.8;"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-c-purple text-white border-0 mb-3 hover-shadow-2" style="border-radius: 12px; box-shadow: 0 4px 20px rgba(156, 39, 176, 0.2); transition: all 0.3s ease;">
-                <div class="card-block">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h4 class="text-white m-b-5 f-w-600">@Model.Select(c => c.Topic?.Name).Distinct().Count()</h4>
-                            <h6 class="text-white m-b-0 f-w-400">Chủ đề khác nhau</h6>
-                        </div>
-                        <div class="col-auto">
-                            <i class="feather icon-tag f-30" style="opacity: 0.8;"></i>
-                        </div>
+                    <div class="col-auto">
+                        <i class="feather icon-layers f-30" style="opacity: 0.8;"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-}
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-c-green text-white border-0 mb-3 hover-shadow-2" style="border-radius: 12px; box-shadow: 0 4px 20px rgba(46, 204, 113, 0.2); transition: all 0.3s ease;">
+            <div class="card-block">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h4 class="text-white m-b-5 f-w-600">@ViewBag.FreeClasses</h4>
+                        <h6 class="text-white m-b-0 f-w-400">Khóa học miễn phí</h6>
+                    </div>
+                    <div class="col-auto">
+                        <i class="feather icon-gift f-30" style="opacity: 0.8;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-c-yellow text-white border-0 mb-3 hover-shadow-2" style="border-radius: 12px; box-shadow: 0 4px 20px rgba(255, 193, 7, 0.2); transition: all 0.3s ease;">
+            <div class="card-block">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h4 class="text-white m-b-5 f-w-600">@ViewBag.TopicCount</h4>
+                        <h6 class="text-white m-b-0 f-w-400">Chủ đề khác nhau</h6>
+                    </div>
+                    <div class="col-auto">
+                        <i class="feather icon-tag f-30" style="opacity: 0.8;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-c-purple text-white border-0 mb-3 hover-shadow-2" style="border-radius: 12px; box-shadow: 0 4px 20px rgba(156, 39, 176, 0.2); transition: all 0.3s ease;">
+            <div class="card-block">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h4 class="text-white m-b-5 f-w-600">@ViewBag.NewClasses</h4>
+                        <h6 class="text-white m-b-0 f-w-400">Lớp học mới trong tuần này</h6>
+                    </div>
+                    <div class="col-auto">
+                        <i class="feather icon-clock f-30" style="opacity: 0.8;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Search Results or Empty State -->
 <div class="row">

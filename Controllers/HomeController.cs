@@ -24,6 +24,12 @@ public class HomeController : Controller
         // Define the number of items per page
         int pageSize = 6;
 
+        // Lấy tất cả các lớp học được phê duyệt để tính toán số liệu thống kê
+        var allApprovedClassRooms = await _context.ClassRooms
+            .Include(c => c.Topic)
+            .Where(c => c.Status == ClassRoomStatus.Approved)
+            .ToListAsync();
+
         // Start with the queryable for ClassRooms
         var classRoomsQuery = _context.ClassRooms
             .Include(c => c.Topic)
@@ -35,11 +41,29 @@ public class HomeController : Controller
             string searchLower = searchString.ToLower();
             classRoomsQuery = classRoomsQuery.Where(c => c.Name!.ToLower().Contains(searchLower));
         }
-        // Apply pagination
+
+        // Lấy số lượng học viên cho tất cả các lớp học
+        var studentCounts = await _context.ClassDetails
+            .GroupBy(cd => cd.ClassRoomId!)
+            .Select(g => new { ClassRoomId = g.Key, Count = g.Count() })
+            .ToDictionaryAsync(x => x.ClassRoomId, x => x.Count);
+
+        // Cập nhật số lượng học viên cho tất cả các lớp học
+        foreach (var classRoom in allApprovedClassRooms)
+        {
+            classRoom.Students = studentCounts.ContainsKey(classRoom.Id!) ? studentCounts[classRoom.Id!] : 0;
+        }
+
+        // Apply pagination for displayed classes
         var totalItems = await classRoomsQuery.CountAsync();
         if (totalItems == 0)
         {
             ViewBag.NoClassMessage = "Không tìm thấy lớp học nào phù hợp.";
+            ViewBag.TotalClasses = allApprovedClassRooms.Count;
+            ViewBag.FreeClasses = allApprovedClassRooms.Count(c => c.Price == 0);
+            ViewBag.NewClasses = allApprovedClassRooms.Count(c => (DateTime.UtcNow - c.CreateDate).TotalDays <= 7);
+            ViewBag.TopicCount = allApprovedClassRooms.Select(c => c.Topic?.Name).Distinct().Count();
+            ViewBag.MembersCount = studentCounts;
             return View(new List<ClassRoom>());
         }
         var classRooms = await classRoomsQuery
@@ -47,13 +71,7 @@ public class HomeController : Controller
             .Take(pageSize)
             .ToListAsync();
 
-        var studentCounts = await _context.ClassDetails
-            .GroupBy(cd => cd.ClassRoomId!)
-            .Select(g => new { ClassRoomId = g.Key, Count = g.Count() })
-            .ToDictionaryAsync(x => x.ClassRoomId, x => x.Count);
-
-        ViewBag.MembersCount = studentCounts;
-
+        // Update students count for displayed classes
         foreach (var classRoom in classRooms)
         {
             classRoom.Students = studentCounts.ContainsKey(classRoom.Id!) ? studentCounts[classRoom.Id!] : 0;
@@ -66,6 +84,17 @@ public class HomeController : Controller
             "students" => sortOrder == "asc" ? classRooms.OrderBy(c => c.Students).ToList() : classRooms.OrderByDescending(c => c.Students).ToList(),
             _ => classRooms.OrderByDescending(c => c.CreateDate).ToList(), // Mặc định: Lớp mới nhất lên đầu
         };
+
+        // Truyền tất cả các lớp học cho view để hiển thị thống kê
+        ViewBag.TotalClasses = allApprovedClassRooms.Count;
+        ViewBag.FreeClasses = allApprovedClassRooms.Count(c => c.Price == 0);
+        ViewBag.NewClasses = allApprovedClassRooms.Count(c => (DateTime.UtcNow - c.CreateDate).TotalDays <= 7);
+        ViewBag.TopicCount = allApprovedClassRooms.Select(c => c.Topic?.Name).Distinct().Count();
+        ViewBag.MembersCount = studentCounts;
+
+        // Tính tổng số học viên trong toàn bộ hệ thống
+        ViewBag.TotalStudents = studentCounts.Values.Sum();
+
         // Create a ViewModel or ViewData for pagination
         ViewBag.PageNumber = page;
         ViewBag.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
