@@ -46,7 +46,8 @@
                         @if (!string.IsNullOrEmpty(Model.ImageUrl))
                         {
                             <img src="@Model.ImageUrl" alt="@Model.Name" class="img-thumbnail"
-                                style="max-height: 200px; max-width: 100%;">
+                                style="max-height: 200px; max-width: 100%;"
+                                onerror="this.onerror=null; this.src='/img/default_course.png';">
                         }
                         else
                         {

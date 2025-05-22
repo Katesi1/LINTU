@@ -172,6 +172,29 @@
             max-width: 80%;
             text-align: center;
         }
+
+        .message-limit-indicator {
+            font-size: 0.8em;
+            color: #666;
+            display: flex;
+            justify-content: flex-end;
+            padding: 5px 0;
+        }
+
+        .message-limit-warning {
+            color: #e65100;
+            font-weight: bold;
+        }
+
+        .message-limit-error {
+            color: #d32f2f;
+            font-weight: bold;
+            padding: 10px;
+            background-color: rgba(211, 47, 47, 0.1);
+            border-radius: 5px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
     </style>
 }
 
@@ -202,6 +225,7 @@
     </div>
 
     <div class="chat-input-container">
+        <div id="messageLimitError" class="message-limit-error" style="display: none;"></div>
         <div class="input-wrapper">
             <div class="input-group">
                 <input type="text" id="messageInput" class="form-control" placeholder="Nhập tin nhắn..." />
@@ -209,6 +233,9 @@
                     <i class="feather icon-navigation"></i>
                 </button>
             </div>
+        </div>
+        <div class="message-limit-indicator">
+            <span id="messageLimit">Số tin nhắn còn lại hôm nay: đang tải...</span>
         </div>
     </div>
 </div>
@@ -220,6 +247,7 @@
         var roomId = @Model.Id;
         var userName = "@User.Identity!.Name";
         var userCount = 1;
+        var messageLimitReached = false;
 
         // Initialize SignalR connection
         connection.start().then(function () {
@@ -230,6 +258,11 @@
 
         // Send message
         document.getElementById("sendButton").addEventListener("click", function () {
+            if (messageLimitReached) {
+                showLimitError("Bạn đã đạt giới hạn số lượng tin nhắn hôm nay (50 tin nhắn). Vui lòng thử lại vào ngày mai.");
+                return;
+            }
+
             var message = document.getElementById("messageInput").value;
             if (message.trim() !== "") {
                 connection.invoke("SendMessage", roomId, userName, message);
@@ -253,62 +286,91 @@
 
         // Receive message
         connection.on("ReceiveMessage", function (user, message, time) {
-            var messageClass = user === userName ? "message-sent" : "message-received";
-            var newMessage = `
-                                                        <div class="message ${messageClass}">
-                                                            <div class="message-content">
-                                                                <div class="message-header">
-                                                                    <span class="message-sender">${user}</span>
-                                                                    <span class="message-time">${time}</span>
-                                                                </div>
-                                                                <div class="message-text">${message}</div>
-                                                            </div>
-                                                        </div>
-                                                    `;
-            document.getElementById("chatBox").innerHTML += newMessage;
-            scrollToBottom();
+            var chatBox = document.getElementById("chatBox");
+            var div = document.createElement("div");
+
+            div.className = "message " + (user === userName ? "message-sent" : "message-received");
+            div.innerHTML = `
+                        <div class="message-content">
+                            <div class="message-header">
+                                <span class="message-sender">${user}</span>
+                                <span class="message-time">${time}</span>
+                            </div>
+                            <div class="message-text">${message}</div>
+                        </div>
+                    `;
+
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
         });
 
-        // User joined
+        // Display user joined message
         connection.on("UserJoined", function (message) {
+            var chatBox = document.getElementById("chatBox");
+            var div = document.createElement("div");
+            div.className = "message-system";
+            div.textContent = message;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
             userCount++;
-            updateUserCount();
-            var systemMessage = `
-                                                        <div class="message message-system">
-                                                            <div class="message-content">
-                                                                <div class="message-text">${message}</div>
-                                                            </div>
-                                                        </div>
-                                                    `;
-            document.getElementById("chatBox").innerHTML += systemMessage;
-            scrollToBottom();
+            document.getElementById("userCount").textContent = userCount;
         });
 
-        // User left
+        // Display user left message
         connection.on("UserLeft", function (message) {
-            userCount--;
-            updateUserCount();
-            var systemMessage = `
-                                                        <div class="message message-system">
-                                                            <div class="message-content">
-                                                                <div class="message-text">${message}</div>
-                                                            </div>
-                                                        </div>
-                                                    `;
-            document.getElementById("chatBox").innerHTML += systemMessage;
-            scrollToBottom();
+            var chatBox = document.getElementById("chatBox");
+            var div = document.createElement("div");
+            div.className = "message-system";
+            div.textContent = message;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            userCount = Math.max(1, userCount - 1);
+            document.getElementById("userCount").textContent = userCount;
         });
 
-        function scrollToBottom() {
+        // Handle message limit reached
+        connection.on("MessageLimitReached", function (message) {
+            messageLimitReached = true;
+            showLimitError(message);
+        });
+
+        // Handle message limit warning
+        connection.on("MessageLimitWarning", function (message) {
+            var limitElement = document.getElementById("messageLimit");
+            limitElement.textContent = message;
+            limitElement.className = "message-limit-warning";
+        });
+
+        // Update remaining message count
+        connection.on("RemainingMessageCount", function (count) {
+            var limitElement = document.getElementById("messageLimit");
+            limitElement.textContent = `Số tin nhắn còn lại hôm nay: ${count}/50`;
+
+            // Add warning class if less than 10 messages remaining (20%)
+            if (count <= 10) {
+                limitElement.className = "message-limit-warning";
+            }
+
+            // If count is 0, show error and disable messaging
+            if (count <= 0) {
+                messageLimitReached = true;
+                showLimitError("Bạn đã đạt giới hạn số lượng tin nhắn hôm nay (50 tin nhắn). Vui lòng thử lại vào ngày mai.");
+            }
+        });
+
+        // Helper function to show limit error
+        function showLimitError(message) {
+            var errorElement = document.getElementById("messageLimitError");
+            errorElement.textContent = message;
+            errorElement.style.display = "block";
+            document.getElementById("messageInput").setAttribute("disabled", "disabled");
+            document.getElementById("sendButton").setAttribute("disabled", "disabled");
+        }
+
+        // Scroll to bottom on load
+        window.onload = function () {
             var chatBox = document.getElementById("chatBox");
             chatBox.scrollTop = chatBox.scrollHeight;
-        }
-
-        function updateUserCount() {
-            document.getElementById("userCount").textContent = userCount;
-        }
-
-        // Initial scroll to bottom
-        scrollToBottom();
+        };
     </script>
 }

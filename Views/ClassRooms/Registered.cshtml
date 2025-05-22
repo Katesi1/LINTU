@@ -183,9 +183,10 @@
                                             <h5 class="card-title text-white mb-0">@classRoom.Name</h5>
                                         </div>
                                         <div>
-                                            <img src="@(!string.IsNullOrEmpty(classRoom.ImageUrl) ? classRoom.ImageUrl : "/files/assets/images/default-class.jpg")"
+                                            <img src="@(!string.IsNullOrEmpty(classRoom.ImageUrl) ? classRoom.ImageUrl : "/img/default_course.png")"
                                                 class="card-img-top" alt="Ảnh lớp học"
-                                                style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;">
+                                                style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;"
+                                                onerror="this.onerror=null; this.src='/img/default_course.png';">
                                             <div class="overlay-status position-absolute" style="top: 10px; right: 10px;">
                                                 @if (isPaid)
                                                 {

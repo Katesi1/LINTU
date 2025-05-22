@@ -33,6 +33,11 @@ builder.Services.AddSingleton<IVnPayService, VnPayService>();
 builder.Services.Configure<VnPayConfigOptions>(
 builder.Configuration.GetSection("VnPay"));
 
+// Thêm memory cache cho theo dõi giới hạn tin nhắn
+builder.Services.AddMemoryCache();
+// Đăng ký IChatService
+builder.Services.AddScoped<IChatService, ChatService>();
+
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddTransient<IEmailSender, EmailSenderService>();
 #region Authorization
@@ -43,7 +48,16 @@ AddAuthorizationPolicies();
 builder.Services.AddSignalR();
 AddScoped();
 var app = builder.Build();
-
+// Check for the seedtestdata command
+if (args.Length > 0 && args[0].ToLower() == "seedtestdata")
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        await SeedTestData.Initialize(services);
+    }
+    return;
+}
 // Ensure uploads directory exists
 var uploadsDir = Path.Combine(app.Environment.WebRootPath, "uploads", "lectures");
 if (!Directory.Exists(uploadsDir))

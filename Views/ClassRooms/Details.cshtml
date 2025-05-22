@@ -54,7 +54,8 @@
 </style>
 
 <h1 class="card-header"
-    style="background: url(@Model.ClassRoom!.ImageUrl) no-repeat center center; background-size: cover; color: white; line-height: 1.5; font-size: 1.5em; min-height: 200px; display: flex; align-items: flex-end; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">
+    style="background: url('@(string.IsNullOrEmpty(Model.ClassRoom!.ImageUrl) ? "/img/default_course.png" : Model.ClassRoom!.ImageUrl)') no-repeat center center; background-size: cover; color: white; line-height: 1.5; font-size: 1.5em; min-height: 200px; display: flex; align-items: flex-end; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"
+    onerror="this.style.background = 'url(\'/img/default_course.png\') no-repeat center center';">
     @Model.ClassRoom!.Name</h1>
 @if (TempData["ConfirmPayment"] != null)
 {
@@ -146,9 +147,10 @@
                                         data-username="@participant.UserName?.ToLower()"
                                         data-fullname="@participant.FullName?.ToLower()">
                                         <div class="mr-3">
-                                            <img src="@(!string.IsNullOrEmpty(participant.ImageUrl) ? participant.ImageUrl : Url.Content("~/files/assets/images/user.png"))"
+                                            <img src="@(!string.IsNullOrEmpty(participant.ImageUrl) ? participant.ImageUrl : "/img/default_course.png")"
                                                 class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;"
-                                                alt="@participant.FullName">
+                                                alt="@participant.FullName"
+                                                onerror="this.onerror=null; this.src='/img/default_course.png';">
                                         </div>
                                         <div class="flex-grow-1">
                                             <h6 class="mb-0 font-weight-bold">@participant.FullName</h6>

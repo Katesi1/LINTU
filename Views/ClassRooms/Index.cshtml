@@ -33,7 +33,9 @@
         {
             <div class="col">
                 <div class="card h-100 shadow-sm hover-shadow border-0 rounded-lg">
-                    <img src="@item.ImageUrl" class="card-img-top classroom-thumbnail" alt="@item.Name">
+                    <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "/img/default_course.png" : item.ImageUrl)" 
+                        class="card-img-top classroom-thumbnail" alt="@item.Name"
+                        onerror="this.onerror=null; this.src='/img/default_course.png';">
                     <div
                         class="card-status-ribbon @(item.Status == LMS.Data.Entities.ClassRoomStatus.Pending ? "bg-warning" : "bg-success")">
                         <span>@item.Status</span>
@@ -166,5 +168,4 @@
             });
         });
     </script>
-}
 }

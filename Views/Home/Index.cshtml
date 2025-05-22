@@ -151,7 +151,7 @@
                 <div class="row align-items-center">
                     <div class="col">
                         <h4 class="text-white m-b-5 f-w-600">@ViewBag.FreeClasses</h4>
-                        <h6 class="text-white m-b-0 f-w-400">Khóa học miễn phí</h6>
+                        <h6 class="text-white m-b-0 f-w-400">Lớp học miễn phí</h6>
                     </div>
                     <div class="col-auto">
                         <i class="feather icon-gift f-30" style="opacity: 0.8;"></i>
@@ -181,7 +181,7 @@
                 <div class="row align-items-center">
                     <div class="col">
                         <h4 class="text-white m-b-5 f-w-600">@ViewBag.NewClasses</h4>
-                        <h6 class="text-white m-b-0 f-w-400">Lớp học mới trong tuần này</h6>
+                        <h6 class="text-white m-b-0 f-w-400">Lớp học tuần này</h6>
                     </div>
                     <div class="col-auto">
                         <i class="feather icon-clock f-30" style="opacity: 0.8;"></i>
@@ -234,8 +234,9 @@
                             <div class="col-md-6 col-lg-4 mb-4">
                                 <div class="card course-card h-100 border-0 hover-shadow-2" style="border-radius: 12px; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.06);">
                                     <div class="position-relative overflow-hidden">
-                                        <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "/files/assets/images/course-placeholder.jpg" : item.ImageUrl)" 
-                                             class="card-img-top" alt="@item.Name">
+                                       <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "/img/default_course.png" : item.ImageUrl)" 
+                                             class="card-img-top" alt="@item.Name"
+                                             onerror="this.onerror=null; this.src='/img/default_course.png';">
                                         
                                         <div class="card-badges position-absolute" style="top: 15px; right: 15px;">
                                             @if (isNew)
